@@ -1,4 +1,4 @@
-TypeScript
+
 import { useState } from "react";
 
 interface InkProduct {
