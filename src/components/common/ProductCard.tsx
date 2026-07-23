@@ -33,26 +33,49 @@ function ProductCard({
 
   const { addToWishlist } = useWishlist();
 
+  const discount =
+    product.oldPrice > product.price
+      ? Math.round(
+          ((product.oldPrice - product.price) /
+            product.oldPrice) *
+            100
+        )
+      : 0;
+
   return (
 
     <div className="product-card">
 
       <Link
-
         to={`/product/${product.id}`}
-
         className="product-link"
-
       >
 
         <div className="product-image">
 
+          {discount > 0 && (
+
+            <span className="discount-badge">
+
+              -{discount}%
+
+            </span>
+
+          )}
+
+          {product.stock === 0 && (
+
+            <span className="stock-badge">
+
+              Out Of Stock
+
+            </span>
+
+          )}
+
           <img
-
             src={product.image}
-
             alt={product.name}
-
           />
 
         </div>
@@ -60,11 +83,8 @@ function ProductCard({
       </Link>
 
       <button
-
         className="wishlist-btn"
-
         onClick={() => addToWishlist(product)}
-
       >
 
         <FaHeart />
@@ -80,11 +100,8 @@ function ProductCard({
         </span>
 
         <Link
-
           to={`/product/${product.id}`}
-
           className="product-title"
-
         >
 
           <h3>
@@ -111,6 +128,12 @@ function ProductCard({
 
           </span>
 
+          <small>
+
+            ({Math.floor(product.rating * 18)} Reviews)
+
+          </small>
+
         </div>
 
         <div className="price">
@@ -121,11 +144,15 @@ function ProductCard({
 
           </h2>
 
-          <span>
+          {product.oldPrice > product.price && (
 
-            {product.oldPrice} EGP
+            <span>
 
-          </span>
+              {product.oldPrice} EGP
+
+            </span>
+
+          )}
 
         </div>
 
@@ -133,7 +160,9 @@ function ProductCard({
 
           className="add-cart"
 
-          onClick={()=>
+          disabled={product.stock === 0}
+
+          onClick={() =>
 
             addToCart({
 
@@ -159,7 +188,11 @@ function ProductCard({
 
           <FaShoppingCart />
 
-          Add To Cart
+          {product.stock > 0
+
+            ? "Add To Cart"
+
+            : "Out Of Stock"}
 
         </button>
 
