@@ -1,0 +1,81 @@
+.success-page{
+
+    min-height:80vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:40px;
+
+    background:#f8f8f8;
+
+}
+
+.success-icon{
+
+    font-size:90px;
+
+    color:#2ECC71;
+
+    margin-bottom:25px;
+
+}
+
+.success-page h1{
+
+    font-size:40px;
+
+    margin-bottom:15px;
+
+    color:#232323;
+
+}
+
+.success-page p{
+
+    font-size:18px;
+
+    color:#666;
+
+    line-height:1.7;
+
+    margin-bottom:35px;
+
+    max-width:600px;
+
+}
+
+.back-shop{
+
+    padding:16px 35px;
+
+    background:#232323;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:10px;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.back-shop:hover{
+
+    background:#8D7B68;
+
+    transform:translateY(-2px);
+
+}

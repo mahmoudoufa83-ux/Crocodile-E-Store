@@ -1,0 +1,89 @@
+.delete-modal{
+
+background:white;
+
+width:420px;
+
+padding:35px;
+
+border-radius:15px;
+
+text-align:center;
+
+box-shadow:0 15px 40px rgba(0,0,0,.2);
+
+}
+
+.delete-modal h2{
+
+margin-bottom:20px;
+
+color:#232323;
+
+}
+
+.delete-modal p{
+
+font-size:17px;
+
+line-height:1.7;
+
+margin-bottom:30px;
+
+color:#555;
+
+}
+
+.delete-buttons{
+
+display:flex;
+
+justify-content:center;
+
+gap:15px;
+
+}
+
+.delete-buttons .cancel-btn{
+
+padding:12px 24px;
+
+border:none;
+
+background:#999;
+
+color:white;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.delete-buttons .delete-btn{
+
+padding:12px 24px;
+
+border:none;
+
+background:#E74C3C;
+
+color:white;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.delete-buttons .cancel-btn:hover{
+
+background:#777;
+
+}
+
+.delete-buttons .delete-btn:hover{
+
+background:#c0392b;
+
+}
