@@ -1,65 +1,75 @@
 .filter-sidebar{
-
-    width:270px;
-
-    background:#ffffff;
-
-    border-radius:12px;
-
+    width:280px;
+    background:#fff;
+    border-radius:15px;
     padding:25px;
-
-    box-shadow:0 5px 18px rgba(0,0,0,.08);
-
-    height:fit-content;
-
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    position:sticky;
+    top:100px;
 }
 
-.filter-sidebar h2{
-
+.filter-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     margin-bottom:25px;
+}
 
+.filter-header h2{
     color:#23211D;
-
     font-size:22px;
+}
 
+.reset-btn{
+    border:none;
+    background:#8D7B68;
+    color:white;
+    padding:8px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.reset-btn:hover{
+    background:#6F5D4D;
 }
 
 .filter-group{
-
     display:flex;
-
     flex-direction:column;
-
     margin-bottom:22px;
-
 }
 
 .filter-group label{
-
     margin-bottom:8px;
-
-    color:#666;
-
-    font-size:14px;
-
+    color:#555;
     font-weight:600;
+}
 
+.filter-group select,
+.filter-group input[type="range"]{
+    width:100%;
 }
 
 .filter-group select{
-
     height:45px;
-
     border:1px solid #ddd;
-
     border-radius:8px;
-
     padding:0 12px;
+}
 
-    background:white;
+.checkbox{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-    cursor:pointer;
+@media(max-width:900px){
 
-    font-size:15px;
+.filter-sidebar{
+
+width:100%;
+position:static;
+
+}
 
 }

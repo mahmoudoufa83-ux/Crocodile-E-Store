@@ -1,26 +1,48 @@
 import "../../styles/Brands.css";
 
 const brands = [
-  "HP",
-  "Canon",
-  "Brother",
-  "Epson",
-  "Xerox",
-  "Pantum",
+  {
+    name: "HP",
+    desc: "Printers & Toners",
+  },
+  {
+    name: "Canon",
+    desc: "Printers & Ink",
+  },
+  {
+    name: "Brother",
+    desc: "Laser Printers",
+  },
+  {
+    name: "Epson",
+    desc: "EcoTank Series",
+  },
+  {
+    name: "Xerox",
+    desc: "Business Printing",
+  },
+  {
+    name: "Pantum",
+    desc: "Laser Solutions",
+  },
 ];
 
 function Brands() {
+
   return (
+
     <section className="brands">
 
       <div className="section-title">
 
-        <span>OUR BRANDS</span>
+        <span>TOP BRANDS</span>
 
-        <h2>Trusted By The Biggest Brands</h2>
+        <h2>Official Brand Partners</h2>
 
         <p>
-          We proudly supply original products from the world's leading printing companies.
+
+          We proudly provide genuine products from the world's leading printing companies.
+
         </p>
 
       </div>
@@ -29,9 +51,14 @@ function Brands() {
 
         {brands.map((brand) => (
 
-          <div className="brand-card" key={brand}>
+          <div
+            className="brand-card"
+            key={brand.name}
+          >
 
-            <h3>{brand}</h3>
+            <h2>{brand.name}</h2>
+
+            <span>{brand.desc}</span>
 
           </div>
 
@@ -40,7 +67,9 @@ function Brands() {
       </div>
 
     </section>
+
   );
+
 }
 
 export default Brands;

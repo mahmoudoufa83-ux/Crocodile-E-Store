@@ -25,7 +25,9 @@ function RelatedProducts({
     .slice(0, 4);
 
   if (related.length === 0) {
+
     return null;
+
   }
 
   return (
@@ -34,9 +36,15 @@ function RelatedProducts({
 
       <div className="section-title">
 
-        <span>YOU MAY LIKE</span>
+        <span>RECOMMENDED FOR YOU</span>
 
-        <h2>Related Products</h2>
+        <h2>You May Also Like</h2>
+
+        <p>
+
+          Similar products selected based on your interest.
+
+        </p>
 
       </div>
 

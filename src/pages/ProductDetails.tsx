@@ -109,13 +109,13 @@ function ProductDetails() {
 
             </div>
 
-            <div className="stock">
+            <div
+              className={`stock ${product.stock > 0 ? "available" : "unavailable"}`}
+            >
 
               {product.stock > 0
-
-                ? "✔ In Stock"
-
-                : "Out Of Stock"}
+                ? "✔ Available"
+                : "✖ Out Of Stock"}
 
             </div>
 
@@ -131,11 +131,8 @@ function ProductDetails() {
               <button
 
                 onClick={() =>
-
                   quantity > 1 &&
-
                   setQuantity(quantity - 1)
-
                 }
 
               >
@@ -149,11 +146,8 @@ function ProductDetails() {
               <button
 
                 onClick={() =>
-
                   quantity < product.stock &&
-
                   setQuantity(quantity + 1)
-
                 }
 
               >
@@ -209,9 +203,7 @@ function ProductDetails() {
                 className="wish-btn"
 
                 onClick={() =>
-
                   addToWishlist(product)
-
                 }
 
               >
@@ -234,7 +226,9 @@ function ProductDetails() {
 
                 <li>Rating : {product.rating}</li>
 
-                <li>Stock : {product.stock}</li>
+                <li>
+                  Availability : {product.stock > 0 ? "Available" : "Out Of Stock"}
+                </li>
 
               </ul>
 

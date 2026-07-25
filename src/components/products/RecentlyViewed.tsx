@@ -1,4 +1,4 @@
-import "../../styles/RelatedProducts.css";
+import "../../styles/RecentlyViewed.css";
 
 import ProductCard from "../common/ProductCard";
 
@@ -16,33 +16,32 @@ function RecentlyViewed() {
 
   return (
 
-    <section className="related-products">
+    <section className="recently-viewed">
 
       <div className="section-title">
 
-        <span>YOUR HISTORY</span>
+        <span>RECENTLY VIEWED</span>
 
-        <h2>Recently Viewed</h2>
+        <h2>Your Recently Viewed Products</h2>
+
+        <p>
+
+          Continue browsing the products you've recently explored.
+
+        </p>
 
       </div>
 
       <div className="products-grid">
 
-        {
+        {viewed.map((product) => (
 
-          viewed.map((product)=>(
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
 
-            <ProductCard
-
-              key={product.id}
-
-              product={product}
-
-            />
-
-          ))
-
-        }
+        ))}
 
       </div>
 

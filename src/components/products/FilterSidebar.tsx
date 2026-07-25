@@ -1,11 +1,8 @@
 import "../../styles/FilterSidebar.css";
-
 import { useFilter } from "../../context/FilterContext";
 
 function FilterSidebar() {
-
   const {
-
     category,
     setCategory,
 
@@ -22,16 +19,13 @@ function FilterSidebar() {
     setInStock,
 
     resetFilters,
-
   } = useFilter();
 
   return (
-
     <aside className="filter-sidebar">
 
       <div className="filter-header">
-
-        <h2>Filters</h2>
+        <h2>Filter</h2>
 
         <button
           className="reset-btn"
@@ -39,75 +33,55 @@ function FilterSidebar() {
         >
           Reset
         </button>
-
       </div>
 
       <div className="filter-group">
-
         <label>Category</label>
 
         <select
           value={category}
           onChange={(e)=>setCategory(e.target.value)}
         >
-
           <option>All</option>
-
           <option>Printers</option>
-
           <option>Ink</option>
-
           <option>Toner</option>
-
-          <option>Accessories</option>
-
         </select>
-
       </div>
 
       <div className="filter-group">
-
         <label>Brand</label>
 
         <select
           value={brand}
           onChange={(e)=>setBrand(e.target.value)}
         >
-
           <option>All</option>
-
           <option>HP</option>
-
           <option>Canon</option>
-
           <option>Epson</option>
-
           <option>Brother</option>
-
         </select>
-
       </div>
 
       <div className="filter-group">
-
         <label>Maximum Price</label>
 
         <input
           type="range"
           min="0"
-          max="100000"
-          step="500"
+          max="50000"
+          step="100"
           value={maxPrice}
           onChange={(e)=>setMaxPrice(Number(e.target.value))}
         />
 
         <span>{maxPrice} EGP</span>
-
       </div>
 
       <div className="filter-group">
 
-        <label>
+        <label className="checkbox">
 
           <input
             type="checkbox"
@@ -115,7 +89,7 @@ function FilterSidebar() {
             onChange={(e)=>setInStock(e.target.checked)}
           />
 
-          In Stock Only
+          Available Products Only
 
         </label>
 
@@ -123,29 +97,22 @@ function FilterSidebar() {
 
       <div className="filter-group">
 
-        <label>Sort</label>
+        <label>Sort By</label>
 
         <select
           value={sort}
           onChange={(e)=>setSort(e.target.value)}
         >
-
           <option>Newest</option>
-
           <option>Price Low</option>
-
           <option>Price High</option>
-
           <option>Rating</option>
-
         </select>
 
       </div>
 
     </aside>
-
   );
-
 }
 
 export default FilterSidebar;

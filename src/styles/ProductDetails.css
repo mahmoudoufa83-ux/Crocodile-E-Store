@@ -288,4 +288,18 @@ grid-template-columns:1fr;
 
     border:3px solid #8D7B68 !important;
 
+}.stock.available{
+
+color:#1e8e3e;
+
+font-weight:700;
+
+}
+
+.stock.unavailable{
+
+color:#d32f2f;
+
+font-weight:700;
+
 }

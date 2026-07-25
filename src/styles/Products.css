@@ -1,27 +1,30 @@
+.products-page{
+    padding:70px 6%;
+    background:#fafafa;
+}
+
 .products-layout{
-
     display:flex;
-
-    gap:30px;
-
+    gap:35px;
     align-items:flex-start;
-
 }
 
 .products-content{
-
     flex:1;
-
-}.product-card{
-
-transition:.35s;
-
 }
 
-.product-card:hover{
+.products-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+    gap:30px;
+}
 
-transform:translateY(-8px);
+@media(max-width:900px){
 
-box-shadow:0 15px 35px rgba(0,0,0,.12);
+.products-layout{
+
+flex-direction:column;
+
+}
 
 }
