@@ -1,32 +1,49 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
 } from "react";
 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+} from "firebase/auth";
+
+import {
+  doc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
+
+import { auth, db } from "../firebase";
+
 export type User = {
+  uid: string;
   name: string;
   email: string;
-  password?: string;
   role: "admin" | "user";
 };
 
 type AuthContextType = {
   user: User | null;
+  loading: boolean;
 
   login: (
     email: string,
     password: string
-  ) => boolean;
+  ) => Promise<boolean>;
 
   register: (
     name: string,
     email: string,
     password: string
-  ) => boolean;
+  ) => Promise<boolean>;
 
-  logout: () => void;
+  logout: () => Promise<void>;
 };
 
 const AuthContext =
@@ -39,204 +56,174 @@ export function AuthProvider({
 }) {
 
   const [user, setUser] =
-    useState<User | null>(() => {
+    useState<User | null>(null);
 
-      const saved =
-        localStorage.getItem("user");
+  const [loading, setLoading] =
+    useState(true);useEffect(() => {
 
-      return saved
-        ? JSON.parse(saved)
-        : null;
+  const unsubscribe = onAuthStateChanged(
 
-    });
+    auth,
 
-  useEffect(() => {
+    async (firebaseUser: FirebaseUser | null) => {
 
-    if (user) {
+      if (!firebaseUser) {
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(user)
+        setUser(null);
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      const userRef = doc(
+
+        db,
+
+        "users",
+
+        firebaseUser.uid
+
       );
 
-    } else {
+      const snap = await getDoc(userRef);
 
-      localStorage.removeItem("user");
+      if (snap.exists()) {
 
-    }
+        const data = snap.data();
 
-  }, [user]);
+        setUser({
 
-  function login(
-    email: string,
-    password: string
-  ): boolean {
+          uid: firebaseUser.uid,
 
-    // ==========================
-    // Admin Login From Settings
-    // ==========================
+          name: data.name,
 
-    const storeSettings = JSON.parse(
+          email: data.email,
 
-      localStorage.getItem("storeSettings") || "{}"
+          role: data.role,
 
-    );
+        });
 
-    const adminEmail =
-      storeSettings.adminEmail ||
-      "admin@crocodile.com";
+      }
 
-    const adminPassword =
-      storeSettings.adminPassword ||
-      "123456";
-
-    const adminName =
-      storeSettings.adminName ||
-      "Administrator";
-
-    if (
-
-      email === adminEmail &&
-      password === adminPassword
-
-    ) {
-
-      setUser({
-
-        name: adminName,
-
-        email,
-
-        role: "admin",
-
-      });
-
-      return true;
+      setLoading(false);
 
     }
 
-    // ==========================
-    // Normal Users Login
-    // ==========================
+  );
 
-    const users: User[] = JSON.parse(
+  return () => unsubscribe();
 
-      localStorage.getItem("users") || "[]"
+}, []);
 
-    );
+async function login(
 
-    const foundUser = users.find(
+  email: string,
 
-      (u) =>
+  password: string
 
-        u.email === email &&
-        u.password === password
+): Promise<boolean> {
 
-    );
+  try {
 
-    if (!foundUser) {
+    await signInWithEmailAndPassword(
 
-      return false;
-
-    }
-
-    setUser({
-
-      name: foundUser.name,
-
-      email: foundUser.email,
-
-      role: "user",
-
-    });
-
-    return true;
-
-  }
-
-  function register(
-
-    name: string,
-
-    email: string,
-
-    password: string
-
-  ): boolean {
-
-    const users: User[] = JSON.parse(
-
-      localStorage.getItem("users") || "[]"
-
-    );
-
-    const exists = users.find(
-
-      (u) => u.email === email
-
-    );
-
-    if (exists) {
-
-      return false;
-
-    }
-
-    const newUser: User = {
-
-      name,
+      auth,
 
       email,
 
-      password,
-
-      role: "user",
-
-    };
-
-    users.push(newUser);
-
-    localStorage.setItem(
-
-      "users",
-
-      JSON.stringify(users)
+      password
 
     );
 
     return true;
 
-  }
+  } catch {
 
-  function logout() {
-
-    setUser(null);
+    return false;
 
   }
 
-  return (
+}
 
-    <AuthContext.Provider
+async function register(
 
-      value={{
+  name: string,
 
-        user,
+  email: string,
 
-        login,
+  password: string
 
-        register,
+): Promise<boolean> {
 
-        logout,
+  try {
 
-      }}
+    const result = await createUserWithEmailAndPassword(
 
-    >
+      auth,
 
-      {children}
+      email,
 
-    </AuthContext.Provider>
+      password
 
-  );
+    );
+
+    await setDoc(
+
+      doc(db, "users", result.user.uid),
+
+      {
+
+        name,
+
+        email,
+
+        role: "user",
+
+      }
+
+    );
+
+    return true;
+
+  } catch {
+
+    return false;
+
+  }
+
+}async function logout() {
+
+  await signOut(auth);
+
+}
+
+return (
+
+  <AuthContext.Provider
+
+    value={{
+
+      user,
+
+      loading,
+
+      login,
+
+      register,
+
+      logout,
+
+    }}
+
+  >
+
+    {children}
+
+  </AuthContext.Provider>
+
+);
 
 }
 

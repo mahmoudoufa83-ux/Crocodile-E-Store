@@ -2,7 +2,10 @@ import "../styles/Login.css";
 
 import { useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -23,7 +26,9 @@ function Register() {
 
   const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(
+    e: React.FormEvent
+  ) {
 
     e.preventDefault();
 
@@ -37,7 +42,7 @@ function Register() {
 
     }
 
-    const success = register(
+    const success = await register(
 
       name,
 
@@ -49,7 +54,7 @@ function Register() {
 
     if (!success) {
 
-      setError("Email already exists");
+      setError("Registration Failed");
 
       return;
 

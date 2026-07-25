@@ -1,11 +1,7 @@
 import "../styles/Login.css";
 
 import { useState } from "react";
-
-import {
-  useNavigate,
-  Link,
-} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -21,11 +17,18 @@ function Login() {
 
   const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(
+    e: React.FormEvent
+  ) {
 
     e.preventDefault();
 
-    const success = login(email, password);
+    setError("");
+
+    const success = await login(
+      email,
+      password
+    );
 
     if (!success) {
 
@@ -35,15 +38,7 @@ function Login() {
 
     }
 
-    if (email === "admin@crocodile.com") {
-
-      navigate("/admin");
-
-    } else {
-
-      navigate("/");
-
-    }
+    navigate("/");
 
   }
 
