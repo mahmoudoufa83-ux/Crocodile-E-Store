@@ -1,0 +1,184 @@
+/* ================================
+   CROCODILE ADMIN DASHBOARD
+================================ */
+
+.admin-page{
+    padding:35px;
+    background:#F8F7F4;
+    min-height:100vh;
+}
+
+.admin-header{
+    margin-bottom:35px;
+}
+
+.admin-header h1{
+    font-size:34px;
+    color:#23211D;
+    margin-bottom:8px;
+}
+
+.admin-header p{
+    color:#777;
+    font-size:15px;
+}
+
+.dashboard-cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+    gap:25px;
+
+    margin-bottom:40px;
+
+}
+
+.dashboard-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.dashboard-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.dashboard-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:28px;
+
+}
+
+.dashboard-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.dashboard-info h3{
+
+    font-size:30px;
+
+    color:#23211D;
+
+    margin-bottom:6px;
+
+}
+
+.dashboard-info span{
+
+    color:#888;
+
+    font-size:14px;
+
+}
+
+.admin-content{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.admin-tabs{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:30px;
+
+    flex-wrap:wrap;
+
+}
+
+.admin-tab{
+
+    border:none;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    background:#ECE8E2;
+
+    transition:.3s;
+
+    font-weight:600;
+
+}
+
+.admin-tab.active{
+
+    background:#8D7B68;
+
+    color:white;
+
+}
+
+.admin-tab:hover{
+
+    background:#BCA37F;
+
+    color:white;
+
+}
+
+@media(max-width:700px){
+
+.dashboard-card{
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+.dashboard-icon{
+
+margin-bottom:10px;
+
+}
+
+}
