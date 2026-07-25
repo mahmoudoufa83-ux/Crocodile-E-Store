@@ -10,8 +10,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  User as FirebaseUser,
 } from "firebase/auth";
+
+import type { User as FirebaseUser } from "firebase/auth";
 
 import {
   doc,
@@ -59,171 +60,182 @@ export function AuthProvider({
     useState<User | null>(null);
 
   const [loading, setLoading] =
-    useState(true);useEffect(() => {
+    useState(true);
 
-  const unsubscribe = onAuthStateChanged(
+  useEffect(() => {
 
-    auth,
+    const unsubscribe =
+      onAuthStateChanged(
 
-    async (firebaseUser: FirebaseUser | null) => {
+        auth,
 
-      if (!firebaseUser) {
+        async (
+          firebaseUser: FirebaseUser | null
+        ) => {
 
-        setUser(null);
+          if (!firebaseUser) {
 
-        setLoading(false);
+            setUser(null);
 
-        return;
+            setLoading(false);
 
-      }
+            return;
 
-      const userRef = doc(
+          }
 
-        db,
+          const userRef = doc(
+            db,
+            "users",
+            firebaseUser.uid
+          );
 
-        "users",
+          const snap = await getDoc(userRef);
 
-        firebaseUser.uid
+          if (snap.exists()) {
+
+            const data = snap.data();
+
+            setUser({
+
+              uid: firebaseUser.uid,
+
+              name: data.name,
+
+              email: data.email,
+
+              role: data.role,
+
+            });
+
+          }
+
+          setLoading(false);
+
+        }
 
       );
 
-      const snap = await getDoc(userRef);
+    return () => unsubscribe();
 
-      if (snap.exists()) {
+  }, []);  async function login(
 
-        const data = snap.data();
+    email: string,
 
-        setUser({
+    password: string
 
-          uid: firebaseUser.uid,
+  ): Promise<boolean> {
 
-          name: data.name,
+    try {
 
-          email: data.email,
+      await signInWithEmailAndPassword(
 
-          role: data.role,
-
-        });
-
-      }
-
-      setLoading(false);
-
-    }
-
-  );
-
-  return () => unsubscribe();
-
-}, []);
-
-async function login(
-
-  email: string,
-
-  password: string
-
-): Promise<boolean> {
-
-  try {
-
-    await signInWithEmailAndPassword(
-
-      auth,
-
-      email,
-
-      password
-
-    );
-
-    return true;
-
-  } catch {
-
-    return false;
-
-  }
-
-}
-
-async function register(
-
-  name: string,
-
-  email: string,
-
-  password: string
-
-): Promise<boolean> {
-
-  try {
-
-    const result = await createUserWithEmailAndPassword(
-
-      auth,
-
-      email,
-
-      password
-
-    );
-
-    await setDoc(
-
-      doc(db, "users", result.user.uid),
-
-      {
-
-        name,
+        auth,
 
         email,
 
-        role: "user",
+        password
 
-      }
+      );
 
-    );
+      return true;
 
-    return true;
+    } catch {
 
-  } catch {
+      return false;
 
-    return false;
+    }
 
   }
 
-}async function logout() {
+  async function register(
 
-  await signOut(auth);
+    name: string,
 
-}
+    email: string,
 
-return (
+    password: string
 
-  <AuthContext.Provider
+  ): Promise<boolean> {
 
-    value={{
+    try {
 
-      user,
+      const result =
 
-      loading,
+        await createUserWithEmailAndPassword(
 
-      login,
+          auth,
 
-      register,
+          email,
 
-      logout,
+          password
 
-    }}
+        );
 
-  >
+      await setDoc(
 
-    {children}
+        doc(
 
-  </AuthContext.Provider>
+          db,
 
-);
+          "users",
+
+          result.user.uid
+
+        ),
+
+        {
+
+          name,
+
+          email,
+
+          role: "user",
+
+        }
+
+      );
+
+      return true;
+
+    } catch {
+
+      return false;
+
+    }
+
+  }
+
+  async function logout() {
+
+    await signOut(auth);
+
+  }
+
+  return (
+
+    <AuthContext.Provider
+
+      value={{
+
+        user,
+
+        loading,
+
+        login,
+
+        register,
+
+        logout,
+
+      }}
+
+    >
+
+      {children}
+
+    </AuthContext.Provider>
+
+  );
 
 }
 
