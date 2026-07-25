@@ -4,9 +4,6 @@ import {
   FaPrint,
   FaTint,
   FaBoxOpen,
-  FaLaptop,
-  FaChair,
-  FaArchive,
 } from "react-icons/fa";
 
 function Categories() {
@@ -20,7 +17,7 @@ function Categories() {
         <h2>Shop By Category</h2>
 
         <p>
-          Find everything your office needs.
+          Find the perfect printer, toner and ink for your business.
         </p>
 
       </div>
@@ -33,28 +30,13 @@ function Categories() {
         </div>
 
         <div className="category-card">
-          <FaTint />
-          <h3>Ink Cartridges</h3>
-        </div>
-
-        <div className="category-card">
           <FaBoxOpen />
           <h3>Toners</h3>
         </div>
 
         <div className="category-card">
-          <FaLaptop />
-          <h3>Electronics</h3>
-        </div>
-
-        <div className="category-card">
-          <FaChair />
-          <h3>Office Furniture</h3>
-        </div>
-
-        <div className="category-card">
-          <FaArchive />
-          <h3>Office Supplies</h3>
+          <FaTint />
+          <h3>Ink</h3>
         </div>
 
       </div>

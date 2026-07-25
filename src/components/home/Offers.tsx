@@ -1,48 +1,61 @@
 import "../../styles/Offers.css";
+import { useNavigate } from "react-router-dom";
 
 function Offers() {
+
+  const navigate = useNavigate();
+
   return (
+
     <section className="offers">
 
-      <div className="offer-left">
+      <div className="offer-overlay"></div>
+
+      <div className="offer-content">
 
         <span className="offer-badge">
-          🔥 Limited Offer
+
+          🔥 LIMITED TIME OFFER
+
         </span>
 
         <h2>
-          Save up to
+
+          Premium Printing
           <br />
-          40% OFF
+          Solutions
+
         </h2>
 
         <p>
-          Huge discounts on printers, toners,
-          office supplies and accessories.
+
+          Get amazing discounts on printers, toners and ink cartridges.
+          Quality products from trusted brands with unbeatable prices.
+
         </p>
 
-        <button>
+        <button onClick={() => navigate("/products")}>
+
           Shop Now
+
         </button>
 
       </div>
 
-      <div className="offer-right">
+      <div className="offer-discount">
 
-        <div className="offer-card">
+        <span>UP TO</span>
 
-          <h3>Today's Deal</h3>
+        <h1>40%</h1>
 
-          <h1>40%</h1>
-
-          <span>OFF</span>
-
-        </div>
+        <p>OFF</p>
 
       </div>
 
     </section>
+
   );
+
 }
 
 export default Offers;

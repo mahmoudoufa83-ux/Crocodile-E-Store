@@ -1,8 +1,8 @@
 .why{
 
-padding:100px 8%;
+padding:110px 8%;
 
-background:#ffffff;
+background:linear-gradient(to bottom,#ffffff,#f8f7f4);
 
 }
 
@@ -10,7 +10,7 @@ background:#ffffff;
 
 display:grid;
 
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 
 gap:35px;
 
@@ -20,33 +20,67 @@ margin-top:60px;
 
 .why-card{
 
-background:#F7F7F7;
+background:#fff;
 
-padding:40px;
+padding:45px 30px;
 
-border-radius:18px;
+border-radius:20px;
 
 text-align:center;
 
+transition:.4s;
+
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+
+border:1px solid #eee;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.why-card::before{
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+top:0;
+
+width:100%;
+
+height:4px;
+
+background:#d4af37;
+
+transform:scaleX(0);
+
 transition:.35s;
 
-box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.why-card:hover::before{
+
+transform:scaleX(1);
 
 }
 
 .why-card:hover{
 
-transform:translateY(-10px);
+transform:translateY(-12px);
 
-background:#232323;
+box-shadow:0 20px 45px rgba(0,0,0,.12);
 
 }
 
 .why-icon{
 
-width:80px;
+width:85px;
 
-height:80px;
+height:85px;
 
 margin:auto;
 
@@ -54,7 +88,7 @@ margin-bottom:25px;
 
 border-radius:50%;
 
-background:#8D7B68;
+background:linear-gradient(135deg,#d4af37,#8D7B68);
 
 display:flex;
 
@@ -62,9 +96,17 @@ justify-content:center;
 
 align-items:center;
 
-font-size:32px;
+font-size:34px;
 
 color:white;
+
+transition:.35s;
+
+}
+
+.why-card:hover .why-icon{
+
+transform:rotate(10deg) scale(1.1);
 
 }
 
@@ -76,8 +118,6 @@ margin-bottom:15px;
 
 color:#232323;
 
-transition:.3s;
-
 }
 
 .why-card p{
@@ -86,14 +126,24 @@ line-height:1.8;
 
 color:#666;
 
-transition:.3s;
+font-size:15px;
 
 }
 
-.why-card:hover h3,
+@media(max-width:768px){
 
-.why-card:hover p{
+.why{
 
-color:white;
+padding:80px 6%;
+
+}
+
+.why-grid{
+
+grid-template-columns:1fr;
+
+gap:25px;
+
+}
 
 }

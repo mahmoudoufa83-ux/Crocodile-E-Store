@@ -1,6 +1,18 @@
 .offers{
 
-padding:100px 8%;
+position:relative;
+
+margin:100px 8%;
+
+border-radius:30px;
+
+overflow:hidden;
+
+background:
+linear-gradient(rgba(15,15,15,.78),rgba(15,15,15,.78)),
+url("/images/hero.jpg") center center/cover no-repeat;
+
+min-height:420px;
 
 display:flex;
 
@@ -8,19 +20,27 @@ justify-content:space-between;
 
 align-items:center;
 
-background:#232323;
+padding:70px;
 
-color:white;
-
-flex-wrap:wrap;
-
-gap:50px;
+box-shadow:0 20px 50px rgba(0,0,0,.18);
 
 }
 
-.offer-left{
+.offer-overlay{
 
-max-width:550px;
+display:none;
+
+}
+
+.offer-content{
+
+position:relative;
+
+z-index:2;
+
+max-width:600px;
+
+color:white;
 
 }
 
@@ -28,85 +48,87 @@ max-width:550px;
 
 display:inline-block;
 
-padding:10px 18px;
+padding:10px 22px;
 
-background:#8D7B68;
+background:#d4af37;
 
-border-radius:30px;
+color:#111;
 
-margin-bottom:20px;
+font-weight:bold;
+
+border-radius:40px;
+
+margin-bottom:25px;
 
 font-size:14px;
 
+letter-spacing:2px;
+
 }
 
-.offer-left h2{
+.offer-content h2{
 
 font-size:60px;
 
-line-height:1.2;
+line-height:1.1;
 
-margin-bottom:20px;
+margin-bottom:25px;
 
 }
 
-.offer-left p{
-
-color:#ddd;
+.offer-content p{
 
 font-size:18px;
 
 line-height:1.8;
 
+color:#dddddd;
+
 margin-bottom:35px;
+
+max-width:500px;
 
 }
 
-.offer-left button{
+.offer-content button{
 
-padding:16px 35px;
+padding:18px 40px;
 
-background:#8D7B68;
+background:#d4af37;
+
+color:#111;
 
 border:none;
 
-color:white;
+border-radius:10px;
 
 font-size:17px;
 
-border-radius:8px;
+font-weight:bold;
 
 cursor:pointer;
 
-transition:.3s;
+transition:.35s;
 
 }
 
-.offer-left button:hover{
+.offer-content button:hover{
 
-background:#6F5D4D;
+background:#fff;
 
-}
-
-.offer-right{
-
-flex:1;
-
-display:flex;
-
-justify-content:center;
+transform:translateY(-4px);
 
 }
 
-.offer-card{
+.offer-discount{
 
-width:320px;
+width:260px;
 
-height:320px;
+height:260px;
 
-border-radius:25px;
+border-radius:50%;
 
-background:#8D7B68;
+background:linear-gradient(135deg,#d4af37,#8D7B68);
 
 display:flex;
 
@@ -116,31 +138,37 @@ justify-content:center;
 
 align-items:center;
 
+color:white;
+
 box-shadow:0 15px 40px rgba(0,0,0,.25);
 
 }
 
-.offer-card h3{
+.offer-discount span{
 
-font-size:25px;
+font-size:20px;
 
-margin-bottom:20px;
+letter-spacing:2px;
 
 }
 
-.offer-card h1{
+.offer-discount h1{
 
 font-size:90px;
 
 line-height:1;
 
+margin:10px 0;
+
+font-weight:900;
+
 }
 
-.offer-card span{
+.offer-discount p{
 
-font-size:30px;
+font-size:28px;
 
-margin-top:10px;
+font-weight:bold;
 
 }
 
@@ -148,21 +176,45 @@ margin-top:10px;
 
 .offers{
 
+flex-direction:column;
+
 text-align:center;
 
-justify-content:center;
+padding:60px 30px;
+
+gap:40px;
 
 }
 
-.offer-left{
+.offer-content{
 
 max-width:100%;
 
 }
 
-.offer-left h2{
+.offer-content h2{
 
-font-size:42px;
+font-size:40px;
+
+}
+
+.offer-content p{
+
+font-size:16px;
+
+}
+
+.offer-discount{
+
+width:190px;
+
+height:190px;
+
+}
+
+.offer-discount h1{
+
+font-size:65px;
 
 }
 

@@ -4,7 +4,7 @@ import {
   FaTruck,
   FaShieldAlt,
   FaHeadset,
-  FaUndoAlt,
+  FaTags,
 } from "react-icons/fa";
 
 function WhyChooseUs() {
@@ -12,22 +12,22 @@ function WhyChooseUs() {
     {
       icon: <FaTruck />,
       title: "Fast Delivery",
-      desc: "We deliver your orders quickly anywhere in Egypt.",
+      desc: "Fast and secure delivery all over Egypt with reliable shipping.",
     },
     {
       icon: <FaShieldAlt />,
-      title: "100% Original",
-      desc: "All products are genuine with official warranty.",
+      title: "100% Genuine Products",
+      desc: "Original printers, toners and inks from trusted brands with warranty.",
+    },
+    {
+      icon: <FaTags />,
+      title: "Best Prices",
+      desc: "Competitive prices with exclusive offers for businesses and individuals.",
     },
     {
       icon: <FaHeadset />,
-      title: "24/7 Support",
-      desc: "Our team is always ready to help you anytime.",
-    },
-    {
-      icon: <FaUndoAlt />,
-      title: "Easy Returns",
-      desc: "Simple and hassle-free return policy.",
+      title: "Professional Support",
+      desc: "Our experts are ready to help you choose the right printer and cartridges.",
     },
   ];
 
@@ -36,13 +36,12 @@ function WhyChooseUs() {
 
       <div className="section-title">
 
-        <span>WHY CHOOSE US</span>
+        <span>WHY CHOOSE CROCODILE</span>
 
-        <h2>Why Shop With Crocodile?</h2>
+        <h2>Trusted Printing Solutions</h2>
 
         <p>
-          We provide everything you need for your office with
-          premium quality and excellent service.
+          Everything you need for your printing business in one place.
         </p>
 
       </div>

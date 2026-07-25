@@ -58,42 +58,6 @@ const products = [
     stock: 20,
     image: "/images/canon-toner.jpg",
   },
-
-  {
-    id: 6,
-    name: "Double A A4 Copy Paper",
-    category: "Office",
-    brand: "Double A",
-    price: 220,
-    oldPrice: 260,
-    rating: 4.9,
-    stock: 100,
-    image: "/images/a4-paper.jpg",
-  },
-
-  {
-    id: 7,
-    name: "Logitech M185 Wireless Mouse",
-    category: "Accessories",
-    brand: "Logitech",
-    price: 599,
-    oldPrice: 699,
-    rating: 4.8,
-    stock: 50,
-    image: "/images/logitech-mouse.jpg",
-  },
-
-  {
-    id: 8,
-    name: "Redragon K552 Keyboard",
-    category: "Accessories",
-    brand: "Redragon",
-    price: 1599,
-    oldPrice: 1799,
-    rating: 4.7,
-    stock: 18,
-    image: "/images/redragon-keyboard.jpg",
-  },
 ];
 
 export default products;
