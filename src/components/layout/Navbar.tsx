@@ -30,8 +30,8 @@ function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     setMenuOpen(false);
     navigate("/");
   }
@@ -59,7 +59,15 @@ function Navbar() {
       <header className="navbar">
         <div className="container">
 
-          <div className="logo">
+          <Link
+            to="/"
+            className="logo"
+            onClick={closeMenu}
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
             <div className="logo-icon">
               {settings.logo ? (
                 <img
@@ -81,7 +89,7 @@ function Navbar() {
               <h2>{settings.storeName}</h2>
               <span>Print Solutions</span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Search */}
 
@@ -166,9 +174,7 @@ function Navbar() {
 
             <button
               className="menu"
-              onClick={() =>
-                setMenuOpen(true)
-              }
+              onClick={() => setMenuOpen(true)}
             >
               <FaBars />
             </button>
@@ -193,22 +199,15 @@ function Navbar() {
         className={`mobile-menu ${
           menuOpen ? "show" : ""
         }`}
-      >
-
-        <div className="mobile-header">
-
+      >        <div className="mobile-header">
           <h2>{settings.storeName}</h2>
 
-          <button
-            onClick={closeMenu}
-          >
+          <button onClick={closeMenu}>
             <FaTimes />
           </button>
-
         </div>
 
         <div className="mobile-search">
-
           <input
             type="text"
             placeholder="Search Products..."
@@ -219,16 +218,12 @@ function Navbar() {
             onKeyDown={handleKeyDown}
           />
 
-          <button
-            onClick={handleSearch}
-          >
+          <button onClick={handleSearch}>
             <FaSearch />
           </button>
-
         </div>
 
         <nav>
-
           <Link
             to="/"
             onClick={closeMenu}
@@ -283,6 +278,9 @@ function Navbar() {
               to="/admin"
               onClick={closeMenu}
             >
+              <FaUserShield
+                style={{ marginRight: 6 }}
+              />
               Admin
             </Link>
           )}
@@ -292,19 +290,19 @@ function Navbar() {
               className="mobile-login"
               onClick={handleLogout}
             >
-              Logout
+              <FaUser />
+              {user.name} | Logout
             </button>
           ) : (
             <Link
               to="/login"
               onClick={closeMenu}
             >
+              <FaUser />
               Login
             </Link>
           )}
-
         </nav>
-
       </aside>
     </>
   );

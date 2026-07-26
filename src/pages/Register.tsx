@@ -10,7 +10,6 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 function Register() {
-
   const navigate = useNavigate();
 
   const { register } = useAuth();
@@ -29,62 +28,43 @@ function Register() {
   async function handleSubmit(
     e: React.FormEvent
   ) {
-
     e.preventDefault();
 
     setError("");
 
     if (password !== confirmPassword) {
-
       setError("Passwords do not match");
-
       return;
-
     }
 
     const success = await register(
-
       name,
-
       email,
-
       password
-
     );
 
     if (!success) {
-
-      setError("Registration Failed");
-
+      setError("Email already exists");
       return;
-
     }
 
-    navigate("/login");
-
+    navigate("/");
   }
 
   return (
-
     <section className="login-page">
-
       <form
         className="login-form"
         onSubmit={handleSubmit}
       >
-
         <h2>Create Account</h2>
 
         <p>Register New Account</p>
 
         {error && (
-
           <div className="login-error">
-
             {error}
-
           </div>
-
         )}
 
         <input
@@ -128,29 +108,19 @@ function Register() {
         />
 
         <button type="submit">
-
           Register
-
         </button>
 
         <span>
-
           Already have an account?
 
           <Link to="/login">
-
             Login
-
           </Link>
-
         </span>
-
       </form>
-
     </section>
-
   );
-
 }
 
 export default Register;
