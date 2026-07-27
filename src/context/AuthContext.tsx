@@ -5,11 +5,25 @@ import {
   useState,
 } from "react";
 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import {
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
+
+import { auth, db } from "../firebase";
+
 export type User = {
   uid: string;
   name: string;
   email: string;
-  password?: string;
   role: "admin" | "user";
 };
 
@@ -39,6 +53,7 @@ export function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
+
   const [user, setUser] =
     useState<User | null>(null);
 
@@ -46,14 +61,60 @@ export function AuthProvider({
     useState(true);
 
   useEffect(() => {
-    const currentUser =
-      localStorage.getItem("currentUser");
 
-    if (currentUser) {
-      setUser(JSON.parse(currentUser));
-    }
+    const unsubscribe =
+      onAuthStateChanged(auth, async (firebaseUser) => {
 
-    setLoading(false);
+        if (!firebaseUser) {
+
+          setUser(null);
+          setLoading(false);
+          return;
+
+        }
+
+        try {
+
+          const userRef = doc(
+            db,
+            "users",
+            firebaseUser.uid
+          );
+
+          const snapshot =
+            await getDoc(userRef);
+
+          if (!snapshot.exists()) {
+
+            setUser(null);
+            setLoading(false);
+            return;
+
+          }
+
+          const data = snapshot.data();
+
+          setUser({
+            uid: firebaseUser.uid,
+            name: data.name,
+            email: data.email,
+            role: data.role,
+          });
+
+        } catch (error) {
+
+          console.error(error);
+
+          setUser(null);
+
+        }
+
+        setLoading(false);
+
+      });
+
+    return () => unsubscribe();
+
   }, []);
 
   async function register(
@@ -61,114 +122,120 @@ export function AuthProvider({
     email: string,
     password: string
   ): Promise<boolean> {
-    const users: User[] = JSON.parse(
-      localStorage.getItem("users") || "[]"
-    );
 
-    const normalizedEmail = email
-      .trim()
-      .toLowerCase();
+    try {
 
-    const exists = users.find(
-      (u) =>
-        u.email.toLowerCase() === normalizedEmail
-    );
+      const credential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email.trim().toLowerCase(),
+          password
+        );
 
-    if (exists) {
+      await setDoc(
+        doc(
+          db,
+          "users",
+          credential.user.uid
+        ),
+        {
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          role: "user",
+        }
+      );
+
+      return true;
+
+    } catch (error) {
+
+      console.error(error);
+
       return false;
+
     }
 
-    const newUser: User = {
-      uid: Date.now().toString(),
-      name: name.trim(),
-      email: normalizedEmail,
-      password,
-      role: users.length === 0 ? "admin" : "user",
-    };
-
-    users.push(newUser);
-
-    localStorage.setItem(
-      "users",
-      JSON.stringify(users)
-    );
-
-    const currentUser: User = {
-      uid: newUser.uid,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
-    };
-
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(currentUser)
-    );
-
-    setUser(currentUser);
-
-    return true;
   }
 
   async function login(
     email: string,
     password: string
   ): Promise<boolean> {
-    const users: User[] = JSON.parse(
-      localStorage.getItem("users") || "[]"
-    );
 
-    const normalizedEmail = email
-      .trim()
-      .toLowerCase();
+    try {
 
-    const foundUser = users.find(
-      (u) =>
-        u.email.toLowerCase() === normalizedEmail &&
-        u.password === password
-    );
+      await signInWithEmailAndPassword(
+        auth,
+        email.trim().toLowerCase(),
+        password
+      );
 
-    if (!foundUser) {
+      return true;
+
+    } catch (error) {
+
+      console.error(error);
+
       return false;
+
     }
 
-    const currentUser: User = {
-      uid: foundUser.uid,
-      name: foundUser.name,
-      email: foundUser.email,
-      role: foundUser.role,
-    };
+  }  async function logout(): Promise<void> {
 
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify(currentUser)
-    );
+    try {
 
-    setUser(currentUser);
+      await signOut(auth);
 
-    return true;
-  }
+      setUser(null);
 
-  async function logout(): Promise<void> {
-    localStorage.removeItem("currentUser");
-    setUser(null);
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
   }
 
   return (
+
     <AuthContext.Provider
+
       value={{
+
         user,
+
         loading,
+
         login,
+
         register,
+
         logout,
+
       }}
+
     >
+
       {children}
+
     </AuthContext.Provider>
+
   );
+
 }
 
 export function useAuth() {
-  return useContext(AuthContext)!;
+
+  const context = useContext(AuthContext);
+
+  if (!context) {
+
+    throw new Error(
+      "useAuth must be used inside AuthProvider"
+    );
+
+  }
+
+  return context;
+
 }

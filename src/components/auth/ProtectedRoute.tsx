@@ -15,7 +15,19 @@ function ProtectedRoute({
   const location = useLocation();
 
   if (loading) {
-    return null;
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "18px",
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   if (!user) {
@@ -32,7 +44,12 @@ function ProtectedRoute({
     location.pathname.startsWith("/admin") &&
     user.role !== "admin"
   ) {
-    return <Navigate to="/" replace />;
+    return (
+      <Navigate
+        to="/"
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

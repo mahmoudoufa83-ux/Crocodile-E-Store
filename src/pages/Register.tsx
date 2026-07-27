@@ -44,7 +44,9 @@ function Register() {
     );
 
     if (!success) {
-      setError("Email already exists");
+      setError(
+        "Registration failed. Please check your email and password."
+      );
       return;
     }
 
