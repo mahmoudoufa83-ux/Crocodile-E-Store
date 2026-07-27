@@ -2,12 +2,12 @@ import "../styles/Admin.css";
 
 import { useState } from "react";
 
-import DashboardCards from "../components/admin/DashboardCards";
+import DashboardCards from "../components/admin/dashboard/DashboardCards";
 
-import ProductsTable from "../components/admin/ProductsTable";
-import OrdersTable from "../components/admin/OrdersTable";
-import CustomersTable from "../components/admin/CustomersTable";
-import SettingsPanel from "../components/admin/SettingsPanel";
+import ProductsTable from "../components/admin/products/ProductsTable";
+import OrdersTable from "../components/admin/orders/OrdersTable";
+import CustomersTable from "../components/admin/customers/CustomersTable";
+import SettingsPanel from "../components/admin/settings/SettingsPanel";
 
 function Admin() {
 

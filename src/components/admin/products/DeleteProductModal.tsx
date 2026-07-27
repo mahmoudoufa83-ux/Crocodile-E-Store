@@ -1,15 +1,10 @@
-import "../../styles/DeleteProductModal.css";
+import "../../../styles/DeleteProductModal.css";
 
 type Props = {
-
   productName: string;
-
   onConfirm: () => void;
-
   onCancel: () => void;
-
 };
-
 function DeleteProductModal({
 
   productName,

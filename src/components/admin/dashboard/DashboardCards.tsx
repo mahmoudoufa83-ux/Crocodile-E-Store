@@ -21,34 +21,42 @@ function DashboardCards({
   const cards = [
     {
       title: "Products",
-      value: products,
+      value: products.toLocaleString(),
+      subtitle: "Available Products",
+      trend: "+0%",
       icon: <FaBoxOpen />,
       color: "#8D7B68",
     },
     {
       title: "Orders",
-      value: orders,
+      value: orders.toLocaleString(),
+      subtitle: "Total Orders",
+      trend: "+0%",
       icon: <FaShoppingCart />,
-      color: "#2563eb",
+      color: "#2563EB",
     },
     {
       title: "Customers",
-      value: customers,
+      value: customers.toLocaleString(),
+      subtitle: "Registered Customers",
+      trend: "+0%",
       icon: <FaUsers />,
-      color: "#16a34a",
+      color: "#16A34A",
     },
     {
       title: "Revenue",
-      value: `${revenue} EGP`,
+      value: `${revenue.toLocaleString()} EGP`,
+      subtitle: "Total Revenue",
+      trend: "+0%",
       icon: <FaDollarSign />,
-      color: "#d97706",
+      color: "#D97706",
     },
   ];
 
   return (
-    <div className="dashboard-cards">
+    <section className="dashboard-cards">
       {cards.map((card) => (
-        <div
+        <article
           key={card.title}
           className="dashboard-card"
         >
@@ -62,12 +70,19 @@ function DashboardCards({
           </div>
 
           <div className="dashboard-info">
+            <span className="dashboard-card-title">
+              {card.title}
+            </span>
+
             <h3>{card.value}</h3>
-            <span>{card.title}</span>
+
+            <p>{card.subtitle}</p>
+
+            <small>{card.trend} This Month</small>
           </div>
-        </div>
+        </article>
       ))}
-    </div>
+    </section>
   );
 }
 

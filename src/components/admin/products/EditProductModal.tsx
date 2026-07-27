@@ -1,11 +1,11 @@
 import { useState } from "react";
+
 import {
   useProducts,
   type Product,
-} from "../../context/ProductContext";
+} from "../../../context/ProductContext";
 
-import "../../styles/AddProductModal.css";
-
+import "../../../styles/AddProductModal.css";
 type Props = {
   product: Product;
   onClose: () => void;

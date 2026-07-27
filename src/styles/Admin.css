@@ -8,20 +8,218 @@
     min-height:100vh;
 }
 
-.admin-header{
+/* ================================
+   Dashboard Header
+================================ */
+
+.dashboard-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:40px;
+
+    background:#fff;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
     margin-bottom:35px;
+
+}
+
+.dashboard-header-left{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.dashboard-welcome{
+
+    color:#8D7B68;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.dashboard-header-left h1{
+
+    color:#23211D;
+
+    font-size:36px;
+
+    margin-bottom:12px;
+
+}
+
+.dashboard-header-left p{
+
+    color:#777;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+    max-width:600px;
+
+}
+
+.dashboard-info{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+
+}
+
+.dashboard-info span{
+
+    background:#F5F5F5;
+
+    padding:10px 18px;
+
+    border-radius:40px;
+
+    font-size:14px;
+
+    color:#555;
+
+}
+
+.store-status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.status-dot{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#22C55E;
+
+    box-shadow:0 0 10px rgba(34,197,94,.7);
+
+}
+
+.dashboard-header-right{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.primary-btn,
+.secondary-btn{
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.primary-btn{
+
+    background:#8D7B68;
+
+    color:white;
+
+}
+
+.primary-btn:hover{
+
+    transform:translateY(-4px);
+
+    background:#7C6B58;
+
+}
+
+.secondary-btn{
+
+    background:#23211D;
+
+    color:white;
+
+}
+
+.secondary-btn:hover{
+
+    transform:translateY(-4px);
+
+}
+
+/* ================================
+   Old Header
+================================ */
+
+.admin-header{
+
+    margin-bottom:35px;
+
 }
 
 .admin-header h1{
+
     font-size:34px;
+
     color:#23211D;
+
     margin-bottom:8px;
+
 }
 
 .admin-header p{
+
     color:#777;
+
     font-size:15px;
+
 }
+
+/* ================================
+   Dashboard Cards
+================================ */
 
 .dashboard-cards{
 
@@ -107,6 +305,10 @@
 
 }
 
+/* ================================
+   Content
+================================ */
+
 .admin-content{
 
     background:white;
@@ -162,6 +364,37 @@
     background:#BCA37F;
 
     color:white;
+
+}
+
+/* ================================
+   Responsive
+================================ */
+
+@media(max-width:900px){
+
+.dashboard-header{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+.dashboard-header-right{
+
+width:100%;
+
+}
+
+.primary-btn,
+.secondary-btn{
+
+flex:1;
+
+justify-content:center;
+
+}
 
 }
 
