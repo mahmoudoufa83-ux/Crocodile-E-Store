@@ -18,14 +18,14 @@ function ProductCard({
   product: Product;
 }) {
   const { addToCart } = useCart();
-
   const { addToWishlist } = useWishlist();
 
   const discount =
-    product.oldPrice > product.price
+    (product.oldPrice ?? 0) > (product.price ?? 0)
       ? Math.round(
-          ((product.oldPrice - product.price) /
-            product.oldPrice) *
+          (((product.oldPrice ?? 0) -
+            (product.price ?? 0)) /
+            (product.oldPrice ?? 1)) *
             100
         )
       : 0;
@@ -43,15 +43,18 @@ function ProductCard({
             </span>
           )}
 
-          {product.stock === 0 && (
+          {(product.stock ?? 0) === 0 && (
             <span className="stock-badge">
               Out Of Stock
             </span>
           )}
 
           <img
-            src={product.image}
-            alt={product.name}
+            src={
+              product.image ||
+              "https://via.placeholder.com/300x300?text=No+Image"
+            }
+            alt={product.name || "Product"}
           />
         </div>
       </Link>
@@ -65,34 +68,37 @@ function ProductCard({
 
       <div className="product-info">
         <span className="category">
-          {product.category}
+          {product.category || "Unknown"}
         </span>
 
         <Link
           to={`/product/${product.id}`}
           className="product-title"
         >
-          <h3>{product.name}</h3>
+          <h3>
+            {product.name || "Unnamed Product"}
+          </h3>
         </Link>
 
         <p className="brand">
-          {product.brand}
+          {product.brand || "Unknown"}
         </p>
 
         <div className="rating">
           <FaStar />
 
-          <span>{product.rating}</span>
+          <span>{product.rating ?? 0}</span>
 
           <small>
-            ({Math.floor(product.rating * 18)} Reviews)
+            ({Math.floor((product.rating ?? 0) * 18)} Reviews)
           </small>
         </div>
 
         <div className="price">
-          <h2>{product.price} EGP</h2>
+          <h2>{product.price ?? 0} EGP</h2>
 
-          {product.oldPrice > product.price && (
+          {(product.oldPrice ?? 0) >
+            (product.price ?? 0) && (
             <span>
               {product.oldPrice} EGP
             </span>
@@ -101,22 +107,28 @@ function ProductCard({
 
         <button
           className="add-cart"
-          disabled={product.stock === 0}
+          disabled={(product.stock ?? 0) === 0}
           onClick={() =>
             addToCart({
               id: product.id,
-              name: product.name,
-              price: product.price,
-              image: product.image,
-              brand: product.brand,
-              category: product.category,
-              stock: product.stock,
+              name:
+                product.name ||
+                "Unnamed Product",
+              price: product.price ?? 0,
+              image:
+                product.image ||
+                "https://via.placeholder.com/300x300?text=No+Image",
+              brand:
+                product.brand || "Unknown",
+              category:
+                product.category || "Unknown",
+              stock: product.stock ?? 0,
             })
           }
         >
           <FaShoppingCart />
 
-          {product.stock > 0
+          {(product.stock ?? 0) > 0
             ? "Add To Cart"
             : "Out Of Stock"}
         </button>

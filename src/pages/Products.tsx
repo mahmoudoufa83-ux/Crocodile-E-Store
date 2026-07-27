@@ -8,9 +8,7 @@ import { useFilter } from "../context/FilterContext";
 import { useProducts } from "../context/ProductContext";
 
 function Products() {
-
   const { search } = useSearch();
-
   const { products } = useProducts();
 
   const {
@@ -21,14 +19,17 @@ function Products() {
     inStock,
   } = useFilter();
 
-  const keyword = search.toLowerCase();
+  const keyword = (search || "").toLowerCase();
 
   let filteredProducts = products.filter((product) => {
+    const name = (product.name || "").toLowerCase();
+    const productBrand = (product.brand || "").toLowerCase();
+    const productCategory = (product.category || "").toLowerCase();
 
     const matchSearch =
-      product.name.toLowerCase().includes(keyword) ||
-      product.brand.toLowerCase().includes(keyword) ||
-      product.category.toLowerCase().includes(keyword);
+      name.includes(keyword) ||
+      productBrand.includes(keyword) ||
+      productCategory.includes(keyword);
 
     const matchCategory =
       category === "All" ||
@@ -39,11 +40,11 @@ function Products() {
       product.brand === brand;
 
     const matchPrice =
-      product.price <= maxPrice;
+      (product.price || 0) <= maxPrice;
 
     const matchStock =
       !inStock ||
-      product.stock > 0;
+      (product.stock || 0) > 0;
 
     return (
       matchSearch &&
@@ -52,53 +53,38 @@ function Products() {
       matchPrice &&
       matchStock
     );
-
   });
 
   switch (sort) {
-
     case "Price Low":
-
       filteredProducts.sort(
-        (a, b) => a.price - b.price
+        (a, b) => (a.price || 0) - (b.price || 0)
       );
-
       break;
 
     case "Price High":
-
       filteredProducts.sort(
-        (a, b) => b.price - a.price
+        (a, b) => (b.price || 0) - (a.price || 0)
       );
-
       break;
 
     case "Rating":
-
       filteredProducts.sort(
-        (a, b) => b.rating - a.rating
+        (a, b) => (b.rating || 0) - (a.rating || 0)
       );
-
       break;
 
     default:
-
       break;
-
   }
 
   return (
-
     <section className="products-page">
-
       <div className="products-layout">
-
         <FilterSidebar />
 
         <div className="products-content">
-
           <div className="section-title">
-
             <span>OUR STORE</span>
 
             <h2>All Products</h2>
@@ -106,24 +92,17 @@ function Products() {
             <p>
               Showing {filteredProducts.length} Products
             </p>
-
           </div>
 
           <div className="products-grid">
-
             {filteredProducts.length > 0 ? (
-
               filteredProducts.map((product) => (
-
                 <ProductCard
                   key={product.id}
                   product={product}
                 />
-
               ))
-
             ) : (
-
               <div
                 style={{
                   width: "100%",
@@ -133,23 +112,14 @@ function Products() {
                   fontWeight: "600",
                 }}
               >
-
                 No Products Found 🔍
-
               </div>
-
             )}
-
           </div>
-
         </div>
-
       </div>
-
     </section>
-
   );
-
 }
 
 export default Products;
