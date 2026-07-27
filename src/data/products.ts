@@ -1,6 +1,8 @@
-const products = [
+import type { Product } from "../types/Product";
+
+const products: Product[] = [
   {
-    id: 1,
+    id: "1",
     name: "HP LaserJet Pro M404dn",
     category: "Printers",
     brand: "HP",
@@ -12,7 +14,7 @@ const products = [
   },
 
   {
-    id: 2,
+    id: "2",
     name: "Canon PIXMA G3420",
     category: "Printers",
     brand: "Canon",
@@ -24,7 +26,7 @@ const products = [
   },
 
   {
-    id: 3,
+    id: "3",
     name: "Brother HL-L2375DW",
     category: "Printers",
     brand: "Brother",
@@ -36,7 +38,7 @@ const products = [
   },
 
   {
-    id: 4,
+    id: "4",
     name: "HP 85A Black Toner",
     category: "Toner",
     brand: "HP",
@@ -48,7 +50,7 @@ const products = [
   },
 
   {
-    id: 5,
+    id: "5",
     name: "Canon 725 Toner",
     category: "Toner",
     brand: "Canon",

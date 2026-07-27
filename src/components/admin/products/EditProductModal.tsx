@@ -1,11 +1,11 @@
 import { useState } from "react";
-
 import {
   useProducts,
   type Product,
 } from "../../../context/ProductContext";
 
 import "../../../styles/AddProductModal.css";
+
 type Props = {
   product: Product;
   onClose: () => void;
@@ -55,7 +55,7 @@ function EditProductModal({
     reader.readAsDataURL(file);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (
       !form.name ||
       !form.brand ||
@@ -66,7 +66,7 @@ function EditProductModal({
       return;
     }
 
-    updateProduct({
+    await updateProduct({
       ...product,
       name: form.name,
       brand: form.brand,
@@ -75,6 +75,7 @@ function EditProductModal({
       price: Number(form.price),
       oldPrice: Number(form.oldPrice),
       stock: Number(form.stock),
+      rating: product.rating,
     });
 
     onClose();

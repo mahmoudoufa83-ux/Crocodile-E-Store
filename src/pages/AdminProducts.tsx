@@ -2,10 +2,8 @@ import { useState } from "react";
 
 import "../styles/AdminProducts.css";
 
-import {
-  useProducts,
-  type Product,
-} from "../context/ProductContext";
+import { useProducts } from "../context/ProductContext";
+import type { Product } from "../types/Product";
 
 import AddProductModal from "../components/admin/products/AddProductModal";
 import EditProductModal from "../components/admin/products/EditProductModal";
@@ -14,10 +12,12 @@ import DeleteProductModal from "../components/admin/products/DeleteProductModal"
 function AdminProducts() {
   const {
     products,
+    loading,
     deleteProduct,
   } = useProducts();
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] =
+    useState(false);
 
   const [editingProduct, setEditingProduct] =
     useState<Product | null>(null);
@@ -25,9 +25,11 @@ function AdminProducts() {
   const [deletingProduct, setDeletingProduct] =
     useState<Product | null>(null);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] =
+    useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] =
+    useState(1);
 
   const itemsPerPage = 5;
 
@@ -54,12 +56,20 @@ function AdminProducts() {
       startIndex + itemsPerPage
     );
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!deletingProduct) return;
 
-    deleteProduct(deletingProduct.id);
+    await deleteProduct(deletingProduct.id);
 
     setDeletingProduct(null);
+  }
+
+  if (loading) {
+    return (
+      <section className="admin-products">
+        <h2>Loading Products...</h2>
+      </section>
+    );
   }
 
   return (
@@ -97,7 +107,9 @@ function AdminProducts() {
       {editingProduct && (
         <EditProductModal
           product={editingProduct}
-          onClose={() => setEditingProduct(null)}
+          onClose={() =>
+            setEditingProduct(null)
+          }
         />
       )}
 
@@ -105,14 +117,15 @@ function AdminProducts() {
         <DeleteProductModal
           productName={deletingProduct.name}
           onConfirm={handleDelete}
-          onCancel={() => setDeletingProduct(null)}
+          onCancel={() =>
+            setDeletingProduct(null)
+          }
         />
       )}
 
       <table>
 
         <thead>
-
           <tr>
             <th>ID</th>
             <th>Image</th>
@@ -122,57 +135,86 @@ function AdminProducts() {
             <th>Stock</th>
             <th>Actions</th>
           </tr>
-
         </thead>
 
         <tbody>
 
-          {currentProducts.map((product) => (
+          {currentProducts.length === 0 ? (
 
-            <tr key={product.id}>
+            <tr>
 
-              <td>{product.id}</td>
-
-              <td>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                />
-              </td>
-
-              <td>{product.name}</td>
-
-              <td>{product.brand}</td>
-
-              <td>{product.price} EGP</td>
-
-              <td>{product.stock}</td>
-
-              <td>
-
-                <button
-                  className="edit-btn"
-                  onClick={() =>
-                    setEditingProduct(product)
-                  }
-                >
-                  Edit
-                </button>
-
-                <button
-                  className="delete-btn"
-                  onClick={() =>
-                    setDeletingProduct(product)
-                  }
-                >
-                  Delete
-                </button>
-
+              <td
+                colSpan={7}
+                style={{
+                  textAlign: "center",
+                  padding: "40px",
+                }}
+              >
+                No Products Found
               </td>
 
             </tr>
 
-          ))}
+          ) : (
+
+            currentProducts.map((product) => (
+
+              <tr key={product.id}>
+
+                <td>{product.id}</td>
+
+                <td>
+
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                      borderRadius: "8px",
+                    }}
+                  />
+
+                </td>
+
+                <td>{product.name}</td>
+
+                <td>{product.brand}</td>
+
+                <td>
+                  {product.price.toLocaleString()} EGP
+                </td>
+
+                <td>{product.stock}</td>
+
+                <td>
+
+                  <button
+                    className="edit-btn"
+                    onClick={() =>
+                      setEditingProduct(product)
+                    }
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() =>
+                      setDeletingProduct(product)
+                    }
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))
+
+          )}
 
         </tbody>
 
@@ -183,23 +225,24 @@ function AdminProducts() {
         <button
           disabled={currentPage === 1}
           onClick={() =>
-            setCurrentPage(currentPage - 1)
+            setCurrentPage((prev) => prev - 1)
           }
         >
           Previous
         </button>
 
         <span>
-          Page {currentPage} of {totalPages || 1}
+          Page {currentPage} of{" "}
+          {totalPages || 1}
         </span>
 
         <button
           disabled={
-            currentPage === totalPages ||
+            currentPage >= totalPages ||
             totalPages === 0
           }
           onClick={() =>
-            setCurrentPage(currentPage + 1)
+            setCurrentPage((prev) => prev + 1)
           }
         >
           Next

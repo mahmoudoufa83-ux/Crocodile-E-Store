@@ -1,156 +1,139 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
+  useCallback,
 } from "react";
 
-import initialProducts from "../data/products";
+import type { ReactNode } from "react";
+import type { Product } from "../types/Product";
 
-export type Product = {
+export type { Product };
 
-  id: number;
-
-  name: string;
-
-  category: string;
-
-  brand: string;
-
-  price: number;
-
-  oldPrice: number;
-
-  rating: number;
-
-  stock: number;
-
-  image: string;
-
-};
+import {
+  getProducts,
+  addProduct as addProductService,
+  updateProduct as updateProductService,
+  deleteProduct as deleteProductService,
+} from "../services/productService";
 
 type ProductContextType = {
-
   products: Product[];
+  loading: boolean;
 
-  addProduct: (product: Product) => void;
+  addProduct: (product: Product) => Promise<void>;
+  updateProduct: (product: Product) => Promise<void>;
+  deleteProduct: (id: string | number) => Promise<void>;
 
-  updateProduct: (product: Product) => void;
-
-  deleteProduct: (id: number) => void;
-
+  refreshProducts: () => Promise<void>;
 };
 
-const ProductContext = createContext<ProductContextType | null>(null);
+const ProductContext =
+  createContext<ProductContextType | null>(null);
 
 export function ProductProvider({
-
   children,
-
 }: {
-
-  children: React.ReactNode;
-
+  children: ReactNode;
 }) {
+  const [products, setProducts] =
+    useState<Product[]>([]);
 
-  const [products, setProducts] = useState<Product[]>(() => {
+  const [loading, setLoading] =
+    useState(true);
 
-    const savedProducts = localStorage.getItem("products");
+  const refreshProducts = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    if (savedProducts) {
+      const data = await getProducts();
 
-      return JSON.parse(savedProducts);
-
+      setProducts(data);
+    } catch (error) {
+      console.error(
+        "Failed to load products",
+        error
+      );
+    } finally {
+      setLoading(false);
     }
-
-    return initialProducts;
-
-  });
-
-  function addProduct(product: Product) {
-
-    setProducts((prev) => [
-
-      ...prev,
-
-      product,
-
-    ]);
-
-  }
-
-  function updateProduct(updatedProduct: Product) {
-
-    setProducts((prev) =>
-
-      prev.map((product) =>
-
-        product.id === updatedProduct.id
-
-          ? updatedProduct
-
-          : product
-
-      )
-
-    );
-
-  }
-
-  function deleteProduct(id: number) {
-
-    setProducts((prev) =>
-
-      prev.filter(
-
-        (product) => product.id !== id
-
-      )
-
-    );
-
-  }
+  }, []);
 
   useEffect(() => {
+    refreshProducts();
+  }, [refreshProducts]);
 
-    localStorage.setItem(
+  const addProduct = async (
+    product: Product
+  ) => {
+    try {
+      await addProductService(product);
 
-      "products",
+      await refreshProducts();
+    } catch (error) {
+      console.error(
+        "Failed to add product",
+        error
+      );
+    }
+  };
 
-      JSON.stringify(products)
+  const updateProduct = async (
+    product: Product
+  ) => {
+    try {
+      await updateProductService(product);
 
-    );
+      await refreshProducts();
+    } catch (error) {
+      console.error(
+        "Failed to update product",
+        error
+      );
+    }
+  };
 
-  }, [products]);
+  const deleteProduct = async (
+    id: string | number
+  ) => {
+    try {
+      await deleteProductService(id);
+
+      await refreshProducts();
+    } catch (error) {
+      console.error(
+        "Failed to delete product",
+        error
+      );
+    }
+  };
 
   return (
-
     <ProductContext.Provider
-
       value={{
-
         products,
-
+        loading,
         addProduct,
-
         updateProduct,
-
         deleteProduct,
-
+        refreshProducts,
       }}
-
     >
-
       {children}
-
     </ProductContext.Provider>
-
   );
-
 }
 
 export function useProducts() {
+  const context =
+    useContext(ProductContext);
 
-  return useContext(ProductContext)!;
+  if (!context) {
+    throw new Error(
+      "useProducts must be used inside ProductProvider"
+    );
+  }
 
+  return context;
 }

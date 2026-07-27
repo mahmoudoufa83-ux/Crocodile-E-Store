@@ -6,6 +6,7 @@ import {
 } from "../../../context/ProductContext";
 
 import "../../../styles/AddProductModal.css";
+
 type Props = {
   onClose: () => void;
 };
@@ -51,7 +52,7 @@ function AddProductModal({ onClose }: Props) {
     reader.readAsDataURL(file);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (
       !form.name ||
       !form.brand ||
@@ -63,7 +64,7 @@ function AddProductModal({ onClose }: Props) {
     }
 
     const newProduct: Product = {
-      id: Date.now(),
+      id: Date.now().toString(),
       name: form.name,
       brand: form.brand,
       category: form.category,
@@ -77,7 +78,7 @@ function AddProductModal({ onClose }: Props) {
       rating: 5,
     };
 
-    addProduct(newProduct);
+    await addProduct(newProduct);
 
     setForm({
       name: "",
@@ -94,9 +95,7 @@ function AddProductModal({ onClose }: Props) {
 
   return (
     <div className="modal-overlay">
-
       <div className="modal">
-
         <h2>Add Product</h2>
 
         <input
@@ -166,7 +165,6 @@ function AddProductModal({ onClose }: Props) {
         />
 
         <div className="modal-buttons">
-
           <button
             className="cancel-btn"
             onClick={onClose}
@@ -180,11 +178,8 @@ function AddProductModal({ onClose }: Props) {
           >
             Save
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

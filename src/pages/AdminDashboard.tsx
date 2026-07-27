@@ -2,7 +2,12 @@ import "../styles/AdminDashboard.css";
 
 import { useNavigate } from "react-router-dom";
 
-import { FaCog } from "react-icons/fa";
+import {
+  FaBoxOpen,
+  FaShoppingBag,
+  FaUsers,
+  FaCog,
+} from "react-icons/fa";
 
 import { useProducts } from "../context/ProductContext";
 import { useOrders } from "../context/OrderContext";
@@ -17,7 +22,6 @@ function AdminDashboard() {
 
   const { orders } = useOrders();
 
-  // مؤقتًا لحد ما نربط المستخدمين من Firestore
   const customers = 1;
 
   const revenue = orders.reduce(
@@ -37,62 +41,91 @@ function AdminDashboard() {
         revenue={revenue}
       />
 
-      <div className="dashboard-grid">
+      <section className="dashboard-grid">
 
-        <div
+        <article
           className="dashboard-card"
           onClick={() => navigate("/admin/products")}
         >
+          <div
+            className="dashboard-icon"
+            style={{
+              background: "#8D7B68",
+            }}
+          >
+            <FaBoxOpen />
+          </div>
+
           <h2>Products</h2>
 
           <span>
             Add, Edit and Delete Products
           </span>
-        </div>
+        </article>
 
-        <div
+        <article
           className="dashboard-card"
           onClick={() => navigate("/admin/orders")}
         >
+          <div
+            className="dashboard-icon"
+            style={{
+              background: "#2563EB",
+            }}
+          >
+            <FaShoppingBag />
+          </div>
+
           <h2>Orders</h2>
 
           <span>
             Manage Customer Orders
           </span>
-        </div>
+        </article>
 
-        <div
+        <article
           className="dashboard-card"
           onClick={() => alert("Customers Page Coming Soon")}
         >
+          <div
+            className="dashboard-icon"
+            style={{
+              background: "#16A34A",
+            }}
+          >
+            <FaUsers />
+          </div>
+
           <h2>Customers</h2>
 
           <span>
             Manage Registered Customers
           </span>
-        </div>
+        </article>
 
-        <div
+        <article
           className="dashboard-card"
           onClick={() => navigate("/admin/settings")}
         >
-          <FaCog
+          <div
+            className="dashboard-icon"
             style={{
-              fontSize: "36px",
-              marginBottom: "15px",
+              background: "#D97706",
             }}
-          />
+          >
+            <FaCog />
+          </div>
 
           <h2>Settings</h2>
 
           <span>
             Manage Store Settings
           </span>
-        </div>
+        </article>
 
-      </div>
+      </section>
 
-      <div className="admin-bottom">
+      <section className="admin-bottom">
 
         <div className="quick-actions">
 
@@ -101,25 +134,25 @@ function AdminDashboard() {
           <button
             onClick={() => navigate("/admin/products")}
           >
-            Add Product
+            ➕ Add Product
           </button>
 
           <button
             onClick={() => navigate("/admin/products")}
           >
-            Manage Products
+            📦 Manage Products
           </button>
 
           <button
             onClick={() => navigate("/admin/orders")}
           >
-            Manage Orders
+            🛒 Manage Orders
           </button>
 
           <button
             onClick={() => navigate("/admin/settings")}
           >
-            Store Settings
+            ⚙ Store Settings
           </button>
 
         </div>
@@ -134,30 +167,30 @@ function AdminDashboard() {
 
           ) : (
 
-            orders.slice(0, 5).map((order) => (
+            orders
+              .slice(0, 5)
+              .map((order) => (
 
-              <div
-                key={order.id}
-                className="recent-order"
-              >
+                <div
+                  key={order.id}
+                  className="recent-order"
+                >
+                  <span>
+                    #{order.id}
+                  </span>
 
-                <span>
-                  #{order.id}
-                </span>
+                  <strong>
+                    {order.total.toLocaleString()} EGP
+                  </strong>
+                </div>
 
-                <span>
-                  {order.total.toLocaleString()} EGP
-                </span>
-
-              </div>
-
-            ))
+              ))
 
           )}
 
         </div>
 
-      </div>
+      </section>
 
     </section>
   );
