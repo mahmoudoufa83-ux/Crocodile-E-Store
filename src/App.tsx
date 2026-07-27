@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
+import WhatsAppButton from "./components/common/WhatsAppButton";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -29,7 +30,6 @@ function App() {
       <Navbar />
 
       <Routes>
-
         <Route path="/" element={<Home />} />
 
         <Route path="/products" element={<Products />} />
@@ -109,10 +109,10 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Routes>
 
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }
