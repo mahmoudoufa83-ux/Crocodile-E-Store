@@ -5,6 +5,7 @@ import {
   type Product,
 } from "../../../context/ProductContext";
 
+import { uploadImage } from "../../../services/cloudinary";
 import "../../../styles/AddProductModal.css";
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
 
 function AddProductModal({ onClose }: Props) {
   const { addProduct } = useProducts();
+
+  const [uploading, setUploading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -27,29 +30,34 @@ function AddProductModal({ onClose }: Props) {
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   }
 
-  function handleImage(
+  async function handleImage(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const reader = new FileReader();
+    try {
+      setUploading(true);
 
-    reader.onloadend = () => {
+      const imageUrl = await uploadImage(file);
+
       setForm((prev) => ({
         ...prev,
-        image: reader.result as string,
+        image: imageUrl,
       }));
-    };
-
-    reader.readAsDataURL(file);
+    } catch (error) {
+      console.error(error);
+      alert("Image upload failed");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function handleSubmit() {
@@ -57,40 +65,46 @@ function AddProductModal({ onClose }: Props) {
       !form.name ||
       !form.brand ||
       !form.category ||
-      !form.price
+      !form.price ||
+      !form.image
     ) {
-      alert("Please fill all required fields.");
+      alert("Please complete all fields.");
       return;
     }
 
-    const newProduct: Product = {
-      id: Date.now().toString(),
-      name: form.name,
-      brand: form.brand,
-      category: form.category,
-      image: form.image,
-      price: Number(form.price),
-      oldPrice:
-        Number(form.oldPrice) ||
-        Number(form.price),
-      stock:
-        Number(form.stock) || 1,
-      rating: 5,
-    };
+    try {
+      const newProduct: Product = {
+        id: Date.now().toString(),
+        name: form.name,
+        brand: form.brand,
+        category: form.category,
+        image: form.image,
+        price: Number(form.price),
+        oldPrice:
+          Number(form.oldPrice) ||
+          Number(form.price),
+        stock:
+          Number(form.stock) || 1,
+        rating: 5,
+      };
 
-    await addProduct(newProduct);
+      await addProduct(newProduct);
 
-    setForm({
-      name: "",
-      brand: "",
-      category: "",
-      image: "",
-      price: "",
-      oldPrice: "",
-      stock: "",
-    });
+      setForm({
+        name: "",
+        brand: "",
+        category: "",
+        image: "",
+        price: "",
+        oldPrice: "",
+        stock: "",
+      });
 
-    onClose();
+      onClose();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save product.");
+    }
   }
 
   return (
@@ -124,6 +138,10 @@ function AddProductModal({ onClose }: Props) {
           accept="image/*"
           onChange={handleImage}
         />
+
+        {uploading && (
+          <p>Uploading image...</p>
+        )}
 
         {form.image && (
           <img
@@ -174,9 +192,10 @@ function AddProductModal({ onClose }: Props) {
 
           <button
             className="save-btn"
+            disabled={uploading}
             onClick={handleSubmit}
           >
-            Save
+            {uploading ? "Uploading..." : "Save"}
           </button>
         </div>
       </div>

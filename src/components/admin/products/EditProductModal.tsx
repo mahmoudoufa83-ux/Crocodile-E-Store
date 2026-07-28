@@ -1,8 +1,17 @@
 import { useState } from "react";
+
 import {
   useProducts,
   type Product,
 } from "../../../context/ProductContext";
+
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+
+import { storage } from "../../../firebase";
 
 import "../../../styles/AddProductModal.css";
 
@@ -15,7 +24,12 @@ function EditProductModal({
   product,
   onClose,
 }: Props) {
-  const { updateProduct } = useProducts();
+
+  const { updateProduct } =
+    useProducts();
+
+  const [uploading, setUploading] =
+    useState(false);
 
   const [form, setForm] = useState({
     name: product.name,
@@ -30,40 +44,75 @@ function EditProductModal({
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
+
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+
   }
 
-  function handleImage(
+  async function handleImage(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
+
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const reader = new FileReader();
+    try {
 
-    reader.onloadend = () => {
+      setUploading(true);
+
+      const fileName =
+        `products/${Date.now()}-${file.name}`;
+
+      const imageRef =
+        ref(storage, fileName);
+
+      await uploadBytes(
+        imageRef,
+        file
+      );
+
+      const url =
+        await getDownloadURL(imageRef);
+
       setForm((prev) => ({
         ...prev,
-        image: reader.result as string,
+        image: url,
       }));
-    };
 
-    reader.readAsDataURL(file);
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Image upload failed");
+
+    } finally {
+
+      setUploading(false);
+
+    }
+
   }
 
   async function handleSubmit() {
+
     if (
       !form.name ||
       !form.brand ||
       !form.category ||
-      !form.price
+      !form.price ||
+      !form.image
     ) {
-      alert("Please fill all required fields.");
+
+      alert(
+        "Please fill all required fields."
+      );
+
       return;
+
     }
 
     await updateProduct({
@@ -73,16 +122,21 @@ function EditProductModal({
       category: form.category,
       image: form.image,
       price: Number(form.price),
-      oldPrice: Number(form.oldPrice),
-      stock: Number(form.stock),
+      oldPrice:
+        Number(form.oldPrice),
+      stock:
+        Number(form.stock),
       rating: product.rating,
     });
 
     onClose();
+
   }
 
   return (
+
     <div className="modal-overlay">
+
       <div className="modal">
 
         <h2>Edit Product</h2>
@@ -114,7 +168,12 @@ function EditProductModal({
           onChange={handleImage}
         />
 
+        {uploading && (
+          <p>Uploading image...</p>
+        )}
+
         {form.image && (
+
           <img
             src={form.image}
             alt="Preview"
@@ -127,6 +186,7 @@ function EditProductModal({
               display: "block",
             }}
           />
+
         )}
 
         <input
@@ -164,16 +224,22 @@ function EditProductModal({
 
           <button
             className="save-btn"
+            disabled={uploading}
             onClick={handleSubmit}
           >
-            Save Changes
+            {uploading
+              ? "Uploading..."
+              : "Save Changes"}
           </button>
 
         </div>
 
       </div>
+
     </div>
+
   );
+
 }
 
 export default EditProductModal;

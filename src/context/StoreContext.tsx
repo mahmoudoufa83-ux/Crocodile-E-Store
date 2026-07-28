@@ -5,11 +5,18 @@ import {
   useState,
 } from "react";
 
+import {
+  doc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
+
+import { db } from "../firebase";
+
 export type StoreSettings = {
   storeName: string;
   adminName: string;
   adminEmail: string;
-  adminPassword: string;
   logo: string;
   phone: string;
   whatsapp: string;
@@ -20,14 +27,16 @@ export type StoreSettings = {
 
 type StoreContextType = {
   settings: StoreSettings;
-  updateSettings: (data: StoreSettings) => void;
+  loading: boolean;
+  updateSettings: (
+    data: StoreSettings
+  ) => Promise<void>;
 };
 
 const defaultSettings: StoreSettings = {
   storeName: "Crocodile Print Solutions",
   adminName: "Administrator",
-  adminEmail: "admin@crocodile.com",
-  adminPassword: "123456",
+  adminEmail: "",
   logo: "",
   phone: "",
   whatsapp: "",
@@ -46,32 +55,82 @@ export function StoreProvider({
 }) {
 
   const [settings, setSettings] =
-    useState<StoreSettings>(() => {
+    useState(defaultSettings);
 
-      const saved = localStorage.getItem(
-        "storeSettings"
-      );
-
-      return saved
-        ? JSON.parse(saved)
-        : defaultSettings;
-
-    });
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
 
-    localStorage.setItem(
-      "storeSettings",
-      JSON.stringify(settings)
-    );
+    async function loadSettings() {
 
-  }, [settings]);
+      try {
 
-  function updateSettings(
+        const ref = doc(
+          db,
+          "settings",
+          "store"
+        );
+
+        const snapshot =
+          await getDoc(ref);
+
+        if (snapshot.exists()) {
+
+          setSettings({
+            ...defaultSettings,
+            ...(snapshot.data() as StoreSettings),
+          });
+
+        } else {
+
+          await setDoc(
+            ref,
+            defaultSettings
+          );
+
+          setSettings(defaultSettings);
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    }
+
+    loadSettings();
+
+  }, []);
+
+  async function updateSettings(
     data: StoreSettings
   ) {
 
-    setSettings(data);
+    try {
+
+      await setDoc(
+        doc(
+          db,
+          "settings",
+          "store"
+        ),
+        data
+      );
+
+      setSettings(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
 
   }
 
@@ -80,6 +139,7 @@ export function StoreProvider({
     <StoreContext.Provider
       value={{
         settings,
+        loading,
         updateSettings,
       }}
     >
@@ -94,6 +154,17 @@ export function StoreProvider({
 
 export function useStore() {
 
-  return useContext(StoreContext)!;
+  const context =
+    useContext(StoreContext);
+
+  if (!context) {
+
+    throw new Error(
+      "useStore must be used inside StoreProvider"
+    );
+
+  }
+
+  return context;
 
 }

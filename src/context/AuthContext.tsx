@@ -63,55 +63,73 @@ export function AuthProvider({
   useEffect(() => {
 
     const unsubscribe =
-      onAuthStateChanged(auth, async (firebaseUser) => {
+      onAuthStateChanged(
+        auth,
+        async (firebaseUser) => {
 
-        if (!firebaseUser) {
-
-          setUser(null);
-          setLoading(false);
-          return;
-
-        }
-
-        try {
-
-          const userRef = doc(
-            db,
-            "users",
-            firebaseUser.uid
-          );
-
-          const snapshot =
-            await getDoc(userRef);
-
-          if (!snapshot.exists()) {
-
+          if (!firebaseUser) {
             setUser(null);
             setLoading(false);
             return;
+          }
+
+          try {
+
+            console.log(
+              "Firebase Auth User:",
+              firebaseUser.uid
+            );
+
+            const userRef = doc(
+              db,
+              "users",
+              firebaseUser.uid
+            );
+
+            const snapshot =
+              await getDoc(userRef);
+
+            if (!snapshot.exists()) {
+
+              console.log(
+                "User document not found in Firestore"
+              );
+
+              setUser(null);
+              setLoading(false);
+              return;
+
+            }
+
+            const data = snapshot.data();
+
+            console.log(
+              "Firestore User:",
+              data
+            );
+
+            setUser({
+              uid: firebaseUser.uid,
+              name: data.name,
+              email: data.email,
+              role: data.role,
+            });
+
+          } catch (error) {
+
+            console.error(
+              "Auth Error:",
+              error
+            );
+
+            setUser(null);
 
           }
 
-          const data = snapshot.data();
-
-          setUser({
-            uid: firebaseUser.uid,
-            name: data.name,
-            email: data.email,
-            role: data.role,
-          });
-
-        } catch (error) {
-
-          console.error(error);
-
-          setUser(null);
+          setLoading(false);
 
         }
-
-        setLoading(false);
-
-      });
+      );
 
     return () => unsubscribe();
 
@@ -164,23 +182,34 @@ export function AuthProvider({
 
     try {
 
-      await signInWithEmailAndPassword(
-        auth,
-        email.trim().toLowerCase(),
-        password
+      const credential =
+        await signInWithEmailAndPassword(
+          auth,
+          email.trim().toLowerCase(),
+          password
+        );
+
+      console.log(
+        "Login Success:",
+        credential.user.uid
       );
 
       return true;
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Login Error:",
+        error
+      );
 
       return false;
 
     }
 
-  }  async function logout(): Promise<void> {
+  }
+
+  async function logout(): Promise<void> {
 
     try {
 
@@ -199,21 +228,13 @@ export function AuthProvider({
   return (
 
     <AuthContext.Provider
-
       value={{
-
         user,
-
         loading,
-
         login,
-
         register,
-
         logout,
-
       }}
-
     >
 
       {children}
@@ -226,7 +247,8 @@ export function AuthProvider({
 
 export function useAuth() {
 
-  const context = useContext(AuthContext);
+  const context =
+    useContext(AuthContext);
 
   if (!context) {
 

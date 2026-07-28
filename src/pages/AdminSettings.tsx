@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useStore } from "../context/StoreContext";
 import { useTheme } from "../context/ThemeContext";
@@ -6,28 +6,43 @@ import { useTheme } from "../context/ThemeContext";
 import "../styles/AdminProducts.css";
 
 function AdminSettings() {
+  const {
+    settings,
+    loading,
+    updateSettings,
+  } = useStore();
 
-  const { settings, updateSettings } = useStore();
-  const { theme, updateTheme } = useTheme();
+  const {
+    theme,
+    updateTheme,
+  } = useTheme();
 
-  const [storeForm, setStoreForm] = useState(settings);
-  const [themeForm, setThemeForm] = useState(theme);
+  const [storeForm, setStoreForm] =
+    useState(settings);
+
+  const [themeForm, setThemeForm] =
+    useState(theme);
+
+  useEffect(() => {
+    setStoreForm(settings);
+  }, [settings]);
+
+  useEffect(() => {
+    setThemeForm(theme);
+  }, [theme]);
 
   function handleStoreChange(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-
     setStoreForm({
       ...storeForm,
       [e.target.name]: e.target.value,
     });
-
   }
 
   function handleThemeChange(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-
     const value =
       e.target.type === "checkbox"
         ? e.target.checked
@@ -37,13 +52,11 @@ function AdminSettings() {
       ...themeForm,
       [e.target.name]: value,
     });
-
   }
 
   function handleLogo(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-
     const file = e.target.files?.[0];
 
     if (!file) return;
@@ -51,44 +64,41 @@ function AdminSettings() {
     const reader = new FileReader();
 
     reader.onloadend = () => {
-
       setStoreForm((prev) => ({
         ...prev,
         logo: reader.result as string,
       }));
-
     };
 
     reader.readAsDataURL(file);
-
   }
 
-  function saveStore() {
-
-    updateSettings(storeForm);
+  async function saveStore() {
+    await updateSettings(storeForm);
 
     alert("Store Settings Saved");
-
   }
 
   function saveTheme() {
-
     updateTheme(themeForm);
 
     alert("Theme Updated Successfully");
+  }
 
+  if (loading) {
+    return (
+      <section className="admin-products">
+        <h2>Loading Settings...</h2>
+      </section>
+    );
   }
 
   return (
-
     <section className="admin-products">
 
       <div className="admin-header">
-
         <h1>Store Settings</h1>
-
         <p>Manage Store & Website</p>
-
       </div>
 
       <div
@@ -120,13 +130,6 @@ function AdminSettings() {
           name="adminEmail"
           placeholder="Admin Email"
           value={storeForm.adminEmail}
-          onChange={handleStoreChange}
-        />
-
-        <input
-          name="adminPassword"
-          placeholder="Admin Password"
-          value={storeForm.adminPassword}
           onChange={handleStoreChange}
         />
 
@@ -174,7 +177,6 @@ function AdminSettings() {
         />
 
         {storeForm.logo && (
-
           <img
             src={storeForm.logo}
             alt="logo"
@@ -186,15 +188,12 @@ function AdminSettings() {
               marginTop: 20,
             }}
           />
-
         )}
 
         <br />
 
         <button onClick={saveStore}>
-
           Save Store
-
         </button>
 
       </div>
@@ -265,7 +264,6 @@ function AdminSettings() {
         <br />
 
         <label>
-
           <input
             type="checkbox"
             name="darkMode"
@@ -274,24 +272,19 @@ function AdminSettings() {
           />
 
           Dark Mode
-
         </label>
 
         <br />
         <br />
 
         <button onClick={saveTheme}>
-
           Save Theme
-
         </button>
 
       </div>
 
     </section>
-
   );
-
 }
 
 export default AdminSettings;
