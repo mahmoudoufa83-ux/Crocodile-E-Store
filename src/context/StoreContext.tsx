@@ -54,6 +54,8 @@ export function StoreProvider({
   children: React.ReactNode;
 }) {
 
+  console.log("🔥 StoreProvider Rendered");
+
   const [settings, setSettings] =
     useState(defaultSettings);
 
@@ -66,23 +68,46 @@ export function StoreProvider({
 
       try {
 
+        console.log("🔥 Loading Firestore Settings...");
+
         const ref = doc(
           db,
           "settings",
-          "store"
+          "site"
         );
 
         const snapshot =
           await getDoc(ref);
 
+        console.log(
+          "🔥 Snapshot exists:",
+          snapshot.exists()
+        );
+
+        console.log(
+          "🔥 Snapshot data:",
+          snapshot.data()
+        );
+
         if (snapshot.exists()) {
 
-          setSettings({
+          const data = {
             ...defaultSettings,
             ...(snapshot.data() as StoreSettings),
-          });
+          };
+
+          console.log(
+            "🔥 Final Settings:",
+            data
+          );
+
+          setSettings(data);
 
         } else {
+
+          console.log(
+            "🔥 Document not found. Creating default..."
+          );
 
           await setDoc(
             ref,
@@ -95,7 +120,10 @@ export function StoreProvider({
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "🔥 Firestore Error:",
+          error
+        );
 
       } finally {
 
@@ -119,8 +147,13 @@ export function StoreProvider({
         doc(
           db,
           "settings",
-          "store"
+          "site"
         ),
+        data
+      );
+
+      console.log(
+        "🔥 Settings Saved:",
         data
       );
 
@@ -128,7 +161,10 @@ export function StoreProvider({
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "🔥 Save Error:",
+        error
+      );
 
     }
 

@@ -1,7 +1,7 @@
 import "../../styles/Navbar.css";
 
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   FaSearch,
@@ -29,6 +29,16 @@ function Navbar() {
   const { settings } = useStore();
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    console.log("========== STORE SETTINGS ==========");
+    console.log(settings);
+    console.log("Store Name:", settings.storeName);
+    console.log("Logo:", settings.logo);
+    console.log("Phone:", settings.phone);
+    console.log("WhatsApp:", settings.whatsapp);
+    console.log("====================================");
+  }, [settings]);
 
   async function handleLogout() {
     await logout();
@@ -69,7 +79,7 @@ function Navbar() {
             }}
           >
             <div className="logo-icon">
-              {settings.logo ? (
+              {settings.logo && settings.logo.trim() !== "" ? (
                 <img
                   src={settings.logo}
                   alt="Logo"
@@ -79,6 +89,15 @@ function Navbar() {
                     objectFit: "cover",
                     borderRadius: "50%",
                   }}
+                  onLoad={() =>
+                    console.log("✅ Logo Loaded")
+                  }
+                  onError={() =>
+                    console.log(
+                      "❌ Logo Failed:",
+                      settings.logo
+                    )
+                  }
                 />
               ) : (
                 "🐊"
@@ -90,8 +109,6 @@ function Navbar() {
               <span>Print Solutions</span>
             </div>
           </Link>
-
-          {/* Desktop Search */}
 
           <div className="search-box">
             <input
@@ -106,8 +123,6 @@ function Navbar() {
               <FaSearch />
             </button>
           </div>
-
-          {/* Desktop Links */}
 
           <nav className="nav-links">
             <Link to="/">Home</Link>
@@ -133,8 +148,6 @@ function Navbar() {
               </Link>
             )}
           </nav>
-
-          {/* Actions */}
 
           <div className="actions">
 
@@ -184,8 +197,6 @@ function Navbar() {
         </div>
       </header>
 
-      {/* Overlay */}
-
       {menuOpen && (
         <div
           className="mobile-overlay"
@@ -193,13 +204,12 @@ function Navbar() {
         />
       )}
 
-      {/* Mobile Menu */}
-
       <aside
         className={`mobile-menu ${
           menuOpen ? "show" : ""
         }`}
-      >        <div className="mobile-header">
+      >
+        <div className="mobile-header">
           <h2>{settings.storeName}</h2>
 
           <button onClick={closeMenu}>
