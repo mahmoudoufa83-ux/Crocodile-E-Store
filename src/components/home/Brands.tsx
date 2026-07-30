@@ -28,48 +28,35 @@ const brands = [
 ];
 
 function Brands() {
-
   return (
-
-    <section className="brands">
-
+    <section
+      className="brands"
+      id="brands"
+    >
       <div className="section-title">
-
         <span>TOP BRANDS</span>
 
         <h2>Official Brand Partners</h2>
 
         <p>
-
           We proudly provide genuine products from the world's leading printing companies.
-
         </p>
-
       </div>
 
       <div className="brands-grid">
-
         {brands.map((brand) => (
-
           <div
             className="brand-card"
             key={brand.name}
           >
-
             <h2>{brand.name}</h2>
 
             <span>{brand.desc}</span>
-
           </div>
-
         ))}
-
       </div>
-
     </section>
-
   );
-
 }
 
 export default Brands;

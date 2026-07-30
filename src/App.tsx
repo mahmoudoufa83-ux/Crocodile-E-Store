@@ -1,6 +1,7 @@
 import "./App.css";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -25,6 +26,21 @@ import AdminOrders from "./pages/AdminOrders";
 import AdminSettings from "./pages/AdminSettings";
 
 function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#offers") {
+      setTimeout(() => {
+        document
+          .getElementById("offers")
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+      }, 100);
+    }
+  }, [location]);
+
   return (
     <>
       <Navbar />

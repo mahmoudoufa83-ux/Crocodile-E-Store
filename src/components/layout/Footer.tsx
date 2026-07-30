@@ -12,19 +12,16 @@ import {
 import { useStore } from "../../context/StoreContext";
 
 function Footer() {
-
   const { settings } = useStore();
 
   return (
-
-    <footer className="footer">
-
+    <footer
+      className="footer"
+      id="contact"
+    >
       <div className="footer-container">
-
         <div className="footer-col">
-
           {settings.logo ? (
-
             <img
               src={settings.logo}
               alt="Logo"
@@ -36,22 +33,17 @@ function Footer() {
                 marginBottom: "15px",
               }}
             />
-
           ) : null}
 
           <h2>{settings.storeName}</h2>
 
           <p>
-
             Original printers, cartridges,
             toners and office supplies.
-
           </p>
 
           <div className="socials">
-
             {settings.facebook && (
-
               <a
                 href={settings.facebook}
                 target="_blank"
@@ -59,11 +51,9 @@ function Footer() {
               >
                 <FaFacebookF />
               </a>
-
             )}
 
             {settings.instagram && (
-
               <a
                 href={settings.instagram}
                 target="_blank"
@@ -71,25 +61,18 @@ function Footer() {
               >
                 <FaInstagram />
               </a>
-
             )}
 
             <a href="#">
-
               <FaLinkedinIn />
-
             </a>
-
           </div>
-
         </div>
 
         <div className="footer-col">
-
           <h3>Quick Links</h3>
 
           <ul>
-
             <li><a href="/">Home</a></li>
 
             <li><a href="/products">Products</a></li>
@@ -99,17 +82,13 @@ function Footer() {
             <li><a href="/">About</a></li>
 
             <li><a href="/">Contact</a></li>
-
           </ul>
-
         </div>
 
         <div className="footer-col">
-
           <h3>Customer Service</h3>
 
           <ul>
-
             <li><a href="#">Shipping</a></li>
 
             <li><a href="#">Returns</a></li>
@@ -117,73 +96,41 @@ function Footer() {
             <li><a href="#">Privacy Policy</a></li>
 
             <li><a href="#">Terms & Conditions</a></li>
-
           </ul>
-
         </div>
 
         <div className="footer-col">
-
           <h3>Contact</h3>
 
           <p>
-
-            <FaPhoneAlt />
-
-            {" "}
-
+            <FaPhoneAlt />{" "}
             {settings.phone || "+20 100 000 0000"}
-
           </p>
 
           <p>
-
-            <FaEnvelope />
-
-            {" "}
-
+            <FaEnvelope />{" "}
             {settings.adminEmail}
-
           </p>
 
           <p>
-
-            <FaMapMarkerAlt />
-
-            {" "}
-
+            <FaMapMarkerAlt />{" "}
             {settings.address || "Cairo, Egypt"}
-
           </p>
 
           {settings.whatsapp && (
-
             <p>
-
-              WhatsApp :
-
-              {" "}
-
+              WhatsApp :{" "}
               {settings.whatsapp}
-
             </p>
-
           )}
-
         </div>
-
       </div>
 
       <div className="footer-bottom">
-
         © {new Date().getFullYear()} {settings.storeName}. All Rights Reserved.
-
       </div>
-
     </footer>
-
   );
-
 }
 
 export default Footer;

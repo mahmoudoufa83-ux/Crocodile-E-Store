@@ -22,28 +22,6 @@
 
 }
 
-.hero::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:url("../assets/logo/logo.png") no-repeat;
-
-    background-size:700px;
-
-    background-position:left center;
-
-    opacity:.08;
-
-    filter:grayscale(100%);
-
-    pointer-events:none;
-
-}
-
 .hero-overlay{
 
     display:none;
@@ -245,20 +223,6 @@
 height:auto;
 
 padding:120px 0;
-
-}
-
-.hero::before{
-
-background-size:350px;
-
-background-position:center top;
-
-}
-
-.hero-logo{
-
-width:120px;
 
 }
 

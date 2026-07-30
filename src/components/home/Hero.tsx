@@ -7,20 +7,16 @@ function Hero() {
 
   const { settings } = useStore();
 
+  console.log("========== HERO ==========");
+  console.log(settings);
+  console.log("Logo:", settings.logo);
+  console.log("==========================");
+
   return (
     <section className="hero">
       <div className="hero-overlay"></div>
 
       <div className="hero-content">
-
-        {settings.logo && (
-          <img
-            src={settings.logo}
-            alt={settings.storeName}
-            className="hero-logo"
-          />
-        )}
-
         <span className="hero-badge">
           PREMIUM PRINTER • TONER • INK
         </span>
@@ -56,7 +52,6 @@ function Hero() {
         </div>
 
         <div className="hero-stats">
-
           <div className="stat-card">
             <h2>2500+</h2>
             <span>Products</span>
@@ -71,9 +66,7 @@ function Hero() {
             <h2>99%</h2>
             <span>Happy Clients</span>
           </div>
-
         </div>
-
       </div>
     </section>
   );

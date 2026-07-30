@@ -1,6 +1,11 @@
 import "../../styles/Navbar.css";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+
 import { useState, useEffect } from "react";
 
 import {
@@ -21,6 +26,7 @@ import { useStore } from "../../context/StoreContext";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { cart } = useCart();
   const { wishlist } = useWishlist();
@@ -64,22 +70,55 @@ function Navbar() {
     setMenuOpen(false);
   }
 
+  function scrollToSection(sectionId: string) {
+    closeMenu();
+
+    if (location.pathname !== "/") {
+      sessionStorage.setItem(
+        "scrollToSection",
+        sectionId
+      );
+
+      navigate("/");
+      return;
+    }
+
+    if (sectionId === "home") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+
+      return;
+    }
+
+    const section =
+      document.getElementById(sectionId);
+
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }
+
   return (
     <>
       <header className="navbar">
         <div className="container">
-
           <Link
             to="/"
             className="logo"
-            onClick={closeMenu}
+            onClick={() => scrollToSection("home")}
             style={{
               textDecoration: "none",
               color: "inherit",
             }}
           >
             <div className="logo-icon">
-              {settings.logo && settings.logo.trim() !== "" ? (
+              {settings.logo &&
+              settings.logo.trim() !== "" ? (
                 <img
                   src={settings.logo}
                   alt="Logo"
@@ -89,15 +128,6 @@ function Navbar() {
                     objectFit: "cover",
                     borderRadius: "50%",
                   }}
-                  onLoad={() =>
-                    console.log("✅ Logo Loaded")
-                  }
-                  onError={() =>
-                    console.log(
-                      "❌ Logo Failed:",
-                      settings.logo
-                    )
-                  }
                 />
               ) : (
                 "🐊"
@@ -115,7 +145,9 @@ function Navbar() {
               type="text"
               placeholder="Search Products..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
               onKeyDown={handleKeyDown}
             />
 
@@ -125,19 +157,58 @@ function Navbar() {
           </div>
 
           <nav className="nav-links">
-            <Link to="/">Home</Link>
+            <button
+              className="nav-scroll-btn"
+              onClick={() =>
+                scrollToSection("home")
+              }
+            >
+              Home
+            </button>
 
-            <Link to="/products">Products</Link>
+            <Link to="/products">
+              Products
+            </Link>
 
-            <Link to="/orders">My Orders</Link>
+            <Link to="/orders">
+              My Orders
+            </Link>
 
-            <Link to="/">Categories</Link>
+            <button
+              className="nav-scroll-btn"
+              onClick={() =>
+                scrollToSection("categories")
+              }
+            >
+              Categories
+            </button>
 
-            <Link to="/">Brands</Link>
+            <button
+              className="nav-scroll-btn"
+              onClick={() =>
+                scrollToSection("brands")
+              }
+            >
+              Brands
+            </button>
 
-            <Link to="/">Offers</Link>
+            <button
+              className="nav-scroll-btn"
+              onClick={() =>
+                scrollToSection("offers")
+              }
+            >
+              Offers
+            </button>
 
-            <Link to="/">Contact</Link>
+            <button
+              className="nav-scroll-btn"
+              onClick={() =>
+                scrollToSection("contact")
+              }
+            >
+              Contact
+            </button>
 
             {user?.role === "admin" && (
               <Link to="/admin">
@@ -149,9 +220,7 @@ function Navbar() {
             )}
           </nav>
 
-          <div className="actions">
-
-            <Link
+          <div className="actions">            <Link
               to="/wishlist"
               className="icon"
             >
@@ -191,9 +260,7 @@ function Navbar() {
             >
               <FaBars />
             </button>
-
           </div>
-
         </div>
       </header>
 
@@ -234,12 +301,14 @@ function Navbar() {
         </div>
 
         <nav>
-          <Link
-            to="/"
-            onClick={closeMenu}
+          <button
+            className="mobile-login"
+            onClick={() =>
+              scrollToSection("home")
+            }
           >
             Home
-          </Link>
+          </button>
 
           <Link
             to="/products"
@@ -255,33 +324,41 @@ function Navbar() {
             My Orders
           </Link>
 
-          <Link
-            to="/"
-            onClick={closeMenu}
+          <button
+            className="mobile-login"
+            onClick={() =>
+              scrollToSection("categories")
+            }
           >
             Categories
-          </Link>
+          </button>
 
-          <Link
-            to="/"
-            onClick={closeMenu}
+          <button
+            className="mobile-login"
+            onClick={() =>
+              scrollToSection("brands")
+            }
           >
             Brands
-          </Link>
+          </button>
 
-          <Link
-            to="/"
-            onClick={closeMenu}
+          <button
+            className="mobile-login"
+            onClick={() =>
+              scrollToSection("offers")
+            }
           >
             Offers
-          </Link>
+          </button>
 
-          <Link
-            to="/"
-            onClick={closeMenu}
+          <button
+            className="mobile-login"
+            onClick={() =>
+              scrollToSection("contact")
+            }
           >
             Contact
-          </Link>
+          </button>
 
           {user?.role === "admin" && (
             <Link
