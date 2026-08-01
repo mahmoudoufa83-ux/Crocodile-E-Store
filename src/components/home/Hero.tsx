@@ -4,13 +4,7 @@ import { useStore } from "../../context/StoreContext";
 
 function Hero() {
   const navigate = useNavigate();
-
   const { settings } = useStore();
-
-  console.log("========== HERO ==========");
-  console.log(settings);
-  console.log("Logo:", settings.logo);
-  console.log("==========================");
 
   return (
     <section className="hero">
@@ -26,13 +20,13 @@ function Hero() {
         </h1>
 
         <h3 className="hero-subtitle">
-          PRINTER & TONER & INK
+          PRINTERS • TONERS • INKS
         </h3>
 
         <p>
-          Original printers, cartridges, toners, inks and office
-          supplies with the best prices, professional support and
-          fast delivery across Egypt.
+          Original printers, cartridges, toners and inks with competitive
+          prices, trusted brands, professional support and fast delivery
+          across Egypt.
         </p>
 
         <div className="hero-buttons">
@@ -50,23 +44,11 @@ function Hero() {
             View Products
           </button>
         </div>
+      </div>
 
-        <div className="hero-stats">
-          <div className="stat-card">
-            <h2>2500+</h2>
-            <span>Products</span>
-          </div>
-
-          <div className="stat-card">
-            <h2>350+</h2>
-            <span>Brands</span>
-          </div>
-
-          <div className="stat-card">
-            <h2>99%</h2>
-            <span>Happy Clients</span>
-          </div>
-        </div>
+      <div className="hero-scroll">
+        <span>Scroll</span>
+        <div className="scroll-line"></div>
       </div>
     </section>
   );
