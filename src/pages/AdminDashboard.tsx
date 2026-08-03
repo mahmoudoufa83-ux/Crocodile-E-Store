@@ -7,6 +7,7 @@ import {
   FaShoppingBag,
   FaUsers,
   FaCog,
+  FaStar,
 } from "react-icons/fa";
 
 import { useProducts } from "../context/ProductContext";
@@ -105,6 +106,26 @@ function AdminDashboard() {
 
         <article
           className="dashboard-card"
+          onClick={() => navigate("/admin/reviews")}
+        >
+          <div
+            className="dashboard-icon"
+            style={{
+              background: "#F59E0B",
+            }}
+          >
+            <FaStar />
+          </div>
+
+          <h2>Reviews</h2>
+
+          <span>
+            Approve Customer Reviews
+          </span>
+        </article>
+
+        <article
+          className="dashboard-card"
           onClick={() => navigate("/admin/settings")}
         >
           <div
@@ -147,6 +168,12 @@ function AdminDashboard() {
             onClick={() => navigate("/admin/orders")}
           >
             🛒 Manage Orders
+          </button>
+
+          <button
+            onClick={() => navigate("/admin/reviews")}
+          >
+            ⭐ Manage Reviews
           </button>
 
           <button

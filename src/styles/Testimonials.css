@@ -74,4 +74,108 @@ color:#8D7B68;
 
 font-weight:600;
 
+}.write-review-btn{
+
+background:#8D7B68;
+
+color:white;
+
+border:none;
+
+padding:14px 30px;
+
+font-size:16px;
+
+font-weight:600;
+
+border-radius:10px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.write-review-btn:hover{
+
+background:#6f6050;
+
+}
+
+.review-form{
+
+max-width:700px;
+
+margin:0 auto 50px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+background:#F6F5F3;
+
+padding:30px;
+
+border-radius:18px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+}
+
+.review-form input,
+
+.review-form textarea,
+
+.review-form select{
+
+padding:14px;
+
+border:1px solid #ddd;
+
+border-radius:10px;
+
+font-size:16px;
+
+font-family:inherit;
+
+outline:none;
+
+}
+
+.review-form textarea{
+
+resize:vertical;
+
+min-height:130px;
+
+}
+
+.submit-review{
+
+background:#232323;
+
+color:white;
+
+border:none;
+
+padding:15px;
+
+font-size:16px;
+
+font-weight:600;
+
+border-radius:10px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.submit-review:hover{
+
+background:#000;
+
 }

@@ -23,6 +23,7 @@ import MyOrders from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
+import AdminReviews from "./pages/AdminReviews";
 import AdminSettings from "./pages/AdminSettings";
 
 function App() {
@@ -46,22 +47,38 @@ function App() {
       <Navbar />
 
       <Routes>
+
         <Route path="/" element={<Home />} />
 
-        <Route path="/products" element={<Products />} />
+        <Route
+          path="/products"
+          element={<Products />}
+        />
 
         <Route
           path="/product/:id"
           element={<ProductDetails />}
         />
 
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
 
-        <Route path="/wishlist" element={<Wishlist />} />
+        <Route
+          path="/wishlist"
+          element={<Wishlist />}
+        />
 
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
         <Route
           path="/checkout"
@@ -118,6 +135,15 @@ function App() {
         />
 
         <Route
+          path="/admin/reviews"
+          element={
+            <ProtectedRoute>
+              <AdminReviews />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/admin/settings"
           element={
             <ProtectedRoute>
@@ -125,6 +151,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
       </Routes>
 
       <Footer />
