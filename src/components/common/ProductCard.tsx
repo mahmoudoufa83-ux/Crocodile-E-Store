@@ -3,7 +3,6 @@ import "../../styles/ProductCard.css";
 import {
   FaHeart,
   FaShoppingCart,
-  FaStar,
 } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
@@ -83,16 +82,6 @@ function ProductCard({
         <p className="brand">
           {product.brand || "Unknown"}
         </p>
-
-        <div className="rating">
-          <FaStar />
-
-          <span>{product.rating ?? 0}</span>
-
-          <small>
-            ({Math.floor((product.rating ?? 0) * 18)} Reviews)
-          </small>
-        </div>
 
         <div className="price">
           <h2>{product.price ?? 0} EGP</h2>
