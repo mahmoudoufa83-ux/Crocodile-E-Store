@@ -4,12 +4,15 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
+  onSnapshot,
   updateDoc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -22,31 +25,68 @@ type Review = {
   review: string;
   rating: number;
   approved: boolean;
+  createdAt?: any;
 };
 
 function AdminReviews() {
   const [reviews, setReviews] =
     useState<Review[]>([]);
 
-  async function loadReviews() {
-    const snapshot = await getDocs(
-      collection(db, "reviews")
-    );
+  const [search, setSearch] =
+    useState("");
 
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...(doc.data() as Omit<
-        Review,
-        "id"
-      >),
-    }));
-
-    setReviews(data);
-  }
+  const [filter, setFilter] =
+    useState<
+      "all" | "approved" | "pending"
+    >("all");
 
   useEffect(() => {
-    loadReviews();
+    const q = query(
+      collection(db, "reviews"),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe =
+      onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map(
+          (doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<
+              Review,
+              "id"
+            >),
+          })
+        );
+
+        setReviews(data);
+      });
+
+    return () => unsubscribe();
   }, []);
+
+  const filteredReviews =
+    useMemo(() => {
+      return reviews.filter((review) => {
+        const matchesSearch =
+          review.name
+            .toLowerCase()
+            .includes(
+              search.toLowerCase()
+            );
+
+        const matchesFilter =
+          filter === "all"
+            ? true
+            : filter === "approved"
+            ? review.approved
+            : !review.approved;
+
+        return (
+          matchesSearch &&
+          matchesFilter
+        );
+      });
+    }, [reviews, search, filter]);
 
   async function approveReview(
     id: string
@@ -57,8 +97,6 @@ function AdminReviews() {
         approved: true,
       }
     );
-
-    loadReviews();
   }
 
   async function deleteReview(
@@ -73,8 +111,6 @@ function AdminReviews() {
     await deleteDoc(
       doc(db, "reviews", id)
     );
-
-    loadReviews();
   }
 
   return (
@@ -82,9 +118,70 @@ function AdminReviews() {
 
       <div className="admin-header">
 
-        <h1>Reviews Management</h1>
+        <h1>
+          Reviews Management
+        </h1>
 
-        <p>Approve or Delete Reviews</p>
+        <p>
+          Approve or Delete Reviews
+        </p>
+
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          alignItems: "center",
+          gap: "20px",
+          marginBottom: "20px",
+          flexWrap: "wrap",
+        }}
+      >
+
+        <input
+          type="text"
+          placeholder="Search by customer..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          style={{
+            padding: "12px",
+            width: "280px",
+            borderRadius: "10px",
+            border: "1px solid #ddd",
+          }}
+        />
+
+        <select
+          value={filter}
+          onChange={(e) =>
+            setFilter(
+              e.target.value as
+                | "all"
+                | "approved"
+                | "pending"
+            )
+          }
+          style={{
+            padding: "12px",
+            borderRadius: "10px",
+          }}
+        >
+          <option value="all">
+            All Reviews
+          </option>
+
+          <option value="approved">
+            Approved
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+        </select>
 
       </div>
 
@@ -98,6 +195,8 @@ function AdminReviews() {
 
             <th>Job</th>
 
+            <th>Review</th>
+
             <th>Rating</th>
 
             <th>Status</th>
@@ -108,16 +207,15 @@ function AdminReviews() {
 
         </thead>
 
-        <tbody>
-
-          {reviews.length === 0 ? (
+        <tbody>          {filteredReviews.length === 0 ? (
 
             <tr>
 
               <td
-                colSpan={5}
+                colSpan={6}
                 style={{
                   textAlign: "center",
+                  padding: "30px",
                 }}
               >
                 No Reviews Found
@@ -127,13 +225,22 @@ function AdminReviews() {
 
           ) : (
 
-            reviews.map((review) => (
+            filteredReviews.map((review) => (
 
               <tr key={review.id}>
 
                 <td>{review.name}</td>
 
                 <td>{review.job}</td>
+
+                <td
+                  style={{
+                    maxWidth: "350px",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  {review.review}
+                </td>
 
                 <td>
                   {"⭐".repeat(review.rating)}
@@ -145,7 +252,7 @@ function AdminReviews() {
 
                     <span
                       style={{
-                        color: "green",
+                        color: "#16A34A",
                         fontWeight: "bold",
                       }}
                     >
@@ -156,7 +263,7 @@ function AdminReviews() {
 
                     <span
                       style={{
-                        color: "orange",
+                        color: "#F59E0B",
                         fontWeight: "bold",
                       }}
                     >
@@ -182,7 +289,7 @@ function AdminReviews() {
                         approveReview(review.id)
                       }
                     >
-                      Approve
+                      ✅ Approve
                     </button>
 
                   )}
@@ -192,7 +299,7 @@ function AdminReviews() {
                       deleteReview(review.id)
                     }
                   >
-                    Delete
+                    🗑 Delete
                   </button>
 
                 </td>
@@ -208,6 +315,7 @@ function AdminReviews() {
       </table>
 
     </section>
+
   );
 }
 

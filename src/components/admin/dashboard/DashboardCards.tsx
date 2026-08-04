@@ -3,6 +3,7 @@ import {
   FaShoppingCart,
   FaUsers,
   FaDollarSign,
+  FaStar,
 } from "react-icons/fa";
 
 type Props = {
@@ -10,6 +11,9 @@ type Props = {
   orders: number;
   customers: number;
   revenue: number;
+
+  reviews: number;
+  pendingReviews: number;
 };
 
 function DashboardCards({
@@ -17,6 +21,8 @@ function DashboardCards({
   orders,
   customers,
   revenue,
+  reviews,
+  pendingReviews,
 }: Props) {
   const cards = [
     {
@@ -27,6 +33,7 @@ function DashboardCards({
       icon: <FaBoxOpen />,
       color: "#8D7B68",
     },
+
     {
       title: "Orders",
       value: orders.toLocaleString(),
@@ -35,6 +42,7 @@ function DashboardCards({
       icon: <FaShoppingCart />,
       color: "#2563EB",
     },
+
     {
       title: "Customers",
       value: customers.toLocaleString(),
@@ -43,6 +51,7 @@ function DashboardCards({
       icon: <FaUsers />,
       color: "#16A34A",
     },
+
     {
       title: "Revenue",
       value: `${revenue.toLocaleString()} EGP`,
@@ -51,15 +60,35 @@ function DashboardCards({
       icon: <FaDollarSign />,
       color: "#D97706",
     },
+
+    {
+      title: "Reviews",
+      value: reviews.toLocaleString(),
+      subtitle:
+        pendingReviews === 0
+          ? "All Reviews Approved"
+          : `${pendingReviews} Pending Review${
+              pendingReviews > 1 ? "s" : ""
+            }`,
+      trend:
+        pendingReviews === 0
+          ? "Approved"
+          : "Needs Review",
+      icon: <FaStar />,
+      color: "#F59E0B",
+    },
   ];
 
   return (
     <section className="dashboard-cards">
+
       {cards.map((card) => (
+
         <article
           key={card.title}
           className="dashboard-card"
         >
+
           <div
             className="dashboard-icon"
             style={{
@@ -70,6 +99,7 @@ function DashboardCards({
           </div>
 
           <div className="dashboard-info">
+
             <span className="dashboard-card-title">
               {card.title}
             </span>
@@ -78,10 +108,24 @@ function DashboardCards({
 
             <p>{card.subtitle}</p>
 
-            <small>{card.trend} This Month</small>
+            <small
+              style={{
+                color:
+                  card.title === "Reviews" &&
+                  pendingReviews > 0
+                    ? "#DC2626"
+                    : undefined,
+              }}
+            >
+              {card.trend}
+            </small>
+
           </div>
+
         </article>
+
       ))}
+
     </section>
   );
 }
