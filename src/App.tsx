@@ -25,6 +25,7 @@ import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
 import AdminReviews from "./pages/AdminReviews";
 import AdminCustomers from "./pages/AdminCustomers";
+import CustomerDetails from "./pages/CustomerDetails";
 import AdminSettings from "./pages/AdminSettings";
 
 function App() {
@@ -133,9 +134,7 @@ function App() {
               <AdminOrders />
             </ProtectedRoute>
           }
-        />
-
-        <Route
+        />        <Route
           path="/admin/reviews"
           element={
             <ProtectedRoute>
@@ -154,6 +153,15 @@ function App() {
         />
 
         <Route
+          path="/admin/customers/:id"
+          element={
+            <ProtectedRoute>
+              <CustomerDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/admin/settings"
           element={
             <ProtectedRoute>
@@ -165,7 +173,9 @@ function App() {
       </Routes>
 
       <Footer />
+
       <WhatsAppButton />
+
     </>
   );
 }
