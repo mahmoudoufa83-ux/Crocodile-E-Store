@@ -10,46 +10,42 @@ import axios from "axios";
 import {
   addDoc,
   collection,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 
 import { db } from "../firebase";
 
-import type { CartItem } from "./CartContext";
+import { useAuth } from "./AuthContext";
 
-export type Order = {
-  id: number;
-  items: CartItem[];
-  total: number;
-  date: string;
-  status: "Pending" | "Processing" | "Delivered";
-};
-
-export type OrderData = {
-  customerName: string;
-  email: string;
-  phone: string;
-  city: string;
-  address: string;
-  paymentMethod: string;
-  items: CartItem[];
-  total: number;
-};
+import type {
+  Order,
+  OrderData,
+} from "../types/Order";
 
 type OrderContextType = {
   orders: Order[];
+
+  loading: boolean;
 
   addOrder: (
     order: OrderData
   ) => Promise<void>;
 
   updateOrderStatus: (
-    id: number,
+    id: string,
     status: Order["status"]
-  ) => void;
+  ) => Promise<void>;
 
   deleteOrder: (
-    id: number
-  ) => void;
+    id: string
+  ) => Promise<void>;
+
+  refreshOrders: () => Promise<void>;
 };
 
 const OrderContext =
@@ -60,125 +56,224 @@ export function OrderProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [orders, setOrders] =
-    useState<Order[]>(() => {
-      const saved =
-        localStorage.getItem("orders");
 
-      return saved
-        ? JSON.parse(saved)
-        : [];
-    });
+  const { user } = useAuth();
+
+  const [orders, setOrders] =
+    useState<Order[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
-    localStorage.setItem(
-      "orders",
-      JSON.stringify(orders)
-    );
-  }, [orders]);
+
+    refreshOrders();
+
+  }, []);
+
+  async function refreshOrders() {
+
+    try {
+
+      setLoading(true);
+
+      const q = query(
+        collection(db, "orders"),
+        orderBy("date", "desc")
+      );
+
+      const snapshot =
+        await getDocs(q);
+
+      const data = snapshot.docs.map(
+        (document) => ({
+
+          id: document.id,
+
+          ...(document.data() as Omit<
+            Order,
+            "id"
+          >),
+
+        })
+      );
+
+      setOrders(data);
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load orders",
+        error
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  }
 
   async function addOrder(
     order: OrderData
   ) {
-    const newOrder: Order = {
-      id: Date.now(),
-      items: order.items,
-      total: order.total,
-      date: new Date().toLocaleString(),
-      status: "Pending",
-    };
-
-    setOrders((prev) => [
-      newOrder,
-      ...prev,
-    ]);
 
     try {
-      // Save in Firestore
+
       await addDoc(
         collection(db, "orders"),
         {
+
           ...order,
-          date: new Date().toISOString(),
+
+          userId: user?.uid ?? "",
+
+          date:
+            new Date().toISOString(),
+
           status: "Pending",
+
         }
       );
 
-      // Send to Railway API
       await axios.post(
         "https://crocodile-order-api-production.up.railway.app/send-order",
         {
-          customerName: order.customerName,
-          email: order.email,
-          phone: order.phone,
-          city: order.city,
-          address: order.address,
-          paymentMethod: order.paymentMethod,
-          total: order.total,
-          items: order.items.map(
-            (item) => ({
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price,
-            })
-          ),
+
+          customerName:
+            order.customerName,
+
+          email:
+            order.email,
+
+          phone:
+            order.phone,
+
+          city:
+            order.city,
+
+          address:
+            order.address,
+
+          paymentMethod:
+            order.paymentMethod,
+
+          total:
+            order.total,
+
+          items:
+            order.items.map(
+              (item) => ({
+                name: item.name,
+                quantity:
+                  item.quantity,
+                price: item.price,
+              })
+            ),
+
         }
       );
 
+      await refreshOrders();
+
       console.log(
-        "✅ Order saved and sent."
+        "✅ Order Saved Successfully"
       );
+
     } catch (error) {
+
       console.error(
         "Order Error:",
         error
       );
-    }
-  }
 
-  function updateOrderStatus(
-    id: number,
+    }
+
+  }  async function updateOrderStatus(
+    id: string,
     status: Order["status"]
   ) {
-    setOrders((prev) =>
-      prev.map((order) =>
-        order.id === id
-          ? {
-              ...order,
-              status,
-            }
-          : order
-      )
-    );
+
+    try {
+
+      await updateDoc(
+        doc(db, "orders", id),
+        {
+          status,
+        }
+      );
+
+      await refreshOrders();
+
+    } catch (error) {
+
+      console.error(
+        "Failed to update order",
+        error
+      );
+
+    }
+
   }
 
-  function deleteOrder(
-    id: number
+  async function deleteOrder(
+    id: string
   ) {
-    setOrders((prev) =>
-      prev.filter(
-        (order) =>
-          order.id !== id
-      )
-    );
+
+    try {
+
+      await deleteDoc(
+        doc(db, "orders", id)
+      );
+
+      await refreshOrders();
+
+    } catch (error) {
+
+      console.error(
+        "Failed to delete order",
+        error
+      );
+
+    }
+
   }
 
   return (
+
     <OrderContext.Provider
       value={{
         orders,
+        loading,
         addOrder,
         updateOrderStatus,
         deleteOrder,
+        refreshOrders,
       }}
     >
+
       {children}
+
     </OrderContext.Provider>
+
   );
+
 }
 
 export function useOrders() {
-  return useContext(
-    OrderContext
-  )!;
+
+  const context =
+    useContext(OrderContext);
+
+  if (!context) {
+
+    throw new Error(
+      "useOrders must be used inside OrderProvider"
+    );
+
+  }
+
+  return context;
+
 }

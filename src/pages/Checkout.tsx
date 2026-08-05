@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useCart } from "../context/CartContext";
 import { useOrders } from "../context/OrderContext";
+import { useAuth } from "../context/AuthContext";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ function Checkout() {
   } = useCart();
 
   const { addOrder } = useOrders();
+
+  const { user } = useAuth();
 
   const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,6 +50,7 @@ function Checkout() {
       paymentMethod,
       items: cart,
       total: totalPrice,
+      userId: user?.uid ?? "",
     });
 
     clearCart();
@@ -57,7 +61,9 @@ function Checkout() {
   return (
     <section className="checkout-page">
       <div className="checkout-container">
+
         <div className="checkout-form">
+
           <h2>Billing Details</h2>
 
           <input
@@ -113,42 +119,52 @@ function Checkout() {
           >
             <option>Cash On Delivery</option>
             <option>Credit Card</option>
-          </select>          <button
+          </select>
+
+          <button
             className="place-order"
             onClick={placeOrder}
           >
             Place Order
           </button>
+
         </div>
 
         <div className="checkout-summary">
+
           <h2>Order Summary</h2>
 
           {cart.map((item) => (
+
             <div
               className="summary-item"
               key={item.id}
             >
-              <span>
-                {item.name}
-              </span>
+
+              <span>{item.name}</span>
 
               <span>
                 {item.quantity} × {item.price} EGP
               </span>
+
             </div>
+
           ))}
 
           <hr />
 
           <div className="summary-total">
+
             <h3>Total</h3>
 
             <h3>
               {totalPrice.toLocaleString()} EGP
             </h3>
+
           </div>
+
         </div>
+
       </div>
     </section>
   );

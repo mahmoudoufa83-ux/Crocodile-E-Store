@@ -4,6 +4,7 @@ import {
   FaUsers,
   FaDollarSign,
   FaStar,
+  FaClock,
 } from "react-icons/fa";
 
 type Props = {
@@ -11,7 +12,6 @@ type Props = {
   orders: number;
   customers: number;
   revenue: number;
-
   reviews: number;
   pendingReviews: number;
 };
@@ -33,7 +33,6 @@ function DashboardCards({
       icon: <FaBoxOpen />,
       color: "#8D7B68",
     },
-
     {
       title: "Orders",
       value: orders.toLocaleString(),
@@ -42,7 +41,6 @@ function DashboardCards({
       icon: <FaShoppingCart />,
       color: "#2563EB",
     },
-
     {
       title: "Customers",
       value: customers.toLocaleString(),
@@ -51,7 +49,6 @@ function DashboardCards({
       icon: <FaUsers />,
       color: "#16A34A",
     },
-
     {
       title: "Revenue",
       value: `${revenue.toLocaleString()} EGP`,
@@ -60,35 +57,34 @@ function DashboardCards({
       icon: <FaDollarSign />,
       color: "#D97706",
     },
-
     {
       title: "Reviews",
       value: reviews.toLocaleString(),
-      subtitle:
-        pendingReviews === 0
-          ? "All Reviews Approved"
-          : `${pendingReviews} Pending Review${
-              pendingReviews > 1 ? "s" : ""
-            }`,
-      trend:
-        pendingReviews === 0
-          ? "Approved"
-          : "Needs Review",
+      subtitle: "Customer Reviews",
+      trend: `${pendingReviews} Pending`,
       icon: <FaStar />,
       color: "#F59E0B",
+    },
+    {
+      title: "Pending Reviews",
+      value: pendingReviews.toLocaleString(),
+      subtitle: "Waiting Approval",
+      trend:
+        pendingReviews > 0
+          ? "Needs Attention"
+          : "All Approved",
+      icon: <FaClock />,
+      color: "#DC2626",
     },
   ];
 
   return (
     <section className="dashboard-cards">
-
       {cards.map((card) => (
-
         <article
           key={card.title}
           className="dashboard-card"
         >
-
           <div
             className="dashboard-icon"
             style={{
@@ -99,7 +95,6 @@ function DashboardCards({
           </div>
 
           <div className="dashboard-info">
-
             <span className="dashboard-card-title">
               {card.title}
             </span>
@@ -108,24 +103,10 @@ function DashboardCards({
 
             <p>{card.subtitle}</p>
 
-            <small
-              style={{
-                color:
-                  card.title === "Reviews" &&
-                  pendingReviews > 0
-                    ? "#DC2626"
-                    : undefined,
-              }}
-            >
-              {card.trend}
-            </small>
-
+            <small>{card.trend}</small>
           </div>
-
         </article>
-
       ))}
-
     </section>
   );
 }

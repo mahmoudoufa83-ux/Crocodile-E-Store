@@ -39,6 +39,10 @@ function Admin() {
 
         revenue={58250}
 
+        reviews={0}
+
+        pendingReviews={0}
+
       />
 
       <div className="admin-content">
@@ -47,9 +51,9 @@ function Admin() {
 
           <button
 
-            className={`admin-tab ${tab==="dashboard"?"active":""}`}
+            className={`admin-tab ${tab === "dashboard" ? "active" : ""}`}
 
-            onClick={()=>setTab("dashboard")}
+            onClick={() => setTab("dashboard")}
 
           >
 
@@ -59,9 +63,9 @@ function Admin() {
 
           <button
 
-            className={`admin-tab ${tab==="products"?"active":""}`}
+            className={`admin-tab ${tab === "products" ? "active" : ""}`}
 
-            onClick={()=>setTab("products")}
+            onClick={() => setTab("products")}
 
           >
 
@@ -71,9 +75,9 @@ function Admin() {
 
           <button
 
-            className={`admin-tab ${tab==="orders"?"active":""}`}
+            className={`admin-tab ${tab === "orders" ? "active" : ""}`}
 
-            onClick={()=>setTab("orders")}
+            onClick={() => setTab("orders")}
 
           >
 
@@ -83,9 +87,9 @@ function Admin() {
 
           <button
 
-            className={`admin-tab ${tab==="customers"?"active":""}`}
+            className={`admin-tab ${tab === "customers" ? "active" : ""}`}
 
-            onClick={()=>setTab("customers")}
+            onClick={() => setTab("customers")}
 
           >
 
@@ -95,9 +99,9 @@ function Admin() {
 
           <button
 
-            className={`admin-tab ${tab==="settings"?"active":""}`}
+            className={`admin-tab ${tab === "settings" ? "active" : ""}`}
 
-            onClick={()=>setTab("settings")}
+            onClick={() => setTab("settings")}
 
           >
 
@@ -107,7 +111,7 @@ function Admin() {
 
         </div>
 
-        {tab==="dashboard" && (
+        {tab === "dashboard" && (
 
           <h2>
 
@@ -117,13 +121,13 @@ function Admin() {
 
         )}
 
-        {tab==="products" && <ProductsTable />}
+        {tab === "products" && <ProductsTable />}
 
-        {tab==="orders" && <OrdersTable />}
+        {tab === "orders" && <OrdersTable />}
 
-        {tab==="customers" && <CustomersTable />}
+        {tab === "customers" && <CustomersTable />}
 
-        {tab==="settings" && <SettingsPanel />}
+        {tab === "settings" && <SettingsPanel />}
 
       </div>
 

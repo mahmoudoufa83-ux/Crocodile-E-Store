@@ -24,6 +24,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
 import AdminReviews from "./pages/AdminReviews";
+import AdminCustomers from "./pages/AdminCustomers";
 import AdminSettings from "./pages/AdminSettings";
 
 function App() {
@@ -139,6 +140,15 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminReviews />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/customers"
+          element={
+            <ProtectedRoute>
+              <AdminCustomers />
             </ProtectedRoute>
           }
         />

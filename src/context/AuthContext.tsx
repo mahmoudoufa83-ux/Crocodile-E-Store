@@ -16,6 +16,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 
 import { auth, db } from "../firebase";
@@ -53,7 +54,6 @@ export function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-
   const [user, setUser] =
     useState<User | null>(null);
 
@@ -61,12 +61,10 @@ export function AuthProvider({
     useState(true);
 
   useEffect(() => {
-
     const unsubscribe =
       onAuthStateChanged(
         auth,
         async (firebaseUser) => {
-
           if (!firebaseUser) {
             setUser(null);
             setLoading(false);
@@ -74,7 +72,6 @@ export function AuthProvider({
           }
 
           try {
-
             console.log(
               "Firebase Auth User:",
               firebaseUser.uid
@@ -90,7 +87,6 @@ export function AuthProvider({
               await getDoc(userRef);
 
             if (!snapshot.exists()) {
-
               console.log(
                 "User document not found in Firestore"
               );
@@ -98,7 +94,6 @@ export function AuthProvider({
               setUser(null);
               setLoading(false);
               return;
-
             }
 
             const data = snapshot.data();
@@ -116,23 +111,19 @@ export function AuthProvider({
             });
 
           } catch (error) {
-
             console.error(
               "Auth Error:",
               error
             );
 
             setUser(null);
-
           }
 
           setLoading(false);
-
         }
       );
 
     return () => unsubscribe();
-
   }, []);
 
   async function register(
@@ -140,9 +131,7 @@ export function AuthProvider({
     email: string,
     password: string
   ): Promise<boolean> {
-
     try {
-
       const credential =
         await createUserWithEmailAndPassword(
           auth,
@@ -160,28 +149,23 @@ export function AuthProvider({
           name: name.trim(),
           email: email.trim().toLowerCase(),
           role: "user",
+          createdAt: serverTimestamp(),
         }
       );
 
       return true;
 
     } catch (error) {
-
       console.error(error);
-
       return false;
-
     }
-
   }
 
   async function login(
     email: string,
     password: string
   ): Promise<boolean> {
-
     try {
-
       const credential =
         await signInWithEmailAndPassword(
           auth,
@@ -197,36 +181,27 @@ export function AuthProvider({
       return true;
 
     } catch (error) {
-
       console.error(
         "Login Error:",
         error
       );
 
       return false;
-
     }
-
   }
 
   async function logout(): Promise<void> {
-
     try {
-
       await signOut(auth);
 
       setUser(null);
 
     } catch (error) {
-
       console.error(error);
-
     }
-
   }
 
   return (
-
     <AuthContext.Provider
       value={{
         user,
@@ -236,28 +211,20 @@ export function AuthProvider({
         logout,
       }}
     >
-
       {children}
-
     </AuthContext.Provider>
-
   );
-
 }
 
 export function useAuth() {
-
   const context =
     useContext(AuthContext);
 
   if (!context) {
-
     throw new Error(
       "useAuth must be used inside AuthProvider"
     );
-
   }
 
   return context;
-
 }

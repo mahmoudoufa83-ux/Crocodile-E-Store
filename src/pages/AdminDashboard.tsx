@@ -29,6 +29,7 @@ type Review = {
 };
 
 function AdminDashboard() {
+
   const navigate = useNavigate();
 
   const { products } = useProducts();
@@ -41,12 +42,21 @@ function AdminDashboard() {
   const [pendingReviews, setPendingReviews] =
     useState(0);
 
+  const [customers, setCustomers] =
+    useState(0);
+
   useEffect(() => {
+
     loadReviewsStats();
+
+    loadCustomers();
+
   }, []);
 
   async function loadReviewsStats() {
+
     try {
+
       const snapshot = await getDocs(
         collection(db, "reviews")
       );
@@ -63,12 +73,32 @@ function AdminDashboard() {
           (review) => !review.approved
         ).length
       );
+
     } catch (error) {
+
       console.error(error);
+
     }
+
   }
 
-  const customers = 1;
+  async function loadCustomers() {
+
+    try {
+
+      const snapshot = await getDocs(
+        collection(db, "users")
+      );
+
+      setCustomers(snapshot.size);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
 
   const revenue = orders.reduce(
     (total, order) => total + order.total,
@@ -76,6 +106,7 @@ function AdminDashboard() {
   );
 
   return (
+
     <section className="admin-page">
 
       <DashboardHeader />
@@ -97,6 +128,7 @@ function AdminDashboard() {
             navigate("/admin/products")
           }
         >
+
           <div
             className="dashboard-icon"
             style={{
@@ -111,6 +143,7 @@ function AdminDashboard() {
           <span>
             Add, Edit and Delete Products
           </span>
+
         </article>
 
         <article
@@ -119,6 +152,7 @@ function AdminDashboard() {
             navigate("/admin/orders")
           }
         >
+
           <div
             className="dashboard-icon"
             style={{
@@ -133,16 +167,16 @@ function AdminDashboard() {
           <span>
             Manage Customer Orders
           </span>
+
         </article>
 
         <article
           className="dashboard-card"
           onClick={() =>
-            alert(
-              "Customers Page Coming Soon"
-            )
+            navigate("/admin/customers")
           }
         >
+
           <div
             className="dashboard-icon"
             style={{
@@ -157,6 +191,7 @@ function AdminDashboard() {
           <span>
             Manage Registered Customers
           </span>
+
         </article>
 
         <article
@@ -165,6 +200,7 @@ function AdminDashboard() {
             navigate("/admin/reviews")
           }
         >
+
           <div
             className="dashboard-icon"
             style={{
@@ -175,7 +211,9 @@ function AdminDashboard() {
           </div>
 
           <h2>
+
             Reviews
+
             {pendingReviews > 0 && (
               <span
                 style={{
@@ -187,6 +225,7 @@ function AdminDashboard() {
                 ({pendingReviews})
               </span>
             )}
+
           </h2>
 
           <span>
@@ -200,8 +239,7 @@ function AdminDashboard() {
           onClick={() =>
             navigate("/admin/settings")
           }
-        >
-          <div
+        >          <div
             className="dashboard-icon"
             style={{
               background: "#D97706",
@@ -215,6 +253,7 @@ function AdminDashboard() {
           <span>
             Manage Store Settings
           </span>
+
         </article>
 
       </section>
@@ -247,6 +286,14 @@ function AdminDashboard() {
             }
           >
             🛒 Manage Orders
+          </button>
+
+          <button
+            onClick={() =>
+              navigate("/admin/customers")
+            }
+          >
+            👥 Manage Customers
           </button>
 
           <button
@@ -285,11 +332,15 @@ function AdminDashboard() {
                   key={order.id}
                   className="recent-order"
                 >
-                  <span>#{order.id}</span>
+
+                  <span>
+                    #{order.id}
+                  </span>
 
                   <strong>
                     {order.total.toLocaleString()} EGP
                   </strong>
+
                 </div>
 
               ))
@@ -301,7 +352,9 @@ function AdminDashboard() {
       </section>
 
     </section>
+
   );
+
 }
 
 export default AdminDashboard;
