@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import WhatsAppButton from "./components/common/WhatsAppButton";
+import ScrollManager from "./components/common/ScrollManager";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
@@ -32,24 +33,26 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash === "#offers") {
+    // لو الرابط فيه #section (زي #offers)
+    if (location.hash) {
+      const sectionId = location.hash.replace("#", "");
+
       setTimeout(() => {
-        document
-          .getElementById("offers")
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+        document.getElementById(sectionId)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 100);
     }
   }, [location]);
 
   return (
     <>
+      <ScrollManager />
+
       <Navbar />
 
       <Routes>
-
         <Route path="/" element={<Home />} />
 
         <Route
@@ -134,7 +137,9 @@ function App() {
               <AdminOrders />
             </ProtectedRoute>
           }
-        />        <Route
+        />
+
+        <Route
           path="/admin/reviews"
           element={
             <ProtectedRoute>
@@ -169,13 +174,11 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Routes>
 
       <Footer />
 
       <WhatsAppButton />
-
     </>
   );
 }
