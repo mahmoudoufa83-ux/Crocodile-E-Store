@@ -1,45 +1,63 @@
 import { useEffect } from "react";
-import { useLocation, useNavigationType } from "react-router-dom";
+import {
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
+
+const positions = new Map<string, number>();
 
 function ScrollManager() {
   const location = useLocation();
   const navigationType = useNavigationType();
 
+  // منع المتصفح من استرجاع الـ Scroll تلقائيًا
   useEffect(() => {
-    const key = `scroll-${location.pathname}`;
-
-    if (navigationType === "POP") {
-      const saved = sessionStorage.getItem(key);
-
-      if (saved) {
-        window.scrollTo({
-          top: Number(saved),
-          behavior: "auto",
-        });
-        return;
-      }
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
+  }, []);
 
-    window.scrollTo({
-      top: 0,
-      behavior: "auto",
-    });
-
-  }, [location.pathname, navigationType]);
-
+  // حفظ مكان الـ Scroll
   useEffect(() => {
-    const saveScroll = () => {
-      sessionStorage.setItem(
-        `scroll-${location.pathname}`,
-        window.scrollY.toString()
+    const savePosition = () => {
+      positions.set(
+        location.key,
+        window.scrollY
       );
     };
 
-    window.addEventListener("scroll", saveScroll);
+    window.addEventListener(
+      "scroll",
+      savePosition
+    );
 
-    return () =>
-      window.removeEventListener("scroll", saveScroll);
-  }, [location.pathname]);
+    return () => {
+      savePosition();
+      window.removeEventListener(
+        "scroll",
+        savePosition
+      );
+    };
+  }, [location]);
+
+  // استرجاع أو تصفير الـ Scroll
+  useEffect(() => {
+    if (navigationType === "POP") {
+      const y =
+        positions.get(location.key) ?? 0;
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, y);
+      });
+
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
+
+  }, [location, navigationType]);
 
   return null;
 }
