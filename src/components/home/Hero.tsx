@@ -4,7 +4,13 @@ import { useStore } from "../../context/StoreContext";
 
 function Hero() {
   const navigate = useNavigate();
-  const { settings } = useStore();
+
+  const { settings, loading } = useStore();
+
+  // لا تعرض الـ Hero قبل تحميل إعدادات المتجر
+  if (loading) {
+    return null;
+  }
 
   return (
     <section className="hero">

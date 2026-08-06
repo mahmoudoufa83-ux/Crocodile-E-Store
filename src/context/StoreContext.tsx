@@ -53,9 +53,6 @@ export function StoreProvider({
 }: {
   children: React.ReactNode;
 }) {
-
-  console.log("🔥 StoreProvider Rendered");
-
   const [settings, setSettings] =
     useState(defaultSettings);
 
@@ -63,13 +60,8 @@ export function StoreProvider({
     useState(true);
 
   useEffect(() => {
-
     async function loadSettings() {
-
       try {
-
-        console.log("🔥 Loading Firestore Settings...");
-
         const ref = doc(
           db,
           "settings",
@@ -79,70 +71,38 @@ export function StoreProvider({
         const snapshot =
           await getDoc(ref);
 
-        console.log(
-          "🔥 Snapshot exists:",
-          snapshot.exists()
-        );
-
-        console.log(
-          "🔥 Snapshot data:",
-          snapshot.data()
-        );
-
         if (snapshot.exists()) {
-
           const data = {
             ...defaultSettings,
             ...(snapshot.data() as StoreSettings),
           };
 
-          console.log(
-            "🔥 Final Settings:",
-            data
-          );
-
           setSettings(data);
-
         } else {
-
-          console.log(
-            "🔥 Document not found. Creating default..."
-          );
-
           await setDoc(
             ref,
             defaultSettings
           );
 
           setSettings(defaultSettings);
-
         }
-
       } catch (error) {
-
         console.error(
-          "🔥 Firestore Error:",
+          "Firestore Error:",
           error
         );
-
       } finally {
-
         setLoading(false);
-
       }
-
     }
 
     loadSettings();
-
   }, []);
 
   async function updateSettings(
     data: StoreSettings
   ) {
-
     try {
-
       await setDoc(
         doc(
           db,
@@ -152,26 +112,16 @@ export function StoreProvider({
         data
       );
 
-      console.log(
-        "🔥 Settings Saved:",
-        data
-      );
-
       setSettings(data);
-
     } catch (error) {
-
       console.error(
-        "🔥 Save Error:",
+        "Save Error:",
         error
       );
-
     }
-
   }
 
   return (
-
     <StoreContext.Provider
       value={{
         settings,
@@ -179,28 +129,70 @@ export function StoreProvider({
         updateSettings,
       }}
     >
+      {loading ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "#ffffff",
+            gap: "20px",
+          }}
+        >
+          <div
+            style={{
+              width: "60px",
+              height: "60px",
+              border: "5px solid #e5e7eb",
+              borderTop: "5px solid #15803d",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+            }}
+          />
 
-      {children}
+          <h2
+            style={{
+              color: "#15803d",
+              margin: 0,
+              fontSize: "22px",
+              fontWeight: 700,
+            }}
+          >
+            Loading...
+          </h2>
 
+          <style>
+            {`
+              @keyframes spin {
+                from {
+                  transform: rotate(0deg);
+                }
+                to {
+                  transform: rotate(360deg);
+                }
+              }
+            `}
+          </style>
+        </div>
+      ) : (
+        children
+      )}
     </StoreContext.Provider>
-
   );
-
 }
 
 export function useStore() {
-
   const context =
     useContext(StoreContext);
 
   if (!context) {
-
     throw new Error(
       "useStore must be used inside StoreProvider"
     );
-
   }
 
   return context;
-
 }
