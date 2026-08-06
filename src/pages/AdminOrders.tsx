@@ -22,7 +22,128 @@ function AdminOrders() {
 
       </div>
 
-      <table className="products-table">
+      {/* Mobile View */}
+
+      <div className="mobile-orders">
+
+        {orders.length === 0 ? (
+
+          <div className="empty-orders">
+
+            <h3>No Orders Found</h3>
+
+          </div>
+
+        ) : (
+
+          orders.map((order) => (
+
+            <div
+              className="mobile-order-card"
+              key={order.id}
+            >
+
+              <h3>
+
+                Order #{order.id}
+
+              </h3>
+
+              <p>
+
+                <strong>Date:</strong>{" "}
+                {order.date}
+
+              </p>
+
+              <p>
+
+                <strong>Total:</strong>{" "}
+                {order.total.toLocaleString()} EGP
+
+              </p>
+
+              <p>
+
+                <strong>Status:</strong>{" "}
+                {order.status}
+
+              </p>
+
+              <p>
+
+                <strong>Items:</strong>{" "}
+                {order.items.length}
+
+              </p>
+
+              <div className="mobile-order-actions">
+
+                <button
+                  onClick={() =>
+                    updateOrderStatus(
+                      order.id,
+                      "Pending"
+                    )
+                  }
+                >
+                  Pending
+                </button>
+
+                <button
+                  onClick={() =>
+                    updateOrderStatus(
+                      order.id,
+                      "Processing"
+                    )
+                  }
+                >
+                  Processing
+                </button>
+
+                <button
+                  onClick={() =>
+                    updateOrderStatus(
+                      order.id,
+                      "Delivered"
+                    )
+                  }
+                >
+                  Delivered
+                </button>
+
+                <button
+                  onClick={() => {
+
+                    const confirmDelete =
+                      window.confirm(
+                        "Are you sure you want to delete this order?"
+                      );
+
+                    if (confirmDelete) {
+
+                      deleteOrder(order.id);
+
+                    }
+
+                  }}
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
+      {/* Desktop Table */}
+
+      <table className="products-table desktop-table">
 
         <thead>
 
@@ -61,9 +182,7 @@ function AdminOrders() {
 
             </tr>
 
-          ) : (
-
-            orders.map((order) => (
+          ) : (            orders.map((order) => (
 
               <tr key={order.id}>
 

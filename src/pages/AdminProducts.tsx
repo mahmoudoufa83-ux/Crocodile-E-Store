@@ -10,6 +10,7 @@ import EditProductModal from "../components/admin/products/EditProductModal";
 import DeleteProductModal from "../components/admin/products/DeleteProductModal";
 
 function AdminProducts() {
+
   const {
     products,
     loading,
@@ -57,22 +58,31 @@ function AdminProducts() {
     );
 
   async function handleDelete() {
+
     if (!deletingProduct) return;
 
     await deleteProduct(deletingProduct.id);
 
     setDeletingProduct(null);
+
   }
 
   if (loading) {
+
     return (
+
       <section className="admin-products">
+
         <h2>Loading Products...</h2>
+
       </section>
+
     );
+
   }
 
   return (
+
     <section className="admin-products">
 
       <div className="page-header">
@@ -93,27 +103,35 @@ function AdminProducts() {
         placeholder="Search Product..."
         value={search}
         onChange={(e) => {
+
           setSearch(e.target.value);
+
           setCurrentPage(1);
+
         }}
       />
 
       {showModal && (
+
         <AddProductModal
           onClose={() => setShowModal(false)}
         />
+
       )}
 
       {editingProduct && (
+
         <EditProductModal
           product={editingProduct}
           onClose={() =>
             setEditingProduct(null)
           }
         />
+
       )}
 
       {deletingProduct && (
+
         <DeleteProductModal
           productName={deletingProduct.name}
           onConfirm={handleDelete}
@@ -121,20 +139,107 @@ function AdminProducts() {
             setDeletingProduct(null)
           }
         />
+
       )}
 
-      <table>
+      {/* Mobile Cards */}
+
+      <div className="mobile-products">
+
+        {currentProducts.length === 0 ? (
+
+          <div className="mobile-product-card">
+
+            <h3>No Products Found</h3>
+
+          </div>
+
+        ) : (
+
+          currentProducts.map((product) => (
+
+            <div
+              className="mobile-product-card"
+              key={product.id}
+            >
+
+              <img
+                src={product.image}
+                alt={product.name}
+              />
+
+              <h3>{product.name}</h3>
+
+              <p>
+
+                <strong>Brand:</strong> {product.brand}
+
+              </p>
+
+              <p>
+
+                <strong>Price:</strong> {product.price.toLocaleString()} EGP
+
+              </p>
+
+              <p>
+
+                <strong>Stock:</strong> {product.stock}
+
+              </p>
+
+              <div className="mobile-product-actions">                <button
+                  className="edit-btn"
+                  onClick={() =>
+                    setEditingProduct(product)
+                  }
+                >
+                  Edit
+                </button>
+
+                <button
+                  className="delete-btn"
+                  onClick={() =>
+                    setDeletingProduct(product)
+                  }
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
+      {/* Desktop Table */}
+
+      <table className="desktop-table">
 
         <thead>
+
           <tr>
+
             <th>ID</th>
+
             <th>Image</th>
+
             <th>Name</th>
+
             <th>Brand</th>
+
             <th>Price</th>
+
             <th>Stock</th>
+
             <th>Actions</th>
+
           </tr>
+
         </thead>
 
         <tbody>
@@ -150,7 +255,9 @@ function AdminProducts() {
                   padding: "40px",
                 }}
               >
+
                 No Products Found
+
               </td>
 
             </tr>
@@ -183,14 +290,14 @@ function AdminProducts() {
                 <td>{product.brand}</td>
 
                 <td>
+
                   {product.price.toLocaleString()} EGP
+
                 </td>
 
                 <td>{product.stock}</td>
 
-                <td>
-
-                  <button
+                <td>                  <button
                     className="edit-btn"
                     onClick={() =>
                       setEditingProduct(product)
@@ -232,8 +339,9 @@ function AdminProducts() {
         </button>
 
         <span>
-          Page {currentPage} of{" "}
-          {totalPages || 1}
+
+          Page {currentPage} of {totalPages || 1}
+
         </span>
 
         <button
@@ -251,7 +359,9 @@ function AdminProducts() {
       </div>
 
     </section>
+
   );
+
 }
 
 export default AdminProducts;
