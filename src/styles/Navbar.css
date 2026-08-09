@@ -1,6 +1,6 @@
 /* ===========================
-   CROCODILE PRINT SOLUTIONS
-   Premium Navbar
+CROCODILE PRINT SOLUTIONS
+Premium Navbar
 =========================== */
 
 * {
@@ -9,15 +9,15 @@
   box-sizing: border-box;
 }
 
-.navbar{
-width:100%;
-height:85px;
-background:#23211D;
-position:fixed;
-top:0;
-left:0;
-z-index:10000;
-box-shadow:0 5px 20px rgba(0,0,0,.18);
+.navbar {
+  width: 100%;
+  height: 85px;
+  background: #23211D;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
 }
 
 .container {
@@ -30,6 +30,10 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   justify-content: space-between;
   gap: 20px;
 }
+
+/* ===========================
+LOGO
+=========================== */
 
 .logo {
   display: flex;
@@ -77,7 +81,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   SEARCH
+SEARCH
 =========================== */
 
 .search-box {
@@ -115,7 +119,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   DESKTOP NAVIGATION
+DESKTOP NAVIGATION
 =========================== */
 
 .nav-links {
@@ -162,7 +166,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   ACTIONS
+ACTIONS
 =========================== */
 
 .actions {
@@ -235,7 +239,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   TABLET
+TABLET
 =========================== */
 
 @media (max-width: 1200px) {
@@ -254,12 +258,14 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   MOBILE
+MOBILE
 =========================== */
 
 @media (max-width: 850px) {
+
   .navbar {
-    min-height: auto;
+    height: auto;
+    min-height: 85px;
   }
 
   .container {
@@ -274,7 +280,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   }
 
   /* ===========================
-     TOP ROW
+  TOP ROW
   =========================== */
 
   .logo {
@@ -285,6 +291,8 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   .logo img {
     width: 48px !important;
     height: 48px !important;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   .logo-text {
@@ -292,7 +300,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   }
 
   /* ===========================
-     ACTIONS
+  ACTIONS
   =========================== */
 
   .actions {
@@ -306,12 +314,6 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
     height: 44px;
     font-size: 18px;
   }
-
-  /*
-     Login يظهر كأيقونة فقط
-     على الشاشات الصغيرة حتى لا يضغط
-     على باقي العناصر
-  */
 
   .login {
     width: 44px;
@@ -332,7 +334,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   }
 
   /* ===========================
-     SEARCH - ALWAYS VISIBLE
+  SEARCH - ALWAYS VISIBLE
   =========================== */
 
   .search-box {
@@ -355,7 +357,7 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   }
 
   /* ===========================
-     NAV LINKS - ALWAYS VISIBLE
+  NAV LINKS - ALWAYS VISIBLE
   =========================== */
 
   .nav-links {
@@ -399,7 +401,10 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
     color: #fff;
   }
 
-  /* Mobile menu no longer needed */
+  /* ===========================
+  OLD MOBILE MENU DISABLED
+  =========================== */
+
   .mobile-menu,
   .mobile-overlay {
     display: none !important;
@@ -407,10 +412,11 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   SMALL PHONES
+SMALL PHONES
 =========================== */
 
 @media (max-width: 600px) {
+
   .container {
     padding: 8px 10px 10px;
   }
@@ -458,10 +464,11 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   VERY SMALL PHONES
+VERY SMALL PHONES
 =========================== */
 
 @media (max-width: 380px) {
+
   .logo img {
     width: 42px !important;
     height: 42px !important;
@@ -485,8 +492,8 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
 }
 
 /* ===========================
-   OLD MOBILE MENU
-   Kept for compatibility
+OLD MOBILE MENU
+Kept for compatibility
 =========================== */
 
 .mobile-overlay {
@@ -585,7 +592,33 @@ box-shadow:0 5px 20px rgba(0,0,0,.18);
   .mobile-overlay {
     display: none;
   }
-}/* Keep the fixed navbar from covering page content */
-#root{
-padding-top:85px;
+}
+
+/* ===========================
+KEEP FIXED NAVBAR FROM
+COVERING PAGE CONTENT
+=========================== */
+
+#root {
+  padding-top: 85px;
+}
+
+/* Mobile navbar is taller because
+   it contains search + navigation */
+@media (max-width: 850px) {
+  #root {
+    padding-top: 175px;
+  }
+}
+
+@media (max-width: 600px) {
+  #root {
+    padding-top: 170px;
+  }
+}
+
+@media (max-width: 380px) {
+  #root {
+    padding-top: 165px;
+  }
 }

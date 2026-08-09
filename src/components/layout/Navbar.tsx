@@ -6,7 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {
   FaSearch,
@@ -23,6 +23,7 @@ import { useWishlist } from "../../context/WishlistContext";
 import { useSearch } from "../../context/SearchContext";
 import { useAuth } from "../../context/AuthContext";
 import { useStore } from "../../context/StoreContext";
+import { useProducts } from "../../context/ProductContext";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -33,8 +34,13 @@ function Navbar() {
   const { search, setSearch } = useSearch();
   const { user, logout } = useAuth();
   const { settings } = useStore();
+  const { products } = useProducts();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showSearchResults, setShowSearchResults] =
+    useState(false);
+
+  const searchRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     console.log("========== STORE SETTINGS ==========");
@@ -46,6 +52,70 @@ function Navbar() {
     console.log("====================================");
   }, [settings]);
 
+  /*
+   * إغلاق نتائج البحث عند الضغط خارج مربع البحث
+   */
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(
+          event.target as Node
+        )
+      ) {
+        setShowSearchResults(false);
+      }
+    }
+
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, []);
+
+  /*
+   * Live Search
+   *
+   * البحث في:
+   * - اسم المنتج
+   * - البراند
+   * - الكاتيجوري
+   */
+  const searchResults =
+    search.trim() === ""
+      ? []
+      : products
+          .filter((product) => {
+            const keyword =
+              search.trim().toLowerCase();
+
+            const name = (
+              product.name || ""
+            ).toLowerCase();
+
+            const brand = (
+              product.brand || ""
+            ).toLowerCase();
+
+            const category = (
+              product.category || ""
+            ).toLowerCase();
+
+            return (
+              name.includes(keyword) ||
+              brand.includes(keyword) ||
+              category.includes(keyword)
+            );
+          })
+          .slice(0, 6);
+
   async function handleLogout() {
     await logout();
 
@@ -55,6 +125,7 @@ function Navbar() {
   }
 
   function handleSearch() {
+    setShowSearchResults(false);
     setMenuOpen(false);
 
     navigate("/products");
@@ -64,17 +135,43 @@ function Navbar() {
     e: React.KeyboardEvent<HTMLInputElement>
   ) {
     if (e.key === "Enter") {
+      setShowSearchResults(false);
       setMenuOpen(false);
 
       navigate("/products");
     }
+
+    if (e.key === "Escape") {
+      setShowSearchResults(false);
+    }
+  }
+
+  function handleSearchChange(
+    value: string
+  ) {
+    setSearch(value);
+
+    setShowSearchResults(
+      value.trim().length > 0
+    );
+  }
+
+  function handleProductClick(
+    productId: string | number
+  ) {
+    setShowSearchResults(false);
+    setMenuOpen(false);
+
+    navigate(`/product/${productId}`);
   }
 
   function closeMenu() {
     setMenuOpen(false);
   }
 
-  function scrollToSection(sectionId: string) {
+  function scrollToSection(
+    sectionId: string
+  ) {
     closeMenu();
 
     /*
@@ -173,14 +270,28 @@ function Navbar() {
 
           </Link>
 
-          <div className="search-box">
+          {/* =========================
+              DESKTOP SEARCH
+          ========================== */}
+
+          <div
+            className="search-box"
+            ref={searchRef}
+          >
 
             <input
               type="text"
               placeholder="Search Products..."
               value={search}
+              onFocus={() => {
+                if (search.trim() !== "") {
+                  setShowSearchResults(true);
+                }
+              }}
               onChange={(e) =>
-                setSearch(e.target.value)
+                handleSearchChange(
+                  e.target.value
+                )
               }
               onKeyDown={handleKeyDown}
             />
@@ -188,6 +299,72 @@ function Navbar() {
             <button onClick={handleSearch}>
               <FaSearch />
             </button>
+
+            {/* =========================
+                LIVE SEARCH RESULTS
+            ========================== */}
+
+            {showSearchResults &&
+              search.trim() !== "" && (
+                <div className="search-results">
+
+                  {searchResults.length > 0 ? (
+                    searchResults.map(
+                      (product) => (
+                        <button
+                          key={product.id}
+                          className="search-result-item"
+                          onClick={() =>
+                            handleProductClick(
+                              product.id
+                            )
+                          }
+                        >
+
+                          <img
+                            src={
+                              product.image ||
+                              "https://via.placeholder.com/60x60?text=No+Image"
+                            }
+                            alt={
+                              product.name ||
+                              "Product"
+                            }
+                          />
+
+                          <div className="search-result-info">
+
+                            <h4>
+                              {product.name ||
+                                "Unnamed Product"}
+                            </h4>
+
+                            <span>
+                              {product.brand ||
+                                "Unknown"}
+                            </span>
+
+                            <strong>
+                              {(
+                                product.price ??
+                                0
+                              ).toLocaleString()}{" "}
+                              EGP
+                            </strong>
+
+                          </div>
+
+                        </button>
+                      )
+                    )
+                  ) : (
+                    <div className="search-no-results">
+                      No Products Found 🔍
+                    </div>
+                  )}
+
+                </div>
+              )}
 
           </div>
 
@@ -258,7 +435,9 @@ function Navbar() {
                 onClick={closeMenu}
               >
                 <FaUserShield
-                  style={{ marginRight: 6 }}
+                  style={{
+                    marginRight: 6,
+                  }}
                 />
                 Admin
               </Link>
@@ -342,14 +521,28 @@ function Navbar() {
 
         </div>
 
-        <div className="mobile-search">
+        {/* =========================
+            MOBILE SEARCH
+        ========================== */}
+
+        <div
+          className="mobile-search"
+          ref={searchRef}
+        >
 
           <input
             type="text"
             placeholder="Search Products..."
             value={search}
+            onFocus={() => {
+              if (search.trim() !== "") {
+                setShowSearchResults(true);
+              }
+            }}
             onChange={(e) =>
-              setSearch(e.target.value)
+              handleSearchChange(
+                e.target.value
+              )
             }
             onKeyDown={handleKeyDown}
           />
@@ -357,6 +550,70 @@ function Navbar() {
           <button onClick={handleSearch}>
             <FaSearch />
           </button>
+
+          {/* MOBILE LIVE RESULTS */}
+
+          {showSearchResults &&
+            search.trim() !== "" && (
+              <div className="search-results mobile-search-results">
+
+                {searchResults.length > 0 ? (
+                  searchResults.map(
+                    (product) => (
+                      <button
+                        key={product.id}
+                        className="search-result-item"
+                        onClick={() =>
+                          handleProductClick(
+                            product.id
+                          )
+                        }
+                      >
+
+                        <img
+                          src={
+                            product.image ||
+                            "https://via.placeholder.com/60x60?text=No+Image"
+                          }
+                          alt={
+                            product.name ||
+                            "Product"
+                          }
+                        />
+
+                        <div className="search-result-info">
+
+                          <h4>
+                            {product.name ||
+                              "Unnamed Product"}
+                          </h4>
+
+                          <span>
+                            {product.brand ||
+                              "Unknown"}
+                          </span>
+
+                          <strong>
+                            {(
+                              product.price ??
+                              0
+                            ).toLocaleString()}{" "}
+                            EGP
+                          </strong>
+
+                        </div>
+
+                      </button>
+                    )
+                  )
+                ) : (
+                  <div className="search-no-results">
+                    No Products Found 🔍
+                  </div>
+                )}
+
+              </div>
+            )}
 
         </div>
 
