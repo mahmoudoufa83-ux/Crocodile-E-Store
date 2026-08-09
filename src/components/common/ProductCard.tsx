@@ -5,7 +5,7 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
@@ -16,11 +16,14 @@ function ProductCard({
 }: {
   product: Product;
 }) {
+  const navigate = useNavigate();
+
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
 
   const discount =
-    (product.oldPrice ?? 0) > (product.price ?? 0)
+    (product.oldPrice ?? 0) >
+    (product.price ?? 0)
       ? Math.round(
           (((product.oldPrice ?? 0) -
             (product.price ?? 0)) /
@@ -29,62 +32,141 @@ function ProductCard({
         )
       : 0;
 
+  const productPath = `/product/${String(
+    product.id
+  )}`;
+
+  function openProduct() {
+    navigate(productPath);
+  }
+
+  function handleWishlist(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    addToWishlist(product);
+  }
+
+  function handleAddToCart(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if ((product.stock ?? 0) === 0) {
+      return;
+    }
+
+    addToCart({
+      id: product.id,
+      name:
+        product.name ||
+        "Unnamed Product",
+      price: product.price ?? 0,
+      image:
+        product.image ||
+        "https://via.placeholder.com/300x300?text=No+Image",
+      brand:
+        product.brand || "Unknown",
+      category:
+        product.category || "Unknown",
+      stock: product.stock ?? 0,
+    });
+  }
+
   return (
     <div className="product-card">
-      <Link
-        to={`/product/${product.id}`}
-        className="product-link"
+
+      {/* =========================
+          PRODUCT IMAGE
+      ========================= */}
+
+      <div
+        className="product-image"
+        onClick={openProduct}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+            openProduct();
+          }
+        }}
       >
-        <div className="product-image">
-          {discount > 0 && (
-            <span className="discount-badge">
-              -{discount}%
-            </span>
-          )}
 
-          {(product.stock ?? 0) === 0 && (
-            <span className="stock-badge">
-              Out Of Stock
-            </span>
-          )}
+        {discount > 0 && (
+          <span className="discount-badge">
+            -{discount}%
+          </span>
+        )}
 
-          <img
-            src={
-              product.image ||
-              "https://via.placeholder.com/300x300?text=No+Image"
-            }
-            alt={product.name || "Product"}
-          />
-        </div>
-      </Link>
+        {(product.stock ?? 0) === 0 && (
+          <span className="stock-badge">
+            Out Of Stock
+          </span>
+        )}
+
+        <img
+          src={
+            product.image ||
+            "https://via.placeholder.com/300x300?text=No+Image"
+          }
+          alt={
+            product.name || "Product"
+          }
+        />
+
+      </div>
+
+      {/* =========================
+          WISHLIST
+      ========================= */}
 
       <button
+        type="button"
         className="wishlist-btn"
-        onClick={() => addToWishlist(product)}
+        onClick={handleWishlist}
+        aria-label="Add to wishlist"
       >
         <FaHeart />
       </button>
 
+      {/* =========================
+          PRODUCT INFO
+      ========================= */}
+
       <div className="product-info">
+
         <span className="category">
-          {product.category || "Unknown"}
+          {product.category ||
+            "Unknown"}
         </span>
 
-        <Link
-          to={`/product/${product.id}`}
+        <button
+          type="button"
           className="product-title"
+          onClick={openProduct}
         >
           <h3>
-            {product.name || "Unnamed Product"}
+            {product.name ||
+              "Unnamed Product"}
           </h3>
-        </Link>
+        </button>
 
         <p className="brand">
-          {product.brand || "Unknown"}
+          {product.brand ||
+            "Unknown"}
         </p>
 
         <div className="price">
-          <h2>{product.price ?? 0} EGP</h2>
+
+          <h2>
+            {product.price ?? 0} EGP
+          </h2>
 
           {(product.oldPrice ?? 0) >
             (product.price ?? 0) && (
@@ -92,28 +174,20 @@ function ProductCard({
               {product.oldPrice} EGP
             </span>
           )}
+
         </div>
 
+        {/* =========================
+            ADD TO CART
+        ========================= */}
+
         <button
+          type="button"
           className="add-cart"
-          disabled={(product.stock ?? 0) === 0}
-          onClick={() =>
-            addToCart({
-              id: product.id,
-              name:
-                product.name ||
-                "Unnamed Product",
-              price: product.price ?? 0,
-              image:
-                product.image ||
-                "https://via.placeholder.com/300x300?text=No+Image",
-              brand:
-                product.brand || "Unknown",
-              category:
-                product.category || "Unknown",
-              stock: product.stock ?? 0,
-            })
+          disabled={
+            (product.stock ?? 0) === 0
           }
+          onClick={handleAddToCart}
         >
           <FaShoppingCart />
 
@@ -121,6 +195,7 @@ function ProductCard({
             ? "Add To Cart"
             : "Out Of Stock"}
         </button>
+
       </div>
     </div>
   );

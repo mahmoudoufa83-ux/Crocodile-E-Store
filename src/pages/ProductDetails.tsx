@@ -33,10 +33,26 @@ function ProductDetails() {
 
   const [quantity, setQuantity] = useState(1);
 
+  /*
+   * useParams بيرجع id كـ string.
+   * Product.id ممكن يكون string أو number.
+   * لذلك بنحوّل الاثنين إلى String قبل المقارنة.
+   */
   const product = products.find(
-    (item) => item.id === id
+    (item) => String(item.id) === String(id)
   );
 
+  /*
+   * لما ننتقل من منتج لمنتج،
+   * نرجع الكمية إلى 1.
+   */
+  useEffect(() => {
+    setQuantity(1);
+  }, [id]);
+
+  /*
+   * إضافة المنتج إلى Recently Viewed
+   */
   useEffect(() => {
     if (product) {
       addViewed(product);
@@ -44,9 +60,7 @@ function ProductDetails() {
   }, [product, addViewed]);
 
   /*
-   * استنى تحميل المنتجات الأول
-   * بدل ما نظهر Product Not Found
-   * قبل ما Firestore يخلص التحميل.
+   * نستنى تحميل المنتجات في البداية.
    */
   if (loading) {
     return (
@@ -57,8 +71,8 @@ function ProductDetails() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "20px",
-            color: "#555",
+            fontSize: "22px",
+            fontWeight: "600",
           }}
         >
           Loading Product...
@@ -80,7 +94,7 @@ function ProductDetails() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "24px",
+            fontSize: "22px",
             fontWeight: "600",
           }}
         >
@@ -104,7 +118,10 @@ function ProductDetails() {
             <div className="main-image">
 
               <img
-                src={product.image}
+                src={
+                  product.image ||
+                  "https://via.placeholder.com/600x600?text=No+Image"
+                }
                 alt={product.name}
                 loading="eager"
                 decoding="async"
@@ -129,11 +146,13 @@ function ProductDetails() {
             </h1>
 
             <div className="rating">
+
               <FaStar />
 
               <span>
                 {product.rating}
               </span>
+
             </div>
 
             <div className="price">
@@ -142,11 +161,12 @@ function ProductDetails() {
                 {product.price} EGP
               </h2>
 
-              {product.oldPrice && (
-                <span>
-                  {product.oldPrice} EGP
-                </span>
-              )}
+              {product.oldPrice &&
+                product.oldPrice > product.price && (
+                  <span>
+                    {product.oldPrice} EGP
+                  </span>
+                )}
 
             </div>
 
@@ -168,12 +188,20 @@ function ProductDetails() {
               and home use.
             </p>
 
+            {/* =========================
+                QUANTITY
+            ========================= */}
+
             <div className="quantity-box">
 
               <button
+                type="button"
                 onClick={() =>
-                  quantity > 1 &&
-                  setQuantity(quantity - 1)
+                  setQuantity((prev) =>
+                    prev > 1
+                      ? prev - 1
+                      : 1
+                  )
                 }
                 disabled={quantity <= 1}
               >
@@ -185,9 +213,13 @@ function ProductDetails() {
               </span>
 
               <button
+                type="button"
                 onClick={() =>
-                  quantity < product.stock &&
-                  setQuantity(quantity + 1)
+                  setQuantity((prev) =>
+                    prev < product.stock
+                      ? prev + 1
+                      : prev
+                  )
                 }
                 disabled={
                   product.stock <= 0 ||
@@ -199,9 +231,14 @@ function ProductDetails() {
 
             </div>
 
+            {/* =========================
+                ACTION BUTTONS
+            ========================= */}
+
             <div className="buttons">
 
               <button
+                type="button"
                 className="cart-btn"
                 disabled={product.stock <= 0}
                 onClick={() => {
@@ -211,7 +248,6 @@ function ProductDetails() {
                     i < quantity;
                     i++
                   ) {
-
                     addToCart({
                       id: product.id,
                       name: product.name,
@@ -221,16 +257,17 @@ function ProductDetails() {
                       category: product.category,
                       stock: product.stock,
                     });
-
                   }
 
                 }}
               >
                 <FaShoppingCart />
+
                 Add To Cart
               </button>
 
               <button
+                type="button"
                 className="wish-btn"
                 onClick={() =>
                   addToWishlist(product)
@@ -240,6 +277,10 @@ function ProductDetails() {
               </button>
 
             </div>
+
+            {/* =========================
+                SPECIFICATIONS
+            ========================= */}
 
             <div className="specs">
 

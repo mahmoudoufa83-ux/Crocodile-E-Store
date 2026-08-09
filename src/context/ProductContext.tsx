@@ -43,22 +43,23 @@ export function ProductProvider({
   const [loading, setLoading] =
     useState(true);
 
-  const refreshProducts = useCallback(async () => {
-    try {
-      setLoading(true);
+  const refreshProducts = useCallback(
+    async () => {
+      try {
+        const data = await getProducts();
 
-      const data = await getProducts();
-
-      setProducts(data);
-    } catch (error) {
-      console.error(
-        "Failed to load products",
-        error
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        setProducts(data);
+      } catch (error) {
+        console.error(
+          "Failed to load products",
+          error
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     refreshProducts();
@@ -66,7 +67,7 @@ export function ProductProvider({
 
   const addProduct = async (
     product: Product
-  ) => {
+  ): Promise<void> => {
     try {
       await addProductService(product);
 
@@ -76,12 +77,13 @@ export function ProductProvider({
         "Failed to add product",
         error
       );
+      throw error;
     }
   };
 
   const updateProduct = async (
     product: Product
-  ) => {
+  ): Promise<void> => {
     try {
       await updateProductService(product);
 
@@ -91,12 +93,13 @@ export function ProductProvider({
         "Failed to update product",
         error
       );
+      throw error;
     }
   };
 
   const deleteProduct = async (
     id: string | number
-  ) => {
+  ): Promise<void> => {
     try {
       await deleteProductService(id);
 
@@ -106,6 +109,7 @@ export function ProductProvider({
         "Failed to delete product",
         error
       );
+      throw error;
     }
   };
 
