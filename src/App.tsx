@@ -31,12 +31,11 @@ import AdminSettings from "./pages/AdminSettings";
 function App() {
   return (
     <>
-      <ScrollManager />
-
       <Navbar />
 
-      <Routes>
+      <ScrollManager />
 
+      <Routes>
         <Route
           path="/"
           element={<Home />}
@@ -161,7 +160,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Routes>
 
       <Footer />

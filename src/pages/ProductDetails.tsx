@@ -8,7 +8,12 @@ import {
   FaPlus,
 } from "react-icons/fa";
 
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
+
 import { useParams } from "react-router-dom";
 
 import { useProducts } from "../context/ProductContext";
@@ -33,51 +38,50 @@ function ProductDetails() {
 
   const [quantity, setQuantity] = useState(1);
 
-  /*
-   * useParams بيرجع id كـ string.
-   * Product.id ممكن يكون string أو number.
-   * لذلك بنحوّل الاثنين إلى String قبل المقارنة.
-   */
+  const viewedProductId =
+    useRef<string | null>(null);
+
   const product = products.find(
-    (item) => String(item.id) === String(id)
+    (item) =>
+      String(item.id) === String(id)
   );
 
-  /*
-   * لما ننتقل من منتج لمنتج،
-   * نرجع الكمية إلى 1.
-   */
   useEffect(() => {
-    setQuantity(1);
-  }, [id]);
+    if (!product) return;
 
-  /*
-   * إضافة المنتج إلى Recently Viewed
-   */
-  useEffect(() => {
-    if (product) {
-      addViewed(product);
+    const productId = String(product.id);
+
+    if (
+      viewedProductId.current ===
+      productId
+    ) {
+      return;
     }
+
+    viewedProductId.current = productId;
+
+    addViewed(product);
   }, [product, addViewed]);
 
   /*
-   * نستنى تحميل المنتجات في البداية.
+   * استنى تحميل المنتجات الأول
+   * بدل ما نظهر Product Not Found
+   * قبل ما Firestore يخلص التحميل.
    */
   if (loading) {
     return (
-      <section className="details-page">
-        <div
-          style={{
-            minHeight: "60vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "22px",
-            fontWeight: "600",
-          }}
-        >
-          Loading Product...
-        </div>
-      </section>
+      <div
+        style={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "20px",
+          fontWeight: "600",
+        }}
+      >
+        Loading Product...
+      </div>
     );
   }
 
@@ -87,26 +91,24 @@ function ProductDetails() {
    */
   if (!product) {
     return (
-      <section className="details-page">
-        <div
-          style={{
-            minHeight: "60vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "22px",
-            fontWeight: "600",
-          }}
-        >
-          Product Not Found
-        </div>
-      </section>
+      <div
+        style={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "22px",
+          fontWeight: "600",
+        }}
+      >
+        Product Not Found
+      </div>
     );
   }
 
   return (
     <>
-      <section className="details-page">
+      <section className="product-details">
         <div className="details-container">
 
           {/* =========================
@@ -118,10 +120,7 @@ function ProductDetails() {
             <div className="main-image">
 
               <img
-                src={
-                  product.image ||
-                  "https://via.placeholder.com/600x600?text=No+Image"
-                }
+                src={product.image}
                 alt={product.name}
                 loading="eager"
                 decoding="async"
@@ -146,13 +145,11 @@ function ProductDetails() {
             </h1>
 
             <div className="rating">
-
               <FaStar />
 
               <span>
                 {product.rating}
               </span>
-
             </div>
 
             <div className="price">
@@ -161,12 +158,11 @@ function ProductDetails() {
                 {product.price} EGP
               </h2>
 
-              {product.oldPrice &&
-                product.oldPrice > product.price && (
-                  <span>
-                    {product.oldPrice} EGP
-                  </span>
-                )}
+              {product.oldPrice && (
+                <span>
+                  {product.oldPrice} EGP
+                </span>
+              )}
 
             </div>
 
@@ -188,19 +184,13 @@ function ProductDetails() {
               and home use.
             </p>
 
-            {/* =========================
-                QUANTITY
-            ========================= */}
-
             <div className="quantity-box">
 
               <button
-                type="button"
                 onClick={() =>
-                  setQuantity((prev) =>
-                    prev > 1
-                      ? prev - 1
-                      : 1
+                  quantity > 1 &&
+                  setQuantity(
+                    quantity - 1
                   )
                 }
                 disabled={quantity <= 1}
@@ -213,12 +203,10 @@ function ProductDetails() {
               </span>
 
               <button
-                type="button"
                 onClick={() =>
-                  setQuantity((prev) =>
-                    prev < product.stock
-                      ? prev + 1
-                      : prev
+                  quantity < product.stock &&
+                  setQuantity(
+                    quantity + 1
                   )
                 }
                 disabled={
@@ -231,18 +219,14 @@ function ProductDetails() {
 
             </div>
 
-            {/* =========================
-                ACTION BUTTONS
-            ========================= */}
-
             <div className="buttons">
 
               <button
-                type="button"
                 className="cart-btn"
-                disabled={product.stock <= 0}
+                disabled={
+                  product.stock <= 0
+                }
                 onClick={() => {
-
                   for (
                     let i = 0;
                     i < quantity;
@@ -254,20 +238,18 @@ function ProductDetails() {
                       image: product.image,
                       price: product.price,
                       brand: product.brand,
-                      category: product.category,
+                      category:
+                        product.category,
                       stock: product.stock,
                     });
                   }
-
                 }}
               >
                 <FaShoppingCart />
-
                 Add To Cart
               </button>
 
               <button
-                type="button"
                 className="wish-btn"
                 onClick={() =>
                   addToWishlist(product)
@@ -278,10 +260,6 @@ function ProductDetails() {
 
             </div>
 
-            {/* =========================
-                SPECIFICATIONS
-            ========================= */}
-
             <div className="specs">
 
               <h3>
@@ -291,15 +269,18 @@ function ProductDetails() {
               <ul>
 
                 <li>
-                  Brand : {product.brand}
+                  Brand :{" "}
+                  {product.brand}
                 </li>
 
                 <li>
-                  Category : {product.category}
+                  Category :{" "}
+                  {product.category}
                 </li>
 
                 <li>
-                  Rating : {product.rating}
+                  Rating :{" "}
+                  {product.rating}
                 </li>
 
                 <li>
