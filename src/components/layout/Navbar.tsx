@@ -48,21 +48,25 @@ function Navbar() {
 
   async function handleLogout() {
     await logout();
+
     setMenuOpen(false);
+
     navigate("/");
   }
 
   function handleSearch() {
-    navigate("/products");
     setMenuOpen(false);
+
+    navigate("/products");
   }
 
   function handleKeyDown(
     e: React.KeyboardEvent<HTMLInputElement>
   ) {
     if (e.key === "Enter") {
-      navigate("/products");
       setMenuOpen(false);
+
+      navigate("/products");
     }
   }
 
@@ -73,6 +77,11 @@ function Navbar() {
   function scrollToSection(sectionId: string) {
     closeMenu();
 
+    /*
+     * لو المستخدم مش في Home
+     * نرجعه للـ Home وبعدها Home.tsx
+     * يقدر يتعامل مع الـ section المطلوب.
+     */
     if (location.pathname !== "/") {
       sessionStorage.setItem(
         "scrollToSection",
@@ -83,15 +92,22 @@ function Navbar() {
       return;
     }
 
+    /*
+     * Home
+     */
     if (sectionId === "home") {
       window.scrollTo({
         top: 0,
+        left: 0,
         behavior: "smooth",
       });
 
       return;
     }
 
+    /*
+     * باقي أقسام الصفحة الرئيسية
+     */
     const section =
       document.getElementById(sectionId);
 
@@ -105,42 +121,60 @@ function Navbar() {
 
   return (
     <>
-      <header className="navbar">
-        <div className="container">
+      <header>
+        <div className="navbar">
+
           <Link
             to="/"
             className="logo"
-            onClick={() => scrollToSection("home")}
+            onClick={(e) => {
+              /*
+               * لو إحنا بالفعل في Home،
+               * امنع إعادة الـ navigation واعمل scroll فقط.
+               */
+              if (location.pathname === "/") {
+                e.preventDefault();
+
+                scrollToSection("home");
+              } else {
+                closeMenu();
+
+                sessionStorage.removeItem(
+                  "scrollToSection"
+                );
+              }
+            }}
             style={{
               textDecoration: "none",
               color: "inherit",
             }}
           >
-            <div className="logo-icon">
-              {settings.logo &&
-              settings.logo.trim() !== "" ? (
-                <img
-                  src={settings.logo}
-                  alt="Logo"
-                  style={{
-                    width: "45px",
-                    height: "45px",
-                    objectFit: "cover",
-                    borderRadius: "50%",
-                  }}
-                />
-              ) : (
-                "🐊"
-              )}
-            </div>
+
+            {settings.logo &&
+            settings.logo.trim() !== "" ? (
+              <img
+                src={settings.logo}
+                alt="Logo"
+                style={{
+                  width: "45px",
+                  height: "45px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+              />
+            ) : (
+              "🐊"
+            )}
 
             <div className="logo-text">
               <h2>{settings.storeName}</h2>
               <span>Print Solutions</span>
             </div>
+
           </Link>
 
           <div className="search-box">
+
             <input
               type="text"
               placeholder="Search Products..."
@@ -154,9 +188,11 @@ function Navbar() {
             <button onClick={handleSearch}>
               <FaSearch />
             </button>
+
           </div>
 
           <nav className="nav-links">
+
             <button
               className="nav-scroll-btn"
               onClick={() =>
@@ -166,11 +202,17 @@ function Navbar() {
               Home
             </button>
 
-            <Link to="/products">
+            <Link
+              to="/products"
+              onClick={closeMenu}
+            >
               Products
             </Link>
 
-            <Link to="/orders">
+            <Link
+              to="/orders"
+              onClick={closeMenu}
+            >
               My Orders
             </Link>
 
@@ -211,18 +253,25 @@ function Navbar() {
             </button>
 
             {user?.role === "admin" && (
-              <Link to="/admin">
+              <Link
+                to="/admin"
+                onClick={closeMenu}
+              >
                 <FaUserShield
                   style={{ marginRight: 6 }}
                 />
                 Admin
               </Link>
             )}
+
           </nav>
 
-          <div className="actions">            <Link
+          <div className="actions">
+
+            <Link
               to="/wishlist"
               className="icon"
+              onClick={closeMenu}
             >
               <FaHeart />
               <span>{wishlist.length}</span>
@@ -231,6 +280,7 @@ function Navbar() {
             <Link
               to="/cart"
               className="icon"
+              onClick={closeMenu}
             >
               <FaShoppingCart />
               <span>{cart.length}</span>
@@ -248,6 +298,7 @@ function Navbar() {
               <Link
                 to="/login"
                 className="login"
+                onClick={closeMenu}
               >
                 <FaUser />
                 Login
@@ -256,11 +307,15 @@ function Navbar() {
 
             <button
               className="menu"
-              onClick={() => setMenuOpen(true)}
+              onClick={() =>
+                setMenuOpen(true)
+              }
             >
               <FaBars />
             </button>
+
           </div>
+
         </div>
       </header>
 
@@ -276,15 +331,19 @@ function Navbar() {
           menuOpen ? "show" : ""
         }`}
       >
+
         <div className="mobile-header">
+
           <h2>{settings.storeName}</h2>
 
           <button onClick={closeMenu}>
             <FaTimes />
           </button>
+
         </div>
 
         <div className="mobile-search">
+
           <input
             type="text"
             placeholder="Search Products..."
@@ -298,9 +357,11 @@ function Navbar() {
           <button onClick={handleSearch}>
             <FaSearch />
           </button>
+
         </div>
 
         <nav>
+
           <button
             className="mobile-login"
             onClick={() =>
@@ -366,7 +427,9 @@ function Navbar() {
               onClick={closeMenu}
             >
               <FaUserShield
-                style={{ marginRight: 6 }}
+                style={{
+                  marginRight: 6,
+                }}
               />
               Admin
             </Link>
@@ -389,7 +452,9 @@ function Navbar() {
               Login
             </Link>
           )}
+
         </nav>
+
       </aside>
     </>
   );
