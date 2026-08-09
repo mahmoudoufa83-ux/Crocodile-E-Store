@@ -120,6 +120,7 @@ function Navbar() {
     await logout();
 
     setMenuOpen(false);
+    setShowSearchResults(false);
 
     navigate("/");
   }
@@ -156,14 +157,15 @@ function Navbar() {
     );
   }
 
-  function handleProductClick(
-    productId: string | number
-  ) {
-    setShowSearchResults(false);
-    setMenuOpen(false);
-
-    navigate(`/product/${productId}`);
-  }
+  /*
+   * عند الضغط على منتج من نتائج البحث
+   *
+   * مهم:
+   * نستخدم navigate مباشرة مع String(productId)
+   * علشان سواء الـ id في Firestore رقم أو String
+   * الرابط يطلع بشكل صحيح.
+   */
+ 
 
   function closeMenu() {
     setMenuOpen(false);
@@ -311,14 +313,19 @@ function Navbar() {
                   {searchResults.length > 0 ? (
                     searchResults.map(
                       (product) => (
-                        <button
+                        <Link
                           key={product.id}
+                          to={`/product/${String(
+                            product.id
+                          )}`}
                           className="search-result-item"
-                          onClick={() =>
-                            handleProductClick(
-                              product.id
-                            )
-                          }
+                          onClick={() => {
+                            setShowSearchResults(
+                              false
+                            );
+                            setMenuOpen(false);
+                            setSearch("");
+                          }}
                         >
 
                           <img
@@ -354,7 +361,7 @@ function Navbar() {
 
                           </div>
 
-                        </button>
+                        </Link>
                       )
                     )
                   ) : (
@@ -560,14 +567,19 @@ function Navbar() {
                 {searchResults.length > 0 ? (
                   searchResults.map(
                     (product) => (
-                      <button
+                      <Link
                         key={product.id}
+                        to={`/product/${String(
+                          product.id
+                        )}`}
                         className="search-result-item"
-                        onClick={() =>
-                          handleProductClick(
-                            product.id
-                          )
-                        }
+                        onClick={() => {
+                          setShowSearchResults(
+                            false
+                          );
+                          setMenuOpen(false);
+                          setSearch("");
+                        }}
                       >
 
                         <img
@@ -603,7 +615,7 @@ function Navbar() {
 
                         </div>
 
-                      </button>
+                      </Link>
                     )
                   )
                 ) : (
