@@ -1,7 +1,6 @@
 import "./App.css";
 
-import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -30,22 +29,6 @@ import CustomerDetails from "./pages/CustomerDetails";
 import AdminSettings from "./pages/AdminSettings";
 
 function App() {
-  const location = useLocation();
-
-  useEffect(() => {
-    // لو الرابط فيه #section (زي #offers)
-    if (location.hash) {
-      const sectionId = location.hash.replace("#", "");
-
-      setTimeout(() => {
-        document.getElementById(sectionId)?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 100);
-    }
-  }, [location]);
-
   return (
     <>
       <ScrollManager />
@@ -53,7 +36,11 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
         <Route
           path="/products"
@@ -174,6 +161,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
       </Routes>
 
       <Footer />

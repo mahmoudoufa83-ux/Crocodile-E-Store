@@ -22,19 +22,20 @@ import RecentlyViewed from "../components/products/RecentlyViewed";
 function ProductDetails() {
   const { id } = useParams();
 
-  const { products } = useProducts();
+  const {
+    products,
+    loading,
+  } = useProducts();
+
+  const { addToCart } = useCart();
+  const { addToWishlist } = useWishlist();
+  const { addViewed } = useRecentlyViewed();
+
+  const [quantity, setQuantity] = useState(1);
 
   const product = products.find(
     (item) => item.id === id
   );
-
-  const { addToCart } = useCart();
-
-  const { addToWishlist } = useWishlist();
-
-  const { addViewed } = useRecentlyViewed();
-
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (product) {
@@ -42,10 +43,49 @@ function ProductDetails() {
     }
   }, [product, addViewed]);
 
+  /*
+   * استنى تحميل المنتجات الأول
+   * بدل ما نظهر Product Not Found
+   * قبل ما Firestore يخلص التحميل.
+   */
+  if (loading) {
+    return (
+      <section className="details-page">
+        <div
+          style={{
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "20px",
+            color: "#555",
+          }}
+        >
+          Loading Product...
+        </div>
+      </section>
+    );
+  }
+
+  /*
+   * بعد انتهاء التحميل فقط نقرر
+   * هل المنتج موجود أم لا.
+   */
   if (!product) {
     return (
       <section className="details-page">
-        <h1>Product Not Found</h1>
+        <div
+          style={{
+            minHeight: "60vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "24px",
+            fontWeight: "600",
+          }}
+        >
+          Product Not Found
+        </div>
       </section>
     );
   }
@@ -54,31 +94,60 @@ function ProductDetails() {
     <>
       <section className="details-page">
         <div className="details-container">
+
+          {/* =========================
+              PRODUCT IMAGE
+          ========================= */}
+
           <div className="details-gallery">
+
             <div className="main-image">
+
               <img
                 src={product.image}
                 alt={product.name}
+                loading="eager"
+                decoding="async"
               />
+
             </div>
+
           </div>
 
+          {/* =========================
+              PRODUCT INFO
+          ========================= */}
+
           <div className="details-info">
+
             <span className="brand">
               {product.brand}
             </span>
 
-            <h1>{product.name}</h1>
+            <h1>
+              {product.name}
+            </h1>
 
             <div className="rating">
               <FaStar />
-              <span>{product.rating}</span>
+
+              <span>
+                {product.rating}
+              </span>
             </div>
 
             <div className="price">
-              <h2>{product.price} EGP</h2>
 
-              <span>{product.oldPrice} EGP</span>
+              <h2>
+                {product.price} EGP
+              </h2>
+
+              {product.oldPrice && (
+                <span>
+                  {product.oldPrice} EGP
+                </span>
+              )}
+
             </div>
 
             <div
@@ -100,36 +169,49 @@ function ProductDetails() {
             </p>
 
             <div className="quantity-box">
+
               <button
                 onClick={() =>
                   quantity > 1 &&
                   setQuantity(quantity - 1)
                 }
+                disabled={quantity <= 1}
               >
                 <FaMinus />
               </button>
 
-              <span>{quantity}</span>
+              <span>
+                {quantity}
+              </span>
 
               <button
                 onClick={() =>
                   quantity < product.stock &&
                   setQuantity(quantity + 1)
                 }
+                disabled={
+                  product.stock <= 0 ||
+                  quantity >= product.stock
+                }
               >
                 <FaPlus />
               </button>
+
             </div>
 
             <div className="buttons">
+
               <button
                 className="cart-btn"
+                disabled={product.stock <= 0}
                 onClick={() => {
+
                   for (
                     let i = 0;
                     i < quantity;
                     i++
                   ) {
+
                     addToCart({
                       id: product.id,
                       name: product.name,
@@ -139,7 +221,9 @@ function ProductDetails() {
                       category: product.category,
                       stock: product.stock,
                     });
+
                   }
+
                 }}
               >
                 <FaShoppingCart />
@@ -154,12 +238,17 @@ function ProductDetails() {
               >
                 <FaHeart />
               </button>
+
             </div>
 
             <div className="specs">
-              <h3>Specifications</h3>
+
+              <h3>
+                Specifications
+              </h3>
 
               <ul>
+
                 <li>
                   Brand : {product.brand}
                 </li>
@@ -178,9 +267,13 @@ function ProductDetails() {
                     ? "Available"
                     : "Out Of Stock"}
                 </li>
+
               </ul>
+
             </div>
+
           </div>
+
         </div>
       </section>
 
