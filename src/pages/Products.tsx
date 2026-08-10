@@ -19,66 +19,130 @@ function Products() {
     inStock,
   } = useFilter();
 
-  const keyword = (search || "").toLowerCase();
+  const keyword = (search || "").trim().toLowerCase();
 
-  let filteredProducts = products.filter((product) => {
-    const name = (product.name || "").toLowerCase();
-    const productBrand = (
-      product.brand || ""
-    ).toLowerCase();
-    const productCategory = (
-      product.category || ""
-    ).toLowerCase();
+  /*
+   * توحيد اسم الـ Category
+   *
+   * مثال:
+   * Toner   -> toner
+   * Toners  -> toner
+   * TONER   -> toner
+   * Printers -> printer
+   */
+  function normalizeCategory(value: string) {
+    const normalized = (value || "")
+      .trim()
+      .toLowerCase();
 
-    const matchSearch =
-      keyword === "" ||
-      name.includes(keyword) ||
-      productBrand.includes(keyword) ||
-      productCategory.includes(keyword);
+    if (normalized === "printers") {
+      return "printer";
+    }
 
-    const matchCategory =
-      category === "All" ||
-      product.category === category;
+    if (normalized === "toners") {
+      return "toner";
+    }
 
-    const matchBrand =
-      brand === "All" ||
-      product.brand === brand;
+    if (normalized === "inks") {
+      return "ink";
+    }
 
-    const matchPrice =
-      (product.price || 0) <= maxPrice;
+    return normalized;
+  }
 
-    const matchStock =
-      !inStock ||
-      (product.stock || 0) > 0;
+  const selectedCategory =
+    normalizeCategory(category);
 
-    return (
-      matchSearch &&
-      matchCategory &&
-      matchBrand &&
-      matchPrice &&
-      matchStock
-    );
-  });
+  let filteredProducts = products.filter(
+    (product) => {
+      const name = (
+        product.name || ""
+      ).toLowerCase();
 
+      const productBrand = (
+        product.brand || ""
+      ).toLowerCase();
+
+      const productCategory = normalizeCategory(
+        product.category || ""
+      );
+
+      /*
+       * SEARCH
+       */
+      const matchSearch =
+        keyword === "" ||
+        name.includes(keyword) ||
+        productBrand.includes(keyword) ||
+        productCategory.includes(keyword);
+
+      /*
+       * CATEGORY
+       *
+       * All = كل المنتجات
+       *
+       * غير كده بنقارن بعد توحيد الاسم
+       */
+      const matchCategory =
+        category === "All" ||
+        productCategory === selectedCategory;
+
+      /*
+       * BRAND
+       */
+      const matchBrand =
+        brand === "All" ||
+        productBrand ===
+          brand.trim().toLowerCase();
+
+      /*
+       * PRICE
+       */
+      const matchPrice =
+        (product.price || 0) <= maxPrice;
+
+      /*
+       * STOCK
+       */
+      const matchStock =
+        !inStock ||
+        (product.stock || 0) > 0;
+
+      return (
+        matchSearch &&
+        matchCategory &&
+        matchBrand &&
+        matchPrice &&
+        matchStock
+      );
+    }
+  );
+
+  /*
+   * SORT
+   */
   switch (sort) {
     case "Price Low":
       filteredProducts.sort(
         (a, b) =>
-          (a.price || 0) - (b.price || 0)
+          (a.price || 0) -
+          (b.price || 0)
       );
       break;
 
     case "Price High":
       filteredProducts.sort(
         (a, b) =>
-          (b.price || 0) - (a.price || 0)
+          (b.price || 0) -
+          (a.price || 0)
       );
       break;
 
     case "Rating":
       filteredProducts.sort(
         (a, b) =>
-          (b.rating || 0) - (a.rating || 0)
+          (b.rating || 0) -
+          (a.rating || 0)
       );
       break;
 
@@ -91,13 +155,15 @@ function Products() {
       <div className="products-layout">
 
         {/* =========================
-            FILTER SIDEBAR
+            FILTER
         ========================== */}
 
-        <FilterSidebar />
+        <aside className="products-filter">
+          <FilterSidebar />
+        </aside>
 
         {/* =========================
-            PRODUCTS CONTENT
+            PRODUCTS
         ========================== */}
 
         <div className="products-content">
@@ -109,21 +175,32 @@ function Products() {
 
             <p>
               Showing{" "}
-              {filteredProducts.length} Products
+              {filteredProducts.length}{" "}
+              Products
             </p>
           </div>
 
           <div className="products-grid">
 
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
-              ))
+              filteredProducts.map(
+                (product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                  />
+                )
+              )
             ) : (
-              <div className="no-products">
+              <div
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                  padding: "60px 20px",
+                  fontSize: "22px",
+                  fontWeight: "600",
+                }}
+              >
                 No Products Found 🔍
               </div>
             )}
