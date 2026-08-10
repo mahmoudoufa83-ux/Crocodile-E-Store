@@ -832,4 +832,75 @@
   #root {
     padding-top: 165px;
   }
+}.language-btn {
+  min-width: 48px;
+  height: 42px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
+  background: #15803d;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.language-btn:hover {
+  background: #166534;
+  transform: translateY(-2px);
+}
+
+[dir="rtl"] .navbar {
+  direction: rtl;
+}
+
+[dir="rtl"] .search-box {
+  direction: rtl;
+}
+
+[dir="rtl"] .search-box input {
+  border-radius: 0 8px 8px 0;
+}
+
+[dir="rtl"] .search-box button {
+  border-radius: 8px 0 0 8px;
+}
+
+[dir="rtl"] .nav-links {
+  direction: rtl;
+}
+
+[dir="rtl"] .actions {
+  direction: rtl;
+}
+
+@media (max-width: 850px) {
+  .language-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .language-btn {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+}
+
+@media (max-width: 380px) {
+  .language-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
 }

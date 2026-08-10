@@ -20,6 +20,7 @@ import {
   FaBars,
   FaTimes,
   FaUserShield,
+  FaGlobe,
 } from "react-icons/fa";
 
 import { useCart } from "../../context/CartContext";
@@ -28,6 +29,7 @@ import { useSearch } from "../../context/SearchContext";
 import { useAuth } from "../../context/AuthContext";
 import { useStore } from "../../context/StoreContext";
 import { useProducts } from "../../context/ProductContext";
+import { useLanguage } from "../../context/LanguageContext";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -40,6 +42,12 @@ function Navbar() {
   const { settings } = useStore();
   const { products } = useProducts();
 
+  const {
+    language,
+    toggleLanguage,
+    isArabic,
+  } = useLanguage();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSearchResults, setShowSearchResults] =
     useState(false);
@@ -51,8 +59,11 @@ function Navbar() {
     useRef<HTMLDivElement | null>(null);
 
   /*
-   * إغلاق نتائج البحث عند الضغط خارج مربع البحث
+   * =========================
+   * CLOSE SEARCH RESULTS
+   * =========================
    */
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
@@ -82,13 +93,11 @@ function Navbar() {
   }, []);
 
   /*
-   * Live Search
-   *
-   * البحث في:
-   * - اسم المنتج
-   * - البراند
-   * - الكاتيجوري
+   * =========================
+   * LIVE SEARCH
+   * =========================
    */
+
   const searchResults =
     search.trim() === ""
       ? []
@@ -117,6 +126,12 @@ function Navbar() {
           })
           .slice(0, 6);
 
+  /*
+   * =========================
+   * LOGOUT
+   * =========================
+   */
+
   async function handleLogout() {
     await logout();
 
@@ -126,6 +141,12 @@ function Navbar() {
 
     navigate("/");
   }
+
+  /*
+   * =========================
+   * SEARCH
+   * =========================
+   */
 
   function handleSearch() {
     setShowSearchResults(false);
@@ -160,12 +181,11 @@ function Navbar() {
   }
 
   /*
-   * فتح المنتج من نتائج البحث
-   *
-   * مهم:
-   * نستخدم navigate مباشرة ونحوّل الـ ID إلى String
-   * حتى يعمل سواء كان ID رقم أو String.
+   * =========================
+   * OPEN PRODUCT
+   * =========================
    */
+
   function openProduct(
     productId: string | number
   ) {
@@ -179,9 +199,34 @@ function Navbar() {
     navigate(productPath);
   }
 
+  /*
+   * =========================
+   * CLOSE MENU
+   * =========================
+   */
+
   function closeMenu() {
     setMenuOpen(false);
   }
+
+  /*
+   * =========================
+   * LANGUAGE
+   * =========================
+   */
+
+  function handleLanguageChange() {
+    toggleLanguage();
+
+    setShowSearchResults(false);
+    setMenuOpen(false);
+  }
+
+  /*
+   * =========================
+   * SCROLL TO HOME SECTION
+   * =========================
+   */
 
   function scrollToSection(
     sectionId: string
@@ -190,8 +235,6 @@ function Navbar() {
 
     /*
      * لو المستخدم مش في Home
-     * نرجعه للـ Home وبعدها Home.tsx
-     * يتعامل مع الـ section.
      */
     if (location.pathname !== "/") {
       sessionStorage.setItem(
@@ -229,6 +272,41 @@ function Navbar() {
       });
     }
   }
+
+  /*
+   * =========================
+   * TRANSLATIONS
+   * =========================
+   */
+
+  const text = {
+    home: isArabic ? "الرئيسية" : "Home",
+    products: isArabic ? "المنتجات" : "Products",
+    orders: isArabic
+      ? "طلباتي"
+      : "My Orders",
+    categories: isArabic
+      ? "الأقسام"
+      : "Categories",
+    brands: isArabic ? "البراندات" : "Brands",
+    offers: isArabic ? "العروض" : "Offers",
+    contact: isArabic ? "تواصل معنا" : "Contact",
+    admin: isArabic ? "الإدارة" : "Admin",
+    login: isArabic ? "تسجيل الدخول" : "Login",
+    logout: isArabic ? "تسجيل الخروج" : "Logout",
+    search: isArabic
+      ? "ابحث عن المنتجات..."
+      : "Search Products...",
+    noProducts: isArabic
+      ? "لا توجد منتجات 🔍"
+      : "No Products Found 🔍",
+    unnamed: isArabic
+      ? "منتج بدون اسم"
+      : "Unnamed Product",
+    unknown: isArabic
+      ? "غير معروف"
+      : "Unknown",
+  };
 
   return (
     <>
@@ -297,15 +375,13 @@ function Navbar() {
           >
             <input
               type="text"
-              placeholder="Search Products..."
+              placeholder={text.search}
               value={search}
               onFocus={() => {
                 if (
                   search.trim() !== ""
                 ) {
-                  setShowSearchResults(
-                    true
-                  );
+                  setShowSearchResults(true);
                 }
               }}
               onChange={(e) =>
@@ -323,9 +399,7 @@ function Navbar() {
               <FaSearch />
             </button>
 
-            {/* =========================
-                LIVE SEARCH RESULTS
-            ========================== */}
+            {/* LIVE SEARCH RESULTS */}
 
             {showSearchResults &&
               search.trim() !== "" && (
@@ -361,18 +435,17 @@ function Navbar() {
 
                             <h4>
                               {product.name ||
-                                "Unnamed Product"}
+                                text.unnamed}
                             </h4>
 
                             <span>
                               {product.brand ||
-                                "Unknown"}
+                                text.unknown}
                             </span>
 
                             <strong>
                               {(
-                                product.price ??
-                                0
+                                product.price ?? 0
                               ).toLocaleString()}{" "}
                               EGP
                             </strong>
@@ -383,7 +456,7 @@ function Navbar() {
                     )
                   ) : (
                     <div className="search-no-results">
-                      No Products Found 🔍
+                      {text.noProducts}
                     </div>
                   )}
 
@@ -403,21 +476,21 @@ function Navbar() {
                 scrollToSection("home")
               }
             >
-              Home
+              {text.home}
             </button>
 
             <Link
               to="/products"
               onClick={closeMenu}
             >
-              Products
+              {text.products}
             </Link>
 
             <Link
               to="/orders"
               onClick={closeMenu}
             >
-              My Orders
+              {text.orders}
             </Link>
 
             <button
@@ -426,7 +499,7 @@ function Navbar() {
                 scrollToSection("categories")
               }
             >
-              Categories
+              {text.categories}
             </button>
 
             <button
@@ -435,7 +508,7 @@ function Navbar() {
                 scrollToSection("brands")
               }
             >
-              Brands
+              {text.brands}
             </button>
 
             <button
@@ -444,7 +517,7 @@ function Navbar() {
                 scrollToSection("offers")
               }
             >
-              Offers
+              {text.offers}
             </button>
 
             <button
@@ -453,7 +526,7 @@ function Navbar() {
                 scrollToSection("contact")
               }
             >
-              Contact
+              {text.contact}
             </button>
 
             {user?.role === "admin" && (
@@ -466,7 +539,8 @@ function Navbar() {
                     marginRight: 6,
                   }}
                 />
-                Admin
+
+                {text.admin}
               </Link>
             )}
 
@@ -478,16 +552,47 @@ function Navbar() {
 
           <div className="actions">
 
+            {/* LANGUAGE */}
+
+            <button
+              type="button"
+              className="icon language-btn"
+              onClick={handleLanguageChange}
+              title={
+                language === "en"
+                  ? "العربية"
+                  : "English"
+              }
+              aria-label={
+                language === "en"
+                  ? "Switch to Arabic"
+                  : "Switch to English"
+              }
+            >
+              <FaGlobe />
+
+              <span className="language-label">
+                {language === "en"
+                  ? "AR"
+                  : "EN"}
+              </span>
+            </button>
+
+            {/* WISHLIST */}
+
             <Link
               to="/wishlist"
               className="icon"
               onClick={closeMenu}
             >
               <FaHeart />
+
               <span>
                 {wishlist.length}
               </span>
             </Link>
+
+            {/* CART */}
 
             <Link
               to="/cart"
@@ -495,10 +600,13 @@ function Navbar() {
               onClick={closeMenu}
             >
               <FaShoppingCart />
+
               <span>
                 {cart.length}
               </span>
             </Link>
+
+            {/* LOGIN / LOGOUT */}
 
             {user ? (
               <button
@@ -506,7 +614,15 @@ function Navbar() {
                 onClick={handleLogout}
               >
                 <FaUser />
-                {user.name} | Logout
+
+                <span>
+                  {user.name}
+                </span>
+
+                <span>
+                  {" | "}
+                  {text.logout}
+                </span>
               </button>
             ) : (
               <Link
@@ -515,15 +631,18 @@ function Navbar() {
                 onClick={closeMenu}
               >
                 <FaUser />
-                Login
+                {text.login}
               </Link>
             )}
+
+            {/* MENU */}
 
             <button
               className="menu"
               onClick={() =>
                 setMenuOpen(true)
               }
+              aria-label="Open menu"
             >
               <FaBars />
             </button>
@@ -561,15 +680,14 @@ function Navbar() {
 
           <button
             onClick={closeMenu}
+            aria-label="Close menu"
           >
             <FaTimes />
           </button>
 
         </div>
 
-        {/* =========================
-            MOBILE SEARCH
-        ========================== */}
+        {/* MOBILE SEARCH */}
 
         <div
           className="mobile-search"
@@ -577,15 +695,13 @@ function Navbar() {
         >
           <input
             type="text"
-            placeholder="Search Products..."
+            placeholder={text.search}
             value={search}
             onFocus={() => {
               if (
                 search.trim() !== ""
               ) {
-                setShowSearchResults(
-                  true
-                );
+                setShowSearchResults(true);
               }
             }}
             onChange={(e) =>
@@ -639,18 +755,17 @@ function Navbar() {
 
                           <h4>
                             {product.name ||
-                              "Unnamed Product"}
+                              text.unnamed}
                           </h4>
 
                           <span>
                             {product.brand ||
-                              "Unknown"}
+                              text.unknown}
                           </span>
 
                           <strong>
                             {(
-                              product.price ??
-                              0
+                              product.price ?? 0
                             ).toLocaleString()}{" "}
                             EGP
                           </strong>
@@ -661,13 +776,15 @@ function Navbar() {
                   )
                 ) : (
                   <div className="search-no-results">
-                    No Products Found 🔍
+                    {text.noProducts}
                   </div>
                 )}
 
               </div>
             )}
         </div>
+
+        {/* MOBILE NAVIGATION */}
 
         <nav>
 
@@ -677,21 +794,21 @@ function Navbar() {
               scrollToSection("home")
             }
           >
-            Home
+            {text.home}
           </button>
 
           <Link
             to="/products"
             onClick={closeMenu}
           >
-            Products
+            {text.products}
           </Link>
 
           <Link
             to="/orders"
             onClick={closeMenu}
           >
-            My Orders
+            {text.orders}
           </Link>
 
           <button
@@ -702,7 +819,7 @@ function Navbar() {
               )
             }
           >
-            Categories
+            {text.categories}
           </button>
 
           <button
@@ -711,7 +828,7 @@ function Navbar() {
               scrollToSection("brands")
             }
           >
-            Brands
+            {text.brands}
           </button>
 
           <button
@@ -720,7 +837,7 @@ function Navbar() {
               scrollToSection("offers")
             }
           >
-            Offers
+            {text.offers}
           </button>
 
           <button
@@ -729,7 +846,7 @@ function Navbar() {
               scrollToSection("contact")
             }
           >
-            Contact
+            {text.contact}
           </button>
 
           {user?.role === "admin" && (
@@ -742,7 +859,8 @@ function Navbar() {
                   marginRight: 6,
                 }}
               />
-              Admin
+
+              {text.admin}
             </Link>
           )}
 
@@ -752,7 +870,10 @@ function Navbar() {
               onClick={handleLogout}
             >
               <FaUser />
-              {user.name} | Logout
+
+              {user.name}
+              {" | "}
+              {text.logout}
             </button>
           ) : (
             <Link
@@ -760,9 +881,27 @@ function Navbar() {
               onClick={closeMenu}
             >
               <FaUser />
-              Login
+              {text.login}
             </Link>
           )}
+
+          {/* MOBILE LANGUAGE */}
+
+          <button
+            className="mobile-login"
+            onClick={handleLanguageChange}
+            type="button"
+          >
+            <FaGlobe
+              style={{
+                marginRight: 8,
+              }}
+            />
+
+            {language === "en"
+              ? "العربية"
+              : "English"}
+          </button>
 
         </nav>
       </aside>

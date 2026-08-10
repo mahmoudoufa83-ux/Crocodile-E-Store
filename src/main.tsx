@@ -9,6 +9,7 @@ import "./index.css";
 
 import { StoreProvider } from "./context/StoreContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
@@ -19,56 +20,58 @@ import { RecentlyViewedProvider } from "./context/RecentlyViewedContext";
 import { OrderProvider } from "./context/OrderContext";
 import { ProductProvider } from "./context/ProductContext";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-
+ReactDOM.createRoot(
+  document.getElementById("root")!
+).render(
   <React.StrictMode>
-
     <BrowserRouter>
 
       <StoreProvider>
 
         <ThemeProvider>
 
-          <AuthProvider>
+          <LanguageProvider>
 
-            <SearchProvider>
+            <AuthProvider>
 
-              <FilterProvider>
+              <SearchProvider>
 
-                <RecentlyViewedProvider>
+                <FilterProvider>
 
-                  <OrderProvider>
+                  <RecentlyViewedProvider>
 
-                    <WishlistProvider>
+                    <OrderProvider>
 
-                      <ProductProvider>
+                      <WishlistProvider>
 
-                        <CartProvider>
+                        <ProductProvider>
 
-                          <App />
+                          <CartProvider>
 
-                        </CartProvider>
+                            <App />
 
-                      </ProductProvider>
+                          </CartProvider>
 
-                    </WishlistProvider>
+                        </ProductProvider>
 
-                  </OrderProvider>
+                      </WishlistProvider>
 
-                </RecentlyViewedProvider>
+                    </OrderProvider>
 
-              </FilterProvider>
+                  </RecentlyViewedProvider>
 
-            </SearchProvider>
+                </FilterProvider>
 
-          </AuthProvider>
+              </SearchProvider>
+
+            </AuthProvider>
+
+          </LanguageProvider>
 
         </ThemeProvider>
 
       </StoreProvider>
 
     </BrowserRouter>
-
   </React.StrictMode>
-
 );
