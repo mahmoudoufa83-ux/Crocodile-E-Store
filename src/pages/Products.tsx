@@ -23,10 +23,15 @@ function Products() {
 
   let filteredProducts = products.filter((product) => {
     const name = (product.name || "").toLowerCase();
-    const productBrand = (product.brand || "").toLowerCase();
-    const productCategory = (product.category || "").toLowerCase();
+    const productBrand = (
+      product.brand || ""
+    ).toLowerCase();
+    const productCategory = (
+      product.category || ""
+    ).toLowerCase();
 
     const matchSearch =
+      keyword === "" ||
       name.includes(keyword) ||
       productBrand.includes(keyword) ||
       productCategory.includes(keyword);
@@ -58,19 +63,22 @@ function Products() {
   switch (sort) {
     case "Price Low":
       filteredProducts.sort(
-        (a, b) => (a.price || 0) - (b.price || 0)
+        (a, b) =>
+          (a.price || 0) - (b.price || 0)
       );
       break;
 
     case "Price High":
       filteredProducts.sort(
-        (a, b) => (b.price || 0) - (a.price || 0)
+        (a, b) =>
+          (b.price || 0) - (a.price || 0)
       );
       break;
 
     case "Rating":
       filteredProducts.sort(
-        (a, b) => (b.rating || 0) - (a.rating || 0)
+        (a, b) =>
+          (b.rating || 0) - (a.rating || 0)
       );
       break;
 
@@ -81,20 +89,32 @@ function Products() {
   return (
     <section className="products-page">
       <div className="products-layout">
+
+        {/* =========================
+            FILTER SIDEBAR
+        ========================== */}
+
         <FilterSidebar />
 
+        {/* =========================
+            PRODUCTS CONTENT
+        ========================== */}
+
         <div className="products-content">
+
           <div className="section-title">
             <span>OUR STORE</span>
 
             <h2>All Products</h2>
 
             <p>
-              Showing {filteredProducts.length} Products
+              Showing{" "}
+              {filteredProducts.length} Products
             </p>
           </div>
 
           <div className="products-grid">
+
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
                 <ProductCard
@@ -103,20 +123,15 @@ function Products() {
                 />
               ))
             ) : (
-              <div
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  padding: "60px 20px",
-                  fontSize: "22px",
-                  fontWeight: "600",
-                }}
-              >
+              <div className="no-products">
                 No Products Found 🔍
               </div>
             )}
+
           </div>
+
         </div>
+
       </div>
     </section>
   );

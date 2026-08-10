@@ -6,7 +6,11 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 import {
   FaSearch,
@@ -40,29 +44,26 @@ function Navbar() {
   const [showSearchResults, setShowSearchResults] =
     useState(false);
 
-  const searchRef = useRef<HTMLDivElement | null>(null);
+  const desktopSearchRef =
+    useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    console.log("========== STORE SETTINGS ==========");
-    console.log(settings);
-    console.log("Store Name:", settings.storeName);
-    console.log("Logo:", settings.logo);
-    console.log("Phone:", settings.phone);
-    console.log("WhatsApp:", settings.whatsapp);
-    console.log("====================================");
-  }, [settings]);
+  const mobileSearchRef =
+    useRef<HTMLDivElement | null>(null);
 
   /*
    * إغلاق نتائج البحث عند الضغط خارج مربع البحث
    */
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(
-          event.target as Node
-        )
-      ) {
+      const target = event.target as Node;
+
+      const insideDesktop =
+        desktopSearchRef.current?.contains(target);
+
+      const insideMobile =
+        mobileSearchRef.current?.contains(target);
+
+      if (!insideDesktop && !insideMobile) {
         setShowSearchResults(false);
       }
     }
@@ -121,6 +122,7 @@ function Navbar() {
 
     setMenuOpen(false);
     setShowSearchResults(false);
+    setSearch("");
 
     navigate("/");
   }
@@ -133,7 +135,7 @@ function Navbar() {
   }
 
   function handleKeyDown(
-    e: React.KeyboardEvent<HTMLInputElement>
+    e: React.KeyboardEvent
   ) {
     if (e.key === "Enter") {
       setShowSearchResults(false);
@@ -158,14 +160,24 @@ function Navbar() {
   }
 
   /*
-   * عند الضغط على منتج من نتائج البحث
+   * فتح المنتج من نتائج البحث
    *
    * مهم:
-   * نستخدم navigate مباشرة مع String(productId)
-   * علشان سواء الـ id في Firestore رقم أو String
-   * الرابط يطلع بشكل صحيح.
+   * نستخدم navigate مباشرة ونحوّل الـ ID إلى String
+   * حتى يعمل سواء كان ID رقم أو String.
    */
- 
+  function openProduct(
+    productId: string | number
+  ) {
+    const productPath =
+      `/product/${String(productId)}`;
+
+    setShowSearchResults(false);
+    setMenuOpen(false);
+    setSearch("");
+
+    navigate(productPath);
+  }
 
   function closeMenu() {
     setMenuOpen(false);
@@ -179,7 +191,7 @@ function Navbar() {
     /*
      * لو المستخدم مش في Home
      * نرجعه للـ Home وبعدها Home.tsx
-     * يقدر يتعامل مع الـ section المطلوب.
+     * يتعامل مع الـ section.
      */
     if (location.pathname !== "/") {
       sessionStorage.setItem(
@@ -220,17 +232,17 @@ function Navbar() {
 
   return (
     <>
-      <header>
-        <div className="navbar">
+      <header className="navbar">
+        <div className="container">
+
+          {/* =========================
+              LOGO
+          ========================== */}
 
           <Link
             to="/"
             className="logo"
             onClick={(e) => {
-              /*
-               * لو إحنا بالفعل في Home،
-               * امنع إعادة الـ navigation واعمل scroll فقط.
-               */
               if (location.pathname === "/") {
                 e.preventDefault();
 
@@ -248,7 +260,6 @@ function Navbar() {
               color: "inherit",
             }}
           >
-
             {settings.logo &&
             settings.logo.trim() !== "" ? (
               <img
@@ -266,10 +277,14 @@ function Navbar() {
             )}
 
             <div className="logo-text">
-              <h2>{settings.storeName}</h2>
-              <span>Print Solutions</span>
-            </div>
+              <h2>
+                {settings.storeName}
+              </h2>
 
+              <span>
+                Print Solutions
+              </span>
+            </div>
           </Link>
 
           {/* =========================
@@ -278,16 +293,19 @@ function Navbar() {
 
           <div
             className="search-box"
-            ref={searchRef}
+            ref={desktopSearchRef}
           >
-
             <input
               type="text"
               placeholder="Search Products..."
               value={search}
               onFocus={() => {
-                if (search.trim() !== "") {
-                  setShowSearchResults(true);
+                if (
+                  search.trim() !== ""
+                ) {
+                  setShowSearchResults(
+                    true
+                  );
                 }
               }}
               onChange={(e) =>
@@ -298,7 +316,10 @@ function Navbar() {
               onKeyDown={handleKeyDown}
             />
 
-            <button onClick={handleSearch}>
+            <button
+              type="button"
+              onClick={handleSearch}
+            >
               <FaSearch />
             </button>
 
@@ -313,21 +334,18 @@ function Navbar() {
                   {searchResults.length > 0 ? (
                     searchResults.map(
                       (product) => (
-                        <Link
-                          key={product.id}
-                          to={`/product/${String(
+                        <button
+                          type="button"
+                          key={String(
                             product.id
-                          )}`}
+                          )}
                           className="search-result-item"
-                          onClick={() => {
-                            setShowSearchResults(
-                              false
-                            );
-                            setMenuOpen(false);
-                            setSearch("");
-                          }}
+                          onClick={() =>
+                            openProduct(
+                              product.id
+                            )
+                          }
                         >
-
                           <img
                             src={
                               product.image ||
@@ -360,8 +378,7 @@ function Navbar() {
                             </strong>
 
                           </div>
-
-                        </Link>
+                        </button>
                       )
                     )
                   ) : (
@@ -372,8 +389,11 @@ function Navbar() {
 
                 </div>
               )}
-
           </div>
+
+          {/* =========================
+              NAVIGATION
+          ========================== */}
 
           <nav className="nav-links">
 
@@ -452,6 +472,10 @@ function Navbar() {
 
           </nav>
 
+          {/* =========================
+              ACTIONS
+          ========================== */}
+
           <div className="actions">
 
             <Link
@@ -460,7 +484,9 @@ function Navbar() {
               onClick={closeMenu}
             >
               <FaHeart />
-              <span>{wishlist.length}</span>
+              <span>
+                {wishlist.length}
+              </span>
             </Link>
 
             <Link
@@ -469,7 +495,9 @@ function Navbar() {
               onClick={closeMenu}
             >
               <FaShoppingCart />
-              <span>{cart.length}</span>
+              <span>
+                {cart.length}
+              </span>
             </Link>
 
             {user ? (
@@ -505,6 +533,10 @@ function Navbar() {
         </div>
       </header>
 
+      {/* =========================
+          MOBILE OVERLAY
+      ========================== */}
+
       {menuOpen && (
         <div
           className="mobile-overlay"
@@ -512,17 +544,24 @@ function Navbar() {
         />
       )}
 
+      {/* =========================
+          MOBILE MENU
+      ========================== */}
+
       <aside
         className={`mobile-menu ${
           menuOpen ? "show" : ""
         }`}
       >
-
         <div className="mobile-header">
 
-          <h2>{settings.storeName}</h2>
+          <h2>
+            {settings.storeName}
+          </h2>
 
-          <button onClick={closeMenu}>
+          <button
+            onClick={closeMenu}
+          >
             <FaTimes />
           </button>
 
@@ -534,16 +573,19 @@ function Navbar() {
 
         <div
           className="mobile-search"
-          ref={searchRef}
+          ref={mobileSearchRef}
         >
-
           <input
             type="text"
             placeholder="Search Products..."
             value={search}
             onFocus={() => {
-              if (search.trim() !== "") {
-                setShowSearchResults(true);
+              if (
+                search.trim() !== ""
+              ) {
+                setShowSearchResults(
+                  true
+                );
               }
             }}
             onChange={(e) =>
@@ -554,7 +596,10 @@ function Navbar() {
             onKeyDown={handleKeyDown}
           />
 
-          <button onClick={handleSearch}>
+          <button
+            type="button"
+            onClick={handleSearch}
+          >
             <FaSearch />
           </button>
 
@@ -567,21 +612,18 @@ function Navbar() {
                 {searchResults.length > 0 ? (
                   searchResults.map(
                     (product) => (
-                      <Link
-                        key={product.id}
-                        to={`/product/${String(
+                      <button
+                        type="button"
+                        key={String(
                           product.id
-                        )}`}
+                        )}
                         className="search-result-item"
-                        onClick={() => {
-                          setShowSearchResults(
-                            false
-                          );
-                          setMenuOpen(false);
-                          setSearch("");
-                        }}
+                        onClick={() =>
+                          openProduct(
+                            product.id
+                          )
+                        }
                       >
-
                         <img
                           src={
                             product.image ||
@@ -614,8 +656,7 @@ function Navbar() {
                           </strong>
 
                         </div>
-
-                      </Link>
+                      </button>
                     )
                   )
                 ) : (
@@ -626,7 +667,6 @@ function Navbar() {
 
               </div>
             )}
-
         </div>
 
         <nav>
@@ -657,7 +697,9 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection("categories")
+              scrollToSection(
+                "categories"
+              )
             }
           >
             Categories
@@ -723,7 +765,6 @@ function Navbar() {
           )}
 
         </nav>
-
       </aside>
     </>
   );

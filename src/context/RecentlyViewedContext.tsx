@@ -1,4 +1,9 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+} from "react";
 
 import type { Product } from "../types/Product";
 
@@ -17,15 +22,15 @@ export function RecentlyViewedProvider({
 }) {
   const [viewed, setViewed] = useState<Product[]>([]);
 
-  function addViewed(product: Product) {
+  const addViewed = useCallback((product: Product) => {
     setViewed((prev) => {
       const filtered = prev.filter(
-        (item) => item.id !== product.id
+        (item) => String(item.id) !== String(product.id)
       );
 
       return [product, ...filtered].slice(0, 6);
     });
-  }
+  }, []);
 
   return (
     <RecentlyViewedContext.Provider
@@ -40,5 +45,13 @@ export function RecentlyViewedProvider({
 }
 
 export function useRecentlyViewed() {
-  return useContext(RecentlyViewedContext)!;
+  const context = useContext(RecentlyViewedContext);
+
+  if (!context) {
+    throw new Error(
+      "useRecentlyViewed must be used inside RecentlyViewedProvider"
+    );
+  }
+
+  return context;
 }

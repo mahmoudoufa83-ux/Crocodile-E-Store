@@ -5,7 +5,10 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 
-import { useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
@@ -32,16 +35,14 @@ function ProductCard({
         )
       : 0;
 
-  const productPath = `/product/${String(
-    product.id
-  )}`;
+  const productPath = `/product/${String(product.id)}`;
 
   function openProduct() {
     navigate(productPath);
   }
 
   function handleWishlist(
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent
   ) {
     event.stopPropagation();
     event.preventDefault();
@@ -50,7 +51,7 @@ function ProductCard({
   }
 
   function handleAddToCart(
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent
   ) {
     event.stopPropagation();
     event.preventDefault();
@@ -81,7 +82,7 @@ function ProductCard({
 
       {/* =========================
           PRODUCT IMAGE
-      ========================= */}
+      ========================== */}
 
       <div
         className="product-image"
@@ -116,7 +117,8 @@ function ProductCard({
             "https://via.placeholder.com/300x300?text=No+Image"
           }
           alt={
-            product.name || "Product"
+            product.name ||
+            "Product"
           }
         />
 
@@ -124,7 +126,7 @@ function ProductCard({
 
       {/* =========================
           WISHLIST
-      ========================= */}
+      ========================== */}
 
       <button
         type="button"
@@ -137,7 +139,7 @@ function ProductCard({
 
       {/* =========================
           PRODUCT INFO
-      ========================= */}
+      ========================== */}
 
       <div className="product-info">
 
@@ -146,21 +148,38 @@ function ProductCard({
             "Unknown"}
         </span>
 
-        <button
-          type="button"
+        {/* =========================
+            PRODUCT TITLE
+        ========================== */}
+
+        <Link
+          to={productPath}
           className="product-title"
-          onClick={openProduct}
+          onClick={() => {
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
         >
           <h3>
             {product.name ||
               "Unnamed Product"}
           </h3>
-        </button>
+        </Link>
+
+        {/* =========================
+            BRAND
+        ========================== */}
 
         <p className="brand">
           {product.brand ||
             "Unknown"}
         </p>
+
+        {/* =========================
+            PRICE
+        ========================== */}
 
         <div className="price">
 
@@ -179,7 +198,7 @@ function ProductCard({
 
         {/* =========================
             ADD TO CART
-        ========================= */}
+        ========================== */}
 
         <button
           type="button"
