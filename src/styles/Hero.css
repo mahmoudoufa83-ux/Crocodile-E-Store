@@ -1,39 +1,47 @@
-/* =========================================================
-   CROCODILE E-STORE
-   HERO SECTION
-   ========================================================= */
+/* ===========================
+   CROCODILE HERO
+   Premium Green Style
+=========================== */
 
 .hero {
   position: relative;
+
   width: 100%;
 
-  /* أصغر من التصميم القديم عشان المنتجات تظهر أسرع */
-  height: 52vh;
-  min-height: 470px;
-  max-height: 620px;
+  /*
+    أصغر شوية من الأول
+    عشان المنتجات تظهر أسرع
+  */
+  height: 68vh;
 
+  min-height: 540px;
+
+  /*
+    نفس عائلة لون الـNavbar
+  */
   background:
     linear-gradient(
-      90deg,
-      rgba(18, 48, 35, 0.82),
-      rgba(18, 48, 35, 0.62)
+      rgba(223, 243, 230, 0.88),
+      rgba(223, 243, 230, 0.88)
     ),
     url("/images/hero.jpg");
 
   background-size: cover;
+
   background-position: center;
+
   background-attachment: fixed;
 
   display: flex;
+
   align-items: center;
 
   overflow: hidden;
 }
 
-
-/* =========================================================
-   GREEN CROCODILE GLOW
-   ========================================================= */
+/* ===========================
+   GREEN LIGHT EFFECT
+=========================== */
 
 .hero::before {
   content: "";
@@ -44,18 +52,17 @@
 
   background:
     radial-gradient(
-      circle at 75% 50%,
-      rgba(92, 145, 105, 0.25),
-      transparent 45%
+      circle at 75% 35%,
+      rgba(21, 128, 61, 0.14),
+      transparent 42%
     );
 
   pointer-events: none;
 }
 
-
-/* =========================================================
-   SUBTLE GREEN EDGE
-   ========================================================= */
+/* ===========================
+   SECOND SOFT EFFECT
+=========================== */
 
 .hero::after {
   content: "";
@@ -66,18 +73,17 @@
 
   background:
     linear-gradient(
-      180deg,
-      rgba(20, 55, 40, 0.15),
-      rgba(20, 55, 40, 0.05)
+      90deg,
+      rgba(223, 243, 230, 0.18),
+      transparent 65%
     );
 
   pointer-events: none;
 }
 
-
-/* =========================================================
+/* ===========================
    HERO CONTENT
-   ========================================================= */
+=========================== */
 
 .hero-content {
   position: relative;
@@ -90,49 +96,45 @@
 
   margin: auto;
 
-  color: #fff;
+  color: #14532d;
 
   animation: fadeUp 0.9s ease;
 }
 
-
-/* =========================================================
+/* ===========================
    BADGE
-   ========================================================= */
+=========================== */
 
 .hero-badge {
   display: inline-block;
 
-  padding: 9px 20px;
+  padding: 10px 22px;
 
   border-radius: 50px;
 
-  background:
-    rgba(110, 160, 120, 0.16);
+  background: rgba(255, 255, 255, 0.55);
 
-  border:
-    1px solid rgba(155, 195, 160, 0.35);
+  border: 1px solid rgba(21, 128, 61, 0.18);
 
   backdrop-filter: blur(10px);
 
-  color: #b8d8bd;
+  color: #166534;
 
   font-size: 13px;
 
-  font-weight: 600;
+  font-weight: 700;
 
   letter-spacing: 2px;
 
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
-
-/* =========================================================
-   HERO TITLE
-   ========================================================= */
+/* ===========================
+   TITLE
+=========================== */
 
 .hero-title {
-  font-size: clamp(48px, 6vw, 72px);
+  font-size: 68px;
 
   line-height: 1;
 
@@ -140,146 +142,131 @@
 
   letter-spacing: 3px;
 
-  margin: 0 0 10px;
+  margin-bottom: 12px;
 
-  color: #ffffff;
+  color: #14532d;
 
   text-shadow:
-    0 4px 25px rgba(0, 0, 0, 0.25);
+    0 2px 10px rgba(255, 255, 255, 0.35);
 }
 
-
-/* =========================================================
-   HERO SUBTITLE
-   ========================================================= */
+/* ===========================
+   SUBTITLE
+=========================== */
 
 .hero-subtitle {
-  color: #b9d8bd;
+  color: #166534;
 
-  font-size: clamp(20px, 2.5vw, 28px);
+  font-size: 27px;
 
   letter-spacing: 3px;
 
-  margin: 0 0 18px;
+  margin-bottom: 22px;
 
-  font-weight: 700;
+  font-weight: 800;
 }
 
-
-/* =========================================================
-   HERO DESCRIPTION
-   ========================================================= */
+/* ===========================
+   DESCRIPTION
+=========================== */
 
 .hero p {
-  max-width: 650px;
+  max-width: 680px;
 
-  color: #e4ebe5;
+  color: #355c45;
 
-  line-height: 1.65;
+  line-height: 1.8;
 
-  font-size: 17px;
+  font-size: 18px;
 
-  margin: 0;
+  font-weight: 500;
 }
 
-
-/* =========================================================
+/* ===========================
    BUTTONS
-   ========================================================= */
+=========================== */
 
 .hero-buttons {
   display: flex;
 
-  gap: 14px;
+  gap: 18px;
 
-  margin-top: 28px;
+  margin-top: 35px;
 }
 
-
-/* =========================================================
+/* ===========================
    PRIMARY BUTTON
-   ========================================================= */
+=========================== */
 
 .primary-btn {
-  background: #6f9f78;
+  background: #15803d;
 
   color: #ffffff;
 
   border: none;
 
-  padding: 13px 30px;
+  padding: 15px 34px;
 
-  border-radius: 9px;
+  border-radius: 10px;
 
   cursor: pointer;
 
-  font-size: 15px;
+  font-size: 16px;
 
   font-weight: 700;
 
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
+  transition: 0.35s;
 }
-
 
 .primary-btn:hover {
-  transform: translateY(-3px);
+  background: #166534;
 
-  background: #7cad84;
+  transform: translateY(-4px);
 
   box-shadow:
-    0 12px 28px rgba(80, 130, 90, 0.35);
+    0 15px 35px rgba(21, 128, 61, 0.25);
 }
 
-
-/* =========================================================
+/* ===========================
    SECONDARY BUTTON
-   ========================================================= */
+=========================== */
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.5);
 
-  border:
-    1px solid rgba(185, 216, 189, 0.7);
+  border: 2px solid #15803d;
 
-  color: #ffffff;
+  color: #166534;
 
-  padding: 13px 30px;
+  padding: 15px 34px;
 
-  border-radius: 9px;
+  border-radius: 10px;
 
   cursor: pointer;
 
-  font-size: 15px;
+  font-size: 16px;
 
-  font-weight: 600;
+  font-weight: 700;
 
-  transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+  transition: 0.35s;
+
+  backdrop-filter: blur(5px);
 }
 
-
 .secondary-btn:hover {
-  background: #6f9f78;
-
-  border-color: #6f9f78;
+  background: #15803d;
 
   color: #ffffff;
 }
 
-
-/* =========================================================
-   SCROLL INDICATOR
-   ========================================================= */
+/* ===========================
+   SCROLL
+=========================== */
 
 .hero-scroll {
   position: absolute;
 
-  bottom: 18px;
+  bottom: 20px;
 
   left: 50%;
 
@@ -291,32 +278,32 @@
 
   align-items: center;
 
-  color: #dce9de;
+  color: #166534;
 
-  font-size: 11px;
+  font-size: 13px;
 
   letter-spacing: 2px;
+
+  font-weight: 600;
 
   z-index: 10;
 }
 
-
 .scroll-line {
   width: 2px;
 
-  height: 32px;
+  height: 38px;
 
-  background: #79a981;
+  background: #15803d;
 
-  margin-top: 7px;
+  margin-top: 8px;
 
   animation: scrollMove 1.5s infinite;
 }
 
-
-/* =========================================================
+/* ===========================
    SCROLL ANIMATION
-   ========================================================= */
+=========================== */
 
 @keyframes scrollMove {
   0% {
@@ -338,16 +325,15 @@
   }
 }
 
-
-/* =========================================================
-   FADE UP
-   ========================================================= */
+/* ===========================
+   FADE ANIMATION
+=========================== */
 
 @keyframes fadeUp {
   from {
     opacity: 0;
 
-    transform: translateY(25px);
+    transform: translateY(35px);
   }
 
   to {
@@ -357,34 +343,68 @@
   }
 }
 
-
-/* =========================================================
+/* ===========================
    TABLET
-   ========================================================= */
+=========================== */
+
+@media (max-width: 1100px) {
+  .hero {
+    height: 65vh;
+
+    min-height: 500px;
+  }
+
+  .hero-title {
+    font-size: 58px;
+  }
+
+  .hero-subtitle {
+    font-size: 24px;
+  }
+
+  .hero p {
+    font-size: 17px;
+
+    max-width: 600px;
+  }
+}
+
+/* ===========================
+   MOBILE
+=========================== */
 
 @media (max-width: 900px) {
   .hero {
     height: auto;
 
-    min-height: 430px;
-
-    max-height: none;
+    min-height: unset;
 
     padding: 90px 0 70px;
 
     background-attachment: scroll;
-  }
 
+    background-position: center;
+  }
 
   .hero-content {
     width: 88%;
   }
 
+  .hero-badge {
+    font-size: 11px;
 
-  .hero-title {
-    font-size: 48px;
+    padding: 9px 16px;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 20px;
   }
 
+  .hero-title {
+    font-size: 46px;
+
+    letter-spacing: 2px;
+  }
 
   .hero-subtitle {
     font-size: 21px;
@@ -392,134 +412,92 @@
     letter-spacing: 2px;
   }
 
-
   .hero p {
     font-size: 16px;
 
     line-height: 1.7;
   }
 
-
   .hero-buttons {
-    margin-top: 25px;
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 30px;
+
+    max-width: 280px;
   }
 
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+
+    padding: 14px 25px;
+  }
 
   .hero-scroll {
     display: none;
   }
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
+/* ===========================
+   SMALL PHONES
+=========================== */
 
 @media (max-width: 600px) {
   .hero {
-    min-height: 430px;
-
-    padding: 85px 0 55px;
-
-    background-position: center;
+    padding: 70px 0 55px;
   }
-
-
-  .hero-content {
-    width: 88%;
-  }
-
-
-  .hero-badge {
-    padding: 8px 14px;
-
-    font-size: 10px;
-
-    letter-spacing: 1.3px;
-
-    margin-bottom: 17px;
-  }
-
 
   .hero-title {
-    font-size: 40px;
+    font-size: 38px;
 
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
   }
 
-
   .hero-subtitle {
-    font-size: 17px;
+    font-size: 18px;
 
     letter-spacing: 1.5px;
 
-    margin-bottom: 15px;
+    margin-bottom: 18px;
   }
-
 
   .hero p {
-    font-size: 14px;
+    font-size: 15px;
 
     line-height: 1.65;
-
-    max-width: 100%;
   }
-
 
   .hero-buttons {
-    flex-direction: row;
-
-    gap: 10px;
-
-    margin-top: 22px;
-  }
-
-
-  .primary-btn,
-  .secondary-btn {
-    padding: 11px 18px;
-
-    font-size: 13px;
+    max-width: 250px;
   }
 }
 
-
-/* =========================================================
+/* ===========================
    VERY SMALL PHONES
-   ========================================================= */
+=========================== */
 
 @media (max-width: 380px) {
   .hero {
-    min-height: 400px;
-
-    padding: 75px 0 50px;
+    padding: 60px 0 50px;
   }
-
 
   .hero-title {
     font-size: 34px;
   }
 
-
   .hero-subtitle {
-    font-size: 15px;
+    font-size: 16px;
   }
-
 
   .hero p {
-    font-size: 13px;
+    font-size: 14px;
   }
 
+  .hero-badge {
+    font-size: 10px;
 
-  .hero-buttons {
-    gap: 8px;
-  }
-
-
-  .primary-btn,
-  .secondary-btn {
-    padding: 10px 14px;
-
-    font-size: 12px;
+    padding: 8px 13px;
   }
 }
