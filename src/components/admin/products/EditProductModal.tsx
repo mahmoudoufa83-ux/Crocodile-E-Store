@@ -5,15 +5,9 @@ import {
   type Product,
 } from "../../../context/ProductContext";
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { uploadImage } from "../../../services/cloudinary";
 
-import { storage } from "../../../firebase";
-
-import "../../../styles/AddProductModal.css";
+import "../../../styles/EditProductModal.css";
 
 type Props = {
   product: Product;
@@ -24,11 +18,12 @@ function EditProductModal({
   product,
   onClose,
 }: Props) {
-
-  const { updateProduct } =
-    useProducts();
+  const { updateProduct } = useProducts();
 
   const [uploading, setUploading] =
+    useState(false);
+
+  const [saving, setSaving] =
     useState(false);
 
   const [form, setForm] = useState({
@@ -44,190 +39,325 @@ function EditProductModal({
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
-
+    }));
   }
 
   async function handleImage(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
-
     const file = e.target.files?.[0];
 
     if (!file) return;
 
     try {
-
       setUploading(true);
 
-      const fileName =
-        `products/${Date.now()}-${file.name}`;
-
-      const imageRef =
-        ref(storage, fileName);
-
-      await uploadBytes(
-        imageRef,
-        file
-      );
-
-      const url =
-        await getDownloadURL(imageRef);
+      // رفع الصورة الجديدة على Cloudinary
+      const imageUrl = await uploadImage(file);
 
       setForm((prev) => ({
         ...prev,
-        image: url,
+        image: imageUrl,
       }));
-
     } catch (error) {
+      console.error(
+        "Image upload failed:",
+        error
+      );
 
-      console.error(error);
-
-      alert("Image upload failed");
-
+      alert(
+        "Image upload failed. Please try again."
+      );
     } finally {
-
       setUploading(false);
-
     }
-
   }
 
   async function handleSubmit() {
-
     if (
-      !form.name ||
-      !form.brand ||
-      !form.category ||
+      !form.name.trim() ||
+      !form.brand.trim() ||
+      !form.category.trim() ||
       !form.price ||
       !form.image
     ) {
-
       alert(
         "Please fill all required fields."
       );
 
       return;
-
     }
 
-    await updateProduct({
-      ...product,
-      name: form.name,
-      brand: form.brand,
-      category: form.category,
-      image: form.image,
-      price: Number(form.price),
-      oldPrice:
-        Number(form.oldPrice),
-      stock:
-        Number(form.stock),
-      rating: product.rating,
-    });
+    const price = Number(form.price);
+    const oldPrice = Number(form.oldPrice);
+    const stock = Number(form.stock);
 
-    onClose();
+    if (
+      Number.isNaN(price) ||
+      price < 0
+    ) {
+      alert("Please enter a valid price.");
+      return;
+    }
 
+    if (
+      Number.isNaN(oldPrice) ||
+      oldPrice < 0
+    ) {
+      alert(
+        "Please enter a valid old price."
+      );
+      return;
+    }
+
+    if (
+      Number.isNaN(stock) ||
+      stock < 0
+    ) {
+      alert(
+        "Please enter a valid stock quantity."
+      );
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      await updateProduct({
+        ...product,
+
+        name: form.name.trim(),
+        brand: form.brand.trim(),
+        category: form.category.trim(),
+
+        // لو مفيش صورة جديدة هتفضل الصورة القديمة
+        image: form.image,
+
+        price,
+        oldPrice,
+        stock,
+
+        rating: product.rating,
+      });
+
+      onClose();
+    } catch (error) {
+      console.error(
+        "Failed to update product:",
+        error
+      );
+
+      alert(
+        "Failed to update product. Please try again."
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
+    <div
+      className="edit-modal-overlay"
+      onClick={onClose}
+    >
+      <div
+        className="edit-modal"
+        onClick={(event) =>
+          event.stopPropagation()
+        }
+      >
+        {/* Header */}
+        <div className="edit-modal-header">
+          <div>
+            <h2>Edit Product</h2>
 
-    <div className="modal-overlay">
-
-      <div className="modal">
-
-        <h2>Edit Product</h2>
-
-        <input
-          name="name"
-          value={form.name}
-          placeholder="Product Name"
-          onChange={handleChange}
-        />
-
-        <input
-          name="brand"
-          value={form.brand}
-          placeholder="Brand"
-          onChange={handleChange}
-        />
-
-        <input
-          name="category"
-          value={form.category}
-          placeholder="Category"
-          onChange={handleChange}
-        />
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImage}
-        />
-
-        {uploading && (
-          <p>Uploading image...</p>
-        )}
-
-        {form.image && (
-
-          <img
-            src={form.image}
-            alt="Preview"
-            style={{
-              width: "120px",
-              height: "120px",
-              objectFit: "cover",
-              borderRadius: "10px",
-              margin: "10px auto",
-              display: "block",
-            }}
-          />
-
-        )}
-
-        <input
-          name="price"
-          type="number"
-          value={form.price}
-          placeholder="Price"
-          onChange={handleChange}
-        />
-
-        <input
-          name="oldPrice"
-          type="number"
-          value={form.oldPrice}
-          placeholder="Old Price"
-          onChange={handleChange}
-        />
-
-        <input
-          name="stock"
-          type="number"
-          value={form.stock}
-          placeholder="Stock"
-          onChange={handleChange}
-        />
-
-        <div className="modal-buttons">
+            <p>
+              Update product information
+            </p>
+          </div>
 
           <button
-            className="cancel-btn"
+            type="button"
+            className="edit-modal-close"
             onClick={onClose}
+            disabled={saving}
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Form */}
+        <div className="edit-modal-body">
+
+          <div className="edit-form-group">
+            <label>
+              Product Name
+            </label>
+
+            <input
+              name="name"
+              value={form.name}
+              placeholder="Product Name"
+              onChange={handleChange}
+              disabled={saving}
+            />
+          </div>
+
+          <div className="edit-form-group">
+            <label>
+              Brand
+            </label>
+
+            <input
+              name="brand"
+              value={form.brand}
+              placeholder="Brand"
+              onChange={handleChange}
+              disabled={saving}
+            />
+          </div>
+
+          <div className="edit-form-group">
+            <label>
+              Category
+            </label>
+
+            <input
+              name="category"
+              value={form.category}
+              placeholder="Category"
+              onChange={handleChange}
+              disabled={saving}
+            />
+          </div>
+
+          {/* Image */}
+          <div className="edit-form-group">
+            <label>
+              Product Image
+            </label>
+
+            <div className="edit-image-section">
+
+              {form.image && (
+                <div className="edit-image-preview">
+                  <img
+                    src={form.image}
+                    alt={form.name}
+                  />
+                </div>
+              )}
+
+              <label className="edit-image-upload">
+                <span>
+                  {uploading
+                    ? "Uploading image..."
+                    : "Choose New Image"}
+                </span>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImage}
+                  disabled={
+                    uploading ||
+                    saving
+                  }
+                />
+              </label>
+
+              <small>
+                Leave it unchanged if you
+                don't want to replace the
+                current image.
+              </small>
+
+            </div>
+          </div>
+
+          {/* Prices */}
+          <div className="edit-form-row">
+
+            <div className="edit-form-group">
+              <label>
+                Price
+              </label>
+
+              <input
+                name="price"
+                type="number"
+                min="0"
+                value={form.price}
+                placeholder="Price"
+                onChange={handleChange}
+                disabled={saving}
+              />
+            </div>
+
+            <div className="edit-form-group">
+              <label>
+                Old Price
+              </label>
+
+              <input
+                name="oldPrice"
+                type="number"
+                min="0"
+                value={form.oldPrice}
+                placeholder="Old Price"
+                onChange={handleChange}
+                disabled={saving}
+              />
+            </div>
+
+          </div>
+
+          {/* Stock */}
+          <div className="edit-form-group">
+            <label>
+              Stock
+            </label>
+
+            <input
+              name="stock"
+              type="number"
+              min="0"
+              value={form.stock}
+              placeholder="Stock"
+              onChange={handleChange}
+              disabled={saving}
+            />
+          </div>
+
+        </div>
+
+        {/* Footer */}
+        <div className="edit-modal-footer">
+
+          <button
+            type="button"
+            className="edit-cancel-btn"
+            onClick={onClose}
+            disabled={saving}
           >
             Cancel
           </button>
 
           <button
-            className="save-btn"
-            disabled={uploading}
+            type="button"
+            className="edit-save-btn"
+            disabled={
+              uploading || saving
+            }
             onClick={handleSubmit}
           >
-            {uploading
+            {saving
+              ? "Saving..."
+              : uploading
               ? "Uploading..."
               : "Save Changes"}
           </button>
@@ -235,11 +365,8 @@ function EditProductModal({
         </div>
 
       </div>
-
     </div>
-
   );
-
 }
 
 export default EditProductModal;
