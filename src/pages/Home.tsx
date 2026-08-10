@@ -10,9 +10,8 @@ import Testimonials from "../components/home/Testimonials";
 
 function Home() {
   useEffect(() => {
-    const sectionId = sessionStorage.getItem(
-      "scrollToSection"
-    );
+    const sectionId =
+      sessionStorage.getItem("scrollToSection");
 
     if (!sectionId) return;
 
@@ -42,17 +41,45 @@ function Home() {
 
   return (
     <>
+      {/* =========================
+          HERO
+      ========================== */}
+
       <Hero />
+
+      {/* =========================
+          CATEGORIES
+      ========================== */}
 
       <Categories />
 
+      {/* =========================
+          FEATURED PRODUCTS
+      ========================== */}
+
       <FeaturedProducts />
+
+      {/* =========================
+          OFFERS
+      ========================== */}
 
       <Offers />
 
+      {/* =========================
+          WHY CHOOSE US
+      ========================== */}
+
       <WhyChooseUs />
 
+      {/* =========================
+          BRANDS
+      ========================== */}
+
       <Brands />
+
+      {/* =========================
+          TESTIMONIALS
+      ========================== */}
 
       <Testimonials />
     </>

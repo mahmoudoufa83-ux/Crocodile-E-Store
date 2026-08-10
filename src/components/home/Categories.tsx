@@ -7,12 +7,23 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 
+import { useNavigate } from "react-router-dom";
+import { useFilter } from "../../context/FilterContext";
+
 function Categories() {
+  const navigate = useNavigate();
+  const { setCategory } = useFilter();
+
+  function goToCategory(category: string) {
+    // تحديد الكاتيجوري في الفلتر
+    setCategory(category);
+
+    // الانتقال لصفحة المنتجات
+    navigate("/products");
+  }
+
   return (
-    <section
-      className="categories"
-      id="categories"
-    >
+    <section id="categories" className="categories-section">
       <div className="section-title">
         <span>CATEGORIES</span>
 
@@ -25,7 +36,24 @@ function Categories() {
       </div>
 
       <div className="category-grid">
-        <div className="category-card">
+
+        {/* =========================
+            PRINTERS
+        ========================== */}
+        <div
+          className="category-card"
+          onClick={() => goToCategory("Printers")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+              goToCategory("Printers");
+            }
+          }}
+        >
           <div className="category-icon">
             <FaPrint />
           </div>
@@ -37,13 +65,35 @@ function Categories() {
             home, office and business.
           </p>
 
-          <button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              goToCategory("Printers");
+            }}
+          >
             Explore
             <FaArrowRight />
           </button>
         </div>
 
-        <div className="category-card">
+        {/* =========================
+            TONERS
+        ========================== */}
+        <div
+          className="category-card"
+          onClick={() => goToCategory("Toner")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+              goToCategory("Toner");
+            }
+          }}
+        >
           <div className="category-icon">
             <FaBoxOpen />
           </div>
@@ -55,13 +105,35 @@ function Categories() {
             for all major printer brands.
           </p>
 
-          <button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              goToCategory("Toner");
+            }}
+          >
             Explore
             <FaArrowRight />
           </button>
         </div>
 
-        <div className="category-card">
+        {/* =========================
+            INK
+        ========================== */}
+        <div
+          className="category-card"
+          onClick={() => goToCategory("Ink")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+              goToCategory("Ink");
+            }
+          }}
+        >
           <div className="category-icon">
             <FaTint />
           </div>
@@ -73,11 +145,18 @@ function Categories() {
             with excellent printing performance.
           </p>
 
-          <button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              goToCategory("Ink");
+            }}
+          >
             Explore
             <FaArrowRight />
           </button>
         </div>
+
       </div>
     </section>
   );
