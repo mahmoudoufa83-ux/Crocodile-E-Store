@@ -21,6 +21,7 @@ import {
 import { db } from "../firebase";
 
 import { useAuth } from "./AuthContext";
+import { useStore } from "./StoreContext";
 
 import type {
   Order,
@@ -46,6 +47,10 @@ type OrderContextType = {
   ) => Promise<void>;
 
   refreshOrders: () => Promise<void>;
+
+  getShippingCost: (
+    city: string
+  ) => number;
 };
 
 const OrderContext =
@@ -58,8 +63,12 @@ export function OrderProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading: authLoading } =
-    useAuth();
+  const {
+    user,
+    loading: authLoading,
+  } = useAuth();
+
+  const { settings } = useStore();
 
   const [orders, setOrders] =
     useState<Order[]>([]);
@@ -69,13 +78,237 @@ export function OrderProvider({
 
   /*
    * =========================
+   * SHIPPING COST
+   * =========================
+   *
+   * Finds the shipping price
+   * according to the customer's
+   * governorate.
+   */
+
+  function getShippingCost(
+    city: string
+  ): number {
+    if (!city) {
+      return 0;
+    }
+
+    const normalizedCity =
+      city.trim().toLowerCase();
+
+    const shippingRates =
+      settings.shippingRates;
+
+    const cityMap: Record<
+      string,
+      keyof typeof shippingRates
+    > = {
+      cairo: "Cairo",
+
+      "القاهرة": "Cairo",
+
+      giza: "Giza",
+
+      "الجيزة": "Giza",
+
+      alexandria:
+        "Alexandria",
+
+      "الإسكندرية":
+        "Alexandria",
+
+      "alexandria governorate":
+        "Alexandria",
+
+      qalyubia:
+        "Qalyubia",
+
+      "القليوبية":
+        "Qalyubia",
+
+      dakahlia:
+        "Dakahlia",
+
+      "الدقهلية":
+        "Dakahlia",
+
+      sharqia:
+        "Sharqia",
+
+      "الشرقية":
+        "Sharqia",
+
+      gharbia:
+        "Gharbia",
+
+      "الغربية":
+        "Gharbia",
+
+      monufia:
+        "Monufia",
+
+      "المنوفية":
+        "Monufia",
+
+      beheira:
+        "Beheira",
+
+      "البحيرة":
+        "Beheira",
+
+      "kafr el sheikh":
+        "KafrElSheikh",
+
+      "kafr-el-sheikh":
+        "KafrElSheikh",
+
+      "كفر الشيخ":
+        "KafrElSheikh",
+
+      damietta:
+        "Damietta",
+
+      "دمياط":
+        "Damietta",
+
+      "port said":
+        "PortSaid",
+
+      "port-said":
+        "PortSaid",
+
+      "بورسعيد":
+        "PortSaid",
+
+      ismailia:
+        "Ismailia",
+
+      "ismailia governorate":
+        "Ismailia",
+
+      "الإسماعيلية":
+        "Ismailia",
+
+      suez:
+        "Suez",
+
+      "السويس":
+        "Suez",
+
+      "north sinai":
+        "NorthSinai",
+
+      "north-sinai":
+        "NorthSinai",
+
+      "شمال سيناء":
+        "NorthSinai",
+
+      "south sinai":
+        "SouthSinai",
+
+      "south-sinai":
+        "SouthSinai",
+
+      "جنوب سيناء":
+        "SouthSinai",
+
+      fayoum:
+        "Fayoum",
+
+      "الفيوم":
+        "Fayoum",
+
+      "beni suef":
+        "BeniSuef",
+
+      "beni-suef":
+        "BeniSuef",
+
+      "بني سويف":
+        "BeniSuef",
+
+      minya:
+        "Minya",
+
+      "المنيا":
+        "Minya",
+
+      assiut:
+        "Assiut",
+
+      "أسيوط":
+        "Assiut",
+
+      sohag:
+        "Sohag",
+
+      "سوهاج":
+        "Sohag",
+
+      qena:
+        "Qena",
+
+      "قنا":
+        "Qena",
+
+      luxor:
+        "Luxor",
+
+      "الأقصر":
+        "Luxor",
+
+      aswan:
+        "Aswan",
+
+      "أسوان":
+        "Aswan",
+
+      "red sea":
+        "RedSea",
+
+      "red-sea":
+        "RedSea",
+
+      "البحر الأحمر":
+        "RedSea",
+
+      "new valley":
+        "NewValley",
+
+      "new-valley":
+        "NewValley",
+
+      "الوادي الجديد":
+        "NewValley",
+
+      matrouh:
+        "Matrouh",
+
+      "مطروح":
+        "Matrouh",
+    };
+
+    const rateKey =
+      cityMap[normalizedCity];
+
+    if (!rateKey) {
+      return 0;
+    }
+
+    return Number(
+      shippingRates[rateKey] ?? 0
+    );
+  }
+
+  /*
+   * =========================
    * LOAD ORDERS
    * =========================
    *
-   * Orders are readable only by Admin.
-   *
-   * Guests and normal users must NOT
-   * try to read the orders collection.
+   * Only Admin can read all
+   * orders according to the
+   * current Firestore rules.
    */
 
   useEffect(() => {
@@ -88,15 +321,10 @@ export function OrderProvider({
 
   async function refreshOrders() {
     /*
-     * =========================
-     * GUEST / NORMAL USER
-     * =========================
-     *
-     * Do not query Firestore orders.
-     *
-     * This is important because the
-     * Firestore Rules only allow the
-     * Admin to read orders.
+     * Guests and normal users
+     * must not query orders because
+     * Firestore rules only allow
+     * Admin to read them.
      */
 
     if (
@@ -104,6 +332,7 @@ export function OrderProvider({
       user.role !== "admin"
     ) {
       setOrders([]);
+
       setLoading(false);
 
       return;
@@ -122,14 +351,29 @@ export function OrderProvider({
 
       const data =
         snapshot.docs.map(
-          (document) => ({
-            id: document.id,
+          (document) => {
+            const firestoreData =
+              document.data();
 
-            ...(document.data() as Omit<
-              Order,
-              "id"
-            >),
-          })
+            return {
+              id: document.id,
+
+              ...firestoreData,
+
+              shippingCost:
+                Number(
+                  firestoreData.shippingCost ??
+                    0
+                ),
+
+              finalTotal:
+                Number(
+                  firestoreData.finalTotal ??
+                    firestoreData.total ??
+                    0
+                ),
+            } as Order;
+          }
         );
 
       setOrders(data);
@@ -150,19 +394,46 @@ export function OrderProvider({
    * ADD ORDER
    * =========================
    *
-   * This function works for:
+   * Works for:
    *
    * 1. Guest
    * 2. Normal User
    * 3. Admin
-   *
-   * Login is NOT required.
    */
 
   async function addOrder(
     order: OrderData
   ): Promise<void> {
     try {
+      /*
+       * Calculate shipping again
+       * before saving the order.
+       *
+       * This makes sure the price
+       * stored in Firestore matches
+       * the selected governorate.
+       */
+
+      const shippingCost =
+        getShippingCost(
+          order.city
+        );
+
+      /*
+       * Products total.
+       */
+
+      const productsTotal =
+        Number(order.total);
+
+      /*
+       * Final order total.
+       */
+
+      const finalTotal =
+        productsTotal +
+        shippingCost;
+
       /*
        * =========================
        * SAVE TO FIRESTORE
@@ -175,16 +446,34 @@ export function OrderProvider({
           ...order,
 
           /*
-           * If the customer is logged in,
-           * save the Firebase UID.
+           * Logged-in customer UID.
            *
-           * If Guest:
-           * userId = ""
+           * Guest = empty string.
            */
+
           userId:
             user?.uid ??
             order.userId ??
             "",
+
+          /*
+           * Products total.
+           */
+
+          total:
+            productsTotal,
+
+          /*
+           * Shipping price.
+           */
+
+          shippingCost,
+
+          /*
+           * Final total.
+           */
+
+          finalTotal,
 
           date:
             new Date().toISOString(),
@@ -220,8 +509,24 @@ export function OrderProvider({
           paymentMethod:
             order.paymentMethod,
 
+          /*
+           * Products total.
+           */
+
           total:
-            order.total,
+            productsTotal,
+
+          /*
+           * Shipping price.
+           */
+
+          shippingCost,
+
+          /*
+           * Final total.
+           */
+
+          finalTotal,
 
           items:
             order.items.map(
@@ -241,12 +546,8 @@ export function OrderProvider({
 
       /*
        * =========================
-       * REFRESH
+       * ADMIN REFRESH
        * =========================
-       *
-       * Only Admin should refresh
-       * because only Admin can read
-       * orders.
        */
 
       if (
@@ -265,13 +566,9 @@ export function OrderProvider({
       );
 
       /*
-       * VERY IMPORTANT:
-       *
-       * Re-throw the error so Checkout
-       * knows that the order failed.
-       *
-       * This prevents clearCart()
-       * from running after a failed order.
+       * Re-throw the error so
+       * Checkout knows that the
+       * order failed.
        */
 
       throw error;
@@ -282,8 +579,6 @@ export function OrderProvider({
    * =========================
    * UPDATE ORDER STATUS
    * =========================
-   *
-   * Admin only.
    */
 
   async function updateOrderStatus(
@@ -324,8 +619,6 @@ export function OrderProvider({
    * =========================
    * DELETE ORDER
    * =========================
-   *
-   * Admin only.
    */
 
   async function deleteOrder(
@@ -362,11 +655,18 @@ export function OrderProvider({
     <OrderContext.Provider
       value={{
         orders,
+
         loading,
+
         addOrder,
+
         updateOrderStatus,
+
         deleteOrder,
+
         refreshOrders,
+
+        getShippingCost,
       }}
     >
       {children}

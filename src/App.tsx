@@ -17,11 +17,16 @@ import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import MyOrders from "./pages/MyOrders";
+
+import Returns from "./pages/Returns";
+import Terms from "./pages/Terms";
 
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
@@ -68,7 +73,9 @@ function App() {
 
         <Route
           path="/product/:id"
-          element={<ProductDetails />}
+          element={
+            <ProductDetails />
+          }
         />
 
         <Route
@@ -96,8 +103,8 @@ function App() {
         />
 
         {/* =========================
+            CHECKOUT
             GUEST CHECKOUT
-            NO LOGIN REQUIRED
         ========================== */}
 
         <Route
@@ -107,17 +114,35 @@ function App() {
 
         {/* =========================
             ORDER SUCCESS
-            NO LOGIN REQUIRED
         ========================== */}
 
         <Route
           path="/order-success"
-          element={<OrderSuccess />}
+          element={
+            <OrderSuccess />
+          }
+        />
+
+        {/* =========================
+            RETURNS
+        ========================== */}
+
+        <Route
+          path="/returns"
+          element={<Returns />}
+        />
+
+        {/* =========================
+            TERMS
+        ========================== */}
+
+        <Route
+          path="/terms"
+          element={<Terms />}
         />
 
         {/* =========================
             ORDERS
-            ADMIN ONLY
         ========================== */}
 
         <Route

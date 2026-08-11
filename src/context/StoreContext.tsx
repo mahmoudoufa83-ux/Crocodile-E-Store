@@ -13,40 +13,246 @@ import {
 
 import { db } from "../firebase";
 
+/*
+ * =========================
+ * SHIPPING RATES
+ * =========================
+ */
+
+export type ShippingRates = {
+  Cairo: number;
+  Giza: number;
+  Alexandria: number;
+  Qalyubia: number;
+  Dakahlia: number;
+  Sharqia: number;
+  Gharbia: number;
+  Monufia: number;
+  Beheira: number;
+  KafrElSheikh: number;
+  Damietta: number;
+  PortSaid: number;
+  Ismailia: number;
+  Suez: number;
+  NorthSinai: number;
+  SouthSinai: number;
+  Fayoum: number;
+  BeniSuef: number;
+  Minya: number;
+  Assiut: number;
+  Sohag: number;
+  Qena: number;
+  Luxor: number;
+  Aswan: number;
+  RedSea: number;
+  NewValley: number;
+  Matrouh: number;
+};
+
+/*
+ * =========================
+ * STORE SETTINGS
+ * =========================
+ */
+
 export type StoreSettings = {
   storeName: string;
+
   adminName: string;
+
   adminEmail: string;
+
   logo: string;
+
   phone: string;
+
   whatsapp: string;
+
   address: string;
+
   facebook: string;
+
   instagram: string;
+
+  /*
+   * Shipping prices according
+   * to governorate.
+   */
+
+  shippingRates: ShippingRates;
+
+  /*
+   * Return / exchange policy.
+   */
+
+  returnPolicy: string;
+
+  /*
+   * Shipping policy.
+   */
+
+  shippingPolicy: string;
+
+  /*
+   * Terms and conditions.
+   */
+
+  termsAndConditions: string;
+
+  /*
+   * Privacy policy.
+   */
+
+  privacyPolicy: string;
 };
+
+/*
+ * =========================
+ * CONTEXT TYPE
+ * =========================
+ */
 
 type StoreContextType = {
   settings: StoreSettings;
+
   loading: boolean;
+
   updateSettings: (
     data: StoreSettings
   ) => Promise<void>;
 };
 
-const defaultSettings: StoreSettings = {
-  storeName: "Crocodile Print Solutions",
-  adminName: "Administrator",
-  adminEmail: "",
-  logo: "",
-  phone: "",
-  whatsapp: "",
-  address: "",
-  facebook: "",
-  instagram: "",
+/*
+ * =========================
+ * DEFAULT SHIPPING RATES
+ * =========================
+ *
+ * You can change these prices
+ * later directly from Admin Settings.
+ */
+
+const defaultShippingRates: ShippingRates = {
+  Cairo: 50,
+
+  Giza: 50,
+
+  Alexandria: 70,
+
+  Qalyubia: 60,
+
+  Dakahlia: 75,
+
+  Sharqia: 70,
+
+  Gharbia: 70,
+
+  Monufia: 70,
+
+  Beheira: 75,
+
+  KafrElSheikh: 75,
+
+  Damietta: 80,
+
+  PortSaid: 80,
+
+  Ismailia: 75,
+
+  Suez: 80,
+
+  NorthSinai: 100,
+
+  SouthSinai: 120,
+
+  Fayoum: 75,
+
+  BeniSuef: 80,
+
+  Minya: 90,
+
+  Assiut: 95,
+
+  Sohag: 100,
+
+  Qena: 105,
+
+  Luxor: 110,
+
+  Aswan: 120,
+
+  RedSea: 120,
+
+  NewValley: 130,
+
+  Matrouh: 120,
 };
 
+/*
+ * =========================
+ * DEFAULT SETTINGS
+ * =========================
+ */
+
+const defaultSettings: StoreSettings = {
+  storeName:
+    "Crocodile Print Solutions",
+
+  adminName:
+    "Administrator",
+
+  adminEmail:
+    "",
+
+  logo:
+    "",
+
+  phone:
+    "",
+
+  whatsapp:
+    "",
+
+  address:
+    "",
+
+  facebook:
+    "",
+
+  instagram:
+    "",
+
+  shippingRates:
+    defaultShippingRates,
+
+  returnPolicy:
+    "Returns and exchanges are accepted according to our store return policy. Products must be returned in their original condition.",
+
+  shippingPolicy:
+    "Shipping fees are calculated according to the customer's governorate and are displayed before placing the order.",
+
+  termsAndConditions:
+    "By placing an order, the customer agrees to the store's terms and conditions.",
+
+  privacyPolicy:
+    "Customer information is used only to process orders and provide the requested services.",
+};
+
+/*
+ * =========================
+ * CONTEXT
+ * =========================
+ */
+
 const StoreContext =
-  createContext<StoreContextType | null>(null);
+  createContext<StoreContextType | null>(
+    null
+  );
+
+/*
+ * =========================
+ * PROVIDER
+ * =========================
+ */
 
 export function StoreProvider({
   children,
@@ -54,10 +260,18 @@ export function StoreProvider({
   children: React.ReactNode;
 }) {
   const [settings, setSettings] =
-    useState(defaultSettings);
+    useState<StoreSettings>(
+      defaultSettings
+    );
 
   const [loading, setLoading] =
     useState(true);
+
+  /*
+   * =========================
+   * LOAD SETTINGS
+   * =========================
+   */
 
   useEffect(() => {
     async function loadSettings() {
@@ -72,24 +286,64 @@ export function StoreProvider({
           await getDoc(ref);
 
         if (snapshot.exists()) {
-          const data = {
-            ...defaultSettings,
-            ...(snapshot.data() as StoreSettings),
-          };
+          const data =
+            snapshot.data();
 
-          setSettings(data);
+          /*
+           * Merge the existing
+           * Firestore settings with
+           * the new defaults.
+           *
+           * This prevents old settings
+           * documents from breaking
+           * after adding new fields.
+           */
+
+          const loadedSettings: StoreSettings =
+            {
+              ...defaultSettings,
+
+              ...data,
+
+              shippingRates: {
+                ...defaultShippingRates,
+
+                ...(data.shippingRates ??
+                  {}),
+              },
+            };
+
+          setSettings(
+            loadedSettings
+          );
         } else {
+          /*
+           * First time settings
+           * document is created.
+           */
+
           await setDoc(
             ref,
             defaultSettings
           );
 
-          setSettings(defaultSettings);
+          setSettings(
+            defaultSettings
+          );
         }
       } catch (error) {
         console.error(
           "Firestore Error:",
           error
+        );
+
+        /*
+         * Keep default settings
+         * if Firestore fails.
+         */
+
+        setSettings(
+          defaultSettings
         );
       } finally {
         setLoading(false);
@@ -98,6 +352,12 @@ export function StoreProvider({
 
     loadSettings();
   }, []);
+
+  /*
+   * =========================
+   * UPDATE SETTINGS
+   * =========================
+   */
 
   async function updateSettings(
     data: StoreSettings
@@ -118,14 +378,24 @@ export function StoreProvider({
         "Save Error:",
         error
       );
+
+      throw error;
     }
   }
+
+  /*
+   * =========================
+   * PROVIDER
+   * =========================
+   */
 
   return (
     <StoreContext.Provider
       value={{
         settings,
+
         loading,
+
         updateSettings,
       }}
     >
@@ -134,30 +404,54 @@ export function StoreProvider({
           style={{
             width: "100%",
             height: "100vh",
+
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "#ffffff",
+
+            flexDirection:
+              "column",
+
+            justifyContent:
+              "center",
+
+            alignItems:
+              "center",
+
+            background:
+              "#ffffff",
+
             gap: "20px",
           }}
         >
           <div
             style={{
               width: "60px",
+
               height: "60px",
-              border: "5px solid #e5e7eb",
-              borderTop: "5px solid #15803d",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
+
+              border:
+                "5px solid #e5e7eb",
+
+              borderTop:
+                "5px solid #15803d",
+
+              borderRadius:
+                "50%",
+
+              animation:
+                "spin 1s linear infinite",
             }}
           />
 
           <h2
             style={{
-              color: "#15803d",
+              color:
+                "#15803d",
+
               margin: 0,
-              fontSize: "22px",
+
+              fontSize:
+                "22px",
+
               fontWeight: 700,
             }}
           >
@@ -170,6 +464,7 @@ export function StoreProvider({
                 from {
                   transform: rotate(0deg);
                 }
+
                 to {
                   transform: rotate(360deg);
                 }
@@ -184,9 +479,17 @@ export function StoreProvider({
   );
 }
 
+/*
+ * =========================
+ * HOOK
+ * =========================
+ */
+
 export function useStore() {
   const context =
-    useContext(StoreContext);
+    useContext(
+      StoreContext
+    );
 
   if (!context) {
     throw new Error(
