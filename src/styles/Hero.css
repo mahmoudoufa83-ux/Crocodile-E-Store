@@ -3,6 +3,10 @@ CROCODILE HERO
 Premium Green Style
 =========================== */
 
+/* ===========================
+HERO
+=========================== */
+
 .hero {
     position: relative;
 
@@ -14,8 +18,10 @@ Premium Green Style
 
     background:
         linear-gradient(
-            rgba(223, 243, 230, 0.88),
-            rgba(223, 243, 230, 0.88)
+            90deg,
+            rgba(223, 243, 230, 0.98) 0%,
+            rgba(223, 243, 230, 0.94) 45%,
+            rgba(223, 243, 230, 0.78) 100%
         ),
         url("/images/hero.jpg");
 
@@ -25,15 +31,12 @@ Premium Green Style
 
     background-attachment: fixed;
 
-    background-repeat: no-repeat;
-
     display: flex;
 
     align-items: center;
 
     overflow: hidden;
 }
-
 
 /* ===========================
 GREEN LIGHT EFFECT
@@ -56,7 +59,6 @@ GREEN LIGHT EFFECT
     pointer-events: none;
 }
 
-
 /* ===========================
 SECOND SOFT EFFECT
 =========================== */
@@ -78,7 +80,6 @@ SECOND SOFT EFFECT
     pointer-events: none;
 }
 
-
 /* ===========================
 HERO CONTENT
 =========================== */
@@ -98,7 +99,6 @@ HERO CONTENT
 
     animation: fadeUp 0.9s ease;
 }
-
 
 /* ===========================
 BADGE
@@ -128,7 +128,6 @@ BADGE
     margin-bottom: 22px;
 }
 
-
 /* ===========================
 TITLE
 =========================== */
@@ -150,7 +149,6 @@ TITLE
         0 2px 10px rgba(255, 255, 255, 0.35);
 }
 
-
 /* ===========================
 SUBTITLE
 =========================== */
@@ -166,7 +164,6 @@ SUBTITLE
 
     font-weight: 800;
 }
-
 
 /* ===========================
 DESCRIPTION
@@ -184,7 +181,6 @@ DESCRIPTION
     font-weight: 500;
 }
 
-
 /* ===========================
 BUTTONS
 =========================== */
@@ -196,7 +192,6 @@ BUTTONS
 
     margin-top: 35px;
 }
-
 
 /* ===========================
 PRIMARY BUTTON
@@ -231,7 +226,6 @@ PRIMARY BUTTON
         0 15px 35px rgba(21, 128, 61, 0.25);
 }
 
-
 /* ===========================
 SECONDARY BUTTON
 =========================== */
@@ -263,7 +257,6 @@ SECONDARY BUTTON
 
     color: #ffffff;
 }
-
 
 /* ===========================
 SCROLL
@@ -307,12 +300,12 @@ SCROLL
     animation: scrollMove 1.5s infinite;
 }
 
-
 /* ===========================
 SCROLL ANIMATION
 =========================== */
 
 @keyframes scrollMove {
+
     0% {
         transform: scaleY(0.2);
 
@@ -332,12 +325,12 @@ SCROLL ANIMATION
     }
 }
 
-
 /* ===========================
 FADE ANIMATION
 =========================== */
 
 @keyframes fadeUp {
+
     from {
         opacity: 0;
 
@@ -351,12 +344,12 @@ FADE ANIMATION
     }
 }
 
-
 /* ===========================
 TABLET
 =========================== */
 
 @media (max-width: 1100px) {
+
     .hero {
         height: 65vh;
 
@@ -378,40 +371,40 @@ TABLET
     }
 }
 
-
 /* ===========================
 MOBILE
 =========================== */
 
 @media (max-width: 900px) {
+
     .hero {
-        /*
-        ارتفاع ثابت للموبايل
-        بدل ما الـ Hero يتمدد مع المحتوى
-        */
+        height: auto;
 
-        height: 620px;
+        min-height: 0;
 
-        min-height: 620px;
-
-        padding: 45px 0 35px;
+        padding: 55px 0 45px;
 
         background-attachment: scroll;
 
         /*
-        إظهار صورة اللوجو بحجم أصغر
-        بدل تكبيرها بشكل مبالغ فيه
+        نحرك الصورة ناحية اليمين
+        لإبعاد التمساح عن منطقة النص
         */
+        background-position: 85% center;
 
-        background-size: 100% auto;
+        background-size: cover;
 
-        background-position: center center;
-
-        background-repeat: no-repeat;
-
-        background-color: #dff3e6;
-
-        align-items: center;
+        /*
+        طبقة فاتحة أقوى ناحية النص
+        */
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(223, 243, 230, 0.99) 0%,
+                rgba(223, 243, 230, 0.97) 55%,
+                rgba(223, 243, 230, 0.85) 100%
+            ),
+            url("/images/hero.jpg");
     }
 
     .hero-content {
@@ -420,106 +413,113 @@ MOBILE
         max-width: 600px;
     }
 
+    /* ===========================
+    BADGE
+    =========================== */
+
     .hero-badge {
         font-size: 11px;
 
-        padding: 9px 16px;
+        padding: 8px 15px;
 
         letter-spacing: 1.5px;
 
-        margin-bottom: 18px;
+        margin-bottom: 16px;
     }
+
+    /* ===========================
+    TITLE
+    =========================== */
 
     .hero-title {
-        font-size: 46px;
+        font-size: 42px;
 
         letter-spacing: 2px;
 
-        line-height: 1;
+        margin-bottom: 8px;
     }
+
+    /* ===========================
+    SUBTITLE
+    =========================== */
 
     .hero-subtitle {
-        font-size: 21px;
+        font-size: 20px;
 
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
 
-        margin-bottom: 18px;
+        margin-bottom: 15px;
     }
+
+    /* ===========================
+    DESCRIPTION
+    =========================== */
 
     .hero p {
-        font-size: 16px;
+        font-size: 15px;
 
-        line-height: 1.65;
+        line-height: 1.6;
 
-        max-width: 600px;
+        max-width: 520px;
     }
+
+    /* ===========================
+    BUTTONS
+    =========================== */
 
     .hero-buttons {
         flex-direction: column;
 
-        gap: 12px;
+        gap: 10px;
 
-        margin-top: 25px;
+        margin-top: 24px;
 
-        max-width: 440px;
+        max-width: 100%;
     }
 
     .primary-btn,
     .secondary-btn {
         width: 100%;
 
-        padding: 14px 25px;
-
-        min-height: 52px;
+        padding: 13px 22px;
     }
+
+    /* ===========================
+    HIDE SCROLL
+    =========================== */
 
     .hero-scroll {
         display: none;
     }
 }
 
-
 /* ===========================
 SMALL PHONES
 =========================== */
 
 @media (max-width: 600px) {
+
     .hero {
-        /*
-        ضبط إضافي للشاشات الصغيرة
-        */
-
-        height: 600px;
-
-        min-height: 600px;
-
-        padding: 35px 0 30px;
+        padding: 45px 0 38px;
 
         /*
-        تصغير الخلفية أكثر
-        علشان اللوجو الخلفي يظهر بشكل
-        متوازن مع محتوى الـ Hero
+        زيادة إبعاد الرسمة عن الكلام
         */
-
-        background-size: 100% auto;
-
-        background-position: center center;
+        background-position: 90% center;
     }
 
     .hero-content {
         width: 88%;
-
-        max-width: 420px;
     }
 
     .hero-badge {
         font-size: 10px;
 
-        padding: 8px 14px;
+        padding: 8px 13px;
 
         letter-spacing: 1.3px;
 
-        margin-bottom: 18px;
+        margin-bottom: 14px;
     }
 
     .hero-title {
@@ -527,7 +527,7 @@ SMALL PHONES
 
         letter-spacing: 1.5px;
 
-        line-height: 1;
+        margin-bottom: 7px;
     }
 
     .hero-subtitle {
@@ -535,71 +535,45 @@ SMALL PHONES
 
         letter-spacing: 1.5px;
 
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
 
     .hero p {
         font-size: 15px;
 
         line-height: 1.6;
-
-        max-width: 100%;
     }
 
     .hero-buttons {
-        max-width: 100%;
+        gap: 10px;
 
-        margin-top: 23px;
-
-        gap: 11px;
+        margin-top: 22px;
     }
 
     .primary-btn,
     .secondary-btn {
-        min-height: 51px;
-
         padding: 13px 20px;
 
-        font-size: 15px;
+        border-radius: 10px;
     }
 }
-
 
 /* ===========================
 VERY SMALL PHONES
 =========================== */
 
 @media (max-width: 380px) {
+
     .hero {
-        height: 575px;
+        padding: 40px 0 35px;
 
-        min-height: 575px;
-
-        padding: 30px 0 25px;
-
-        background-size: 105% auto;
-
-        background-position: center center;
-    }
-
-    .hero-content {
-        width: 89%;
-    }
-
-    .hero-badge {
-        font-size: 9px;
-
-        padding: 7px 12px;
-
-        letter-spacing: 1.1px;
-
-        margin-bottom: 16px;
+        background-position: 92% center;
     }
 
     .hero-title {
         font-size: 34px;
 
-        letter-spacing: 1.2px;
+        letter-spacing: 1px;
     }
 
     .hero-subtitle {
@@ -607,7 +581,7 @@ VERY SMALL PHONES
 
         letter-spacing: 1.2px;
 
-        margin-bottom: 14px;
+        margin-bottom: 12px;
     }
 
     .hero p {
@@ -616,18 +590,22 @@ VERY SMALL PHONES
         line-height: 1.55;
     }
 
+    .hero-badge {
+        font-size: 9px;
+
+        padding: 7px 11px;
+
+        letter-spacing: 1.1px;
+    }
+
     .hero-buttons {
         margin-top: 20px;
-
-        gap: 10px;
     }
 
     .primary-btn,
     .secondary-btn {
-        min-height: 49px;
-
         padding: 12px 18px;
 
-        font-size: 14px;
+        font-size: 15px;
     }
 }
