@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useStore } from "../context/StoreContext";
 import { useTheme } from "../context/ThemeContext";
 
+import { uploadImage } from "../services/cloudinary";
+
 import "../styles/AdminProducts.css";
 
 function AdminSettings() {
@@ -25,6 +27,10 @@ function AdminSettings() {
 
   const [saving, setSaving] =
     useState(false);
+
+  // الصورة الجديدة التي اختارها الأدمن
+  const [logoFile, setLogoFile] =
+    useState<File | null>(null);
 
   useEffect(() => {
     setStoreForm(settings);
@@ -57,6 +63,12 @@ function AdminSettings() {
     });
   }
 
+  /*
+   * =========================
+   * LOGO
+   * =========================
+   */
+
   function handleLogo(
     e: React.ChangeEvent<HTMLInputElement>
   ) {
@@ -64,17 +76,37 @@ function AdminSettings() {
 
     if (!file) return;
 
-    const reader = new FileReader();
+    // نتأكد أنها صورة
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
 
-    reader.onloadend = () => {
-      setStoreForm((prev) => ({
-        ...prev,
-        logo: reader.result as string,
-      }));
-    };
+    // حد أقصى 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Logo image must be less than 5MB.");
+      return;
+    }
 
-    reader.readAsDataURL(file);
+    // نخزن الملف فقط
+    // ولن نضع Base64 داخل Firestore
+    setLogoFile(file);
+
+    // Preview مؤقت للأدمن
+    const previewUrl =
+      URL.createObjectURL(file);
+
+    setStoreForm((prev) => ({
+      ...prev,
+      logo: previewUrl,
+    }));
   }
+
+  /*
+   * =========================
+   * SHIPPING
+   * =========================
+   */
 
   function handleShippingChange(
     e: React.ChangeEvent<HTMLInputElement>
@@ -94,6 +126,12 @@ function AdminSettings() {
     }));
   }
 
+  /*
+   * =========================
+   * POLICIES
+   * =========================
+   */
+
   function handlePolicyChange(
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) {
@@ -103,34 +141,90 @@ function AdminSettings() {
     }));
   }
 
+  /*
+   * =========================
+   * SAVE STORE
+   * =========================
+   */
+
   async function saveStore() {
     try {
       setSaving(true);
 
-      await updateSettings(storeForm);
+      let finalLogo =
+        settings.logo;
 
-      alert("Store Settings Saved Successfully");
-    } catch (error) {
-      console.error(error);
+      /*
+       * لو الأدمن اختار صورة جديدة
+       * نرفعها على Cloudinary
+       */
+      if (logoFile) {
+        finalLogo = await uploadImage(
+          logoFile
+        );
+      }
+
+      /*
+       * البيانات التي سيتم حفظها
+       * في Firestore
+       */
+      const dataToSave = {
+        ...storeForm,
+        logo: finalLogo,
+      };
+
+      await updateSettings(
+        dataToSave
+      );
+
+      /*
+       * الصورة أصبحت محفوظة،
+       * لذلك نمسح الملف المؤقت
+       */
+      setLogoFile(null);
+
+      /*
+       * تحديث الفورم بالرابط الحقيقي
+       */
+      setStoreForm(dataToSave);
 
       alert(
-        "Failed to save store settings."
+        "Store Settings Saved Successfully"
+      );
+    } catch (error) {
+      console.error(
+        "Logo / Store Save Error:",
+        error
+      );
+
+      alert(
+        "Failed to save store settings. Please check the image upload settings and try again."
       );
     } finally {
       setSaving(false);
     }
   }
 
+  /*
+   * =========================
+   * SAVE THEME
+   * =========================
+   */
+
   function saveTheme() {
     updateTheme(themeForm);
 
-    alert("Theme Updated Successfully");
+    alert(
+      "Theme Updated Successfully"
+    );
   }
 
   if (loading) {
     return (
       <section className="admin-products">
-        <h2>Loading Settings...</h2>
+        <h2>
+          Loading Settings...
+        </h2>
       </section>
     );
   }
@@ -210,7 +304,9 @@ function AdminSettings() {
         <input
           name="storeName"
           placeholder="Store Name"
-          value={storeForm.storeName}
+          value={
+            storeForm.storeName
+          }
           onChange={
             handleStoreChange
           }
@@ -219,7 +315,9 @@ function AdminSettings() {
         <input
           name="adminName"
           placeholder="Admin Name"
-          value={storeForm.adminName}
+          value={
+            storeForm.adminName
+          }
           onChange={
             handleStoreChange
           }
@@ -228,7 +326,9 @@ function AdminSettings() {
         <input
           name="adminEmail"
           placeholder="Admin Email"
-          value={storeForm.adminEmail}
+          value={
+            storeForm.adminEmail
+          }
           onChange={
             handleStoreChange
           }
@@ -237,7 +337,9 @@ function AdminSettings() {
         <input
           name="phone"
           placeholder="Phone"
-          value={storeForm.phone}
+          value={
+            storeForm.phone
+          }
           onChange={
             handleStoreChange
           }
@@ -246,7 +348,9 @@ function AdminSettings() {
         <input
           name="whatsapp"
           placeholder="WhatsApp"
-          value={storeForm.whatsapp}
+          value={
+            storeForm.whatsapp
+          }
           onChange={
             handleStoreChange
           }
@@ -255,7 +359,9 @@ function AdminSettings() {
         <input
           name="address"
           placeholder="Address"
-          value={storeForm.address}
+          value={
+            storeForm.address
+          }
           onChange={
             handleStoreChange
           }
@@ -264,7 +370,9 @@ function AdminSettings() {
         <input
           name="facebook"
           placeholder="Facebook"
-          value={storeForm.facebook}
+          value={
+            storeForm.facebook
+          }
           onChange={
             handleStoreChange
           }
@@ -273,13 +381,17 @@ function AdminSettings() {
         <input
           name="instagram"
           placeholder="Instagram"
-          value={storeForm.instagram}
+          value={
+            storeForm.instagram
+          }
           onChange={
             handleStoreChange
           }
         />
 
         <br />
+
+        {/* LOGO UPLOAD */}
 
         <input
           type="file"
@@ -288,17 +400,36 @@ function AdminSettings() {
         />
 
         {storeForm.logo && (
-          <img
-            src={storeForm.logo}
-            alt="logo"
+          <div
             style={{
-              width: 120,
-              height: 120,
-              objectFit: "cover",
-              borderRadius: 12,
-              marginTop: 20,
+              marginTop: "20px",
             }}
-          />
+          >
+            <p
+              style={{
+                marginBottom: "10px",
+                fontWeight: 600,
+              }}
+            >
+              Logo Preview
+            </p>
+
+            <img
+              src={storeForm.logo}
+              alt="Store Logo"
+              style={{
+                width: 180,
+                height: 100,
+                objectFit: "contain",
+                borderRadius: 12,
+                border:
+                  "1px solid #ddd",
+                padding: 10,
+                background:
+                  "#fff",
+              }}
+            />
+          </div>
         )}
 
         <br />
@@ -376,8 +507,8 @@ function AdminSettings() {
                   value={
                     storeForm
                       .shippingRates[
-                      key as keyof typeof storeForm.shippingRates
-                    ]
+                        key as keyof typeof storeForm.shippingRates
+                      ]
                   }
                   onChange={
                     handleShippingChange
@@ -446,7 +577,8 @@ function AdminSettings() {
             padding: "15px",
             marginTop: "15px",
             borderRadius: "10px",
-            border: "1px solid #ddd",
+            border:
+              "1px solid #ddd",
             resize: "vertical",
             fontFamily:
               "inherit",
@@ -510,7 +642,8 @@ function AdminSettings() {
             padding: "15px",
             marginTop: "15px",
             borderRadius: "10px",
-            border: "1px solid #ddd",
+            border:
+              "1px solid #ddd",
             resize: "vertical",
             fontFamily:
               "inherit",

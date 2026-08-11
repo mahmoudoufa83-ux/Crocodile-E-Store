@@ -1,7 +1,8 @@
 /* =========================================================
    CROCODILE PRINT SOLUTIONS
    Premium Green Navbar
-   ========================================================= */
+========================================================= */
+
 
 /* =========================
    RESET
@@ -13,13 +14,14 @@
   box-sizing: border-box;
 }
 
-/* =========================
+
+/* =========================================================
    NAVBAR
-========================= */
+========================================================= */
 
 .navbar {
   width: 100%;
-  height: 85px;
+  height: 130px;
 
   background: #dff3e6;
 
@@ -32,31 +34,44 @@
   box-shadow: 0 5px 20px rgba(21, 128, 61, 0.12);
 }
 
-/* =========================
+
+/* =========================================================
    CONTAINER
-========================= */
+========================================================= */
 
 .container {
-  width: 92%;
-  max-width: 1400px;
+  width: 94%;
+  max-width: 1500px;
 
   margin: auto;
 
-  min-height: 85px;
+  height: 130px;
 
-  display: flex;
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(350px, 1fr)
+    auto;
+
+  grid-template-rows:
+    75px
+    55px;
+
   align-items: center;
-  justify-content: space-between;
 
-  gap: 20px;
+  column-gap: 28px;
 }
+
 
 /* =========================================================
    LOGO
-   Horizontal Crocodile Logo
 ========================================================= */
 
 .logo {
+  grid-column: 1;
+  grid-row: 1;
+
   display: flex;
   align-items: center;
 
@@ -73,9 +88,10 @@
   text-decoration: none;
 }
 
-/* =========================
+
+/* =========================================================
    HORIZONTAL LOGO IMAGE
-========================= */
+========================================================= */
 
 .navbar-logo-image {
   width: 145px;
@@ -91,15 +107,15 @@
   transition: 0.3s ease;
 }
 
-/* Hover effect */
 
 .logo:hover .navbar-logo-image {
   transform: scale(1.04);
 }
 
-/* =========================
+
+/* =========================================================
    FALLBACK LOGO
-========================= */
+========================================================= */
 
 .navbar-logo-fallback {
   width: 145px;
@@ -114,9 +130,10 @@
   flex-shrink: 0;
 }
 
-/* =========================
+
+/* =========================================================
    LOGO TEXT
-========================= */
+========================================================= */
 
 .logo-text {
   display: flex;
@@ -148,31 +165,35 @@
   margin-top: 5px;
 }
 
+
 /* =========================================================
    SEARCH
 ========================================================= */
 
 .search-box {
-  width: 430px;
+  grid-column: 2;
+  grid-row: 1;
+
+  width: 100%;
 
   display: flex;
   align-items: center;
 
-  flex-shrink: 1;
-
   position: relative;
+
+  min-width: 0;
 }
 
 .search-box input {
   width: 100%;
 
-  height: 46px;
+  height: 48px;
 
   border: 1px solid #cce5d5;
 
   outline: none;
 
-  padding: 0 18px;
+  padding: 0 20px;
 
   border-radius: 8px 0 0 8px;
 
@@ -192,9 +213,9 @@
 }
 
 .search-box button {
-  width: 60px;
+  width: 64px;
 
-  height: 46px;
+  height: 48px;
 
   border: none;
 
@@ -208,7 +229,7 @@
 
   transition: 0.3s;
 
-  font-size: 17px;
+  font-size: 18px;
 
   flex-shrink: 0;
 }
@@ -216,6 +237,7 @@
 .search-box button:hover {
   background: #166534;
 }
+
 
 /* =========================================================
    SEARCH RESULTS
@@ -325,18 +347,30 @@
   font-size: 14px;
 }
 
+
 /* =========================================================
    DESKTOP NAVIGATION
 ========================================================= */
 
 .nav-links {
+  grid-column: 1 / -1;
+  grid-row: 2;
+
+  width: 100%;
+
   display: flex;
 
   align-items: center;
 
-  gap: 30px;
+  justify-content: center;
+
+  gap: 28px;
 
   flex-shrink: 0;
+
+  min-width: 0;
+
+  overflow: hidden;
 }
 
 .nav-links a,
@@ -345,7 +379,7 @@
 
   text-decoration: none;
 
-  font-size: 16px;
+  font-size: 15px;
 
   position: relative;
 
@@ -362,6 +396,8 @@
   font-family: inherit;
 
   font-weight: 600;
+
+  flex-shrink: 0;
 }
 
 .nav-links a::after,
@@ -393,27 +429,34 @@
   width: 100%;
 }
 
+
 /* =========================================================
    ACTIONS
 ========================================================= */
 
 .actions {
+  grid-column: 3;
+  grid-row: 1;
+
   display: flex;
 
   align-items: center;
 
-  gap: 15px;
+  justify-content: flex-end;
+
+  gap: 10px;
 
   flex-shrink: 0;
 }
 
-/* =========================
+
+/* =========================================================
    ICONS
-========================= */
+========================================================= */
 
 .icon {
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
 
   border: 1px solid #c5e2cf;
 
@@ -472,6 +515,7 @@
   font-size: 11px;
 }
 
+
 /* =========================================================
    LOGIN
 ========================================================= */
@@ -479,7 +523,9 @@
 .login {
   border: none;
 
-  padding: 12px 22px;
+  padding: 11px 18px;
+
+  min-height: 44px;
 
   border-radius: 8px;
 
@@ -491,17 +537,21 @@
 
   align-items: center;
 
-  gap: 10px;
+  justify-content: center;
+
+  gap: 8px;
 
   cursor: pointer;
 
-  font-size: 15px;
+  font-size: 14px;
 
   transition: 0.3s;
 
   text-decoration: none;
 
   white-space: nowrap;
+
+  flex-shrink: 0;
 }
 
 .login:hover {
@@ -510,16 +560,17 @@
   transform: translateY(-1px);
 }
 
+
 /* =========================================================
    LANGUAGE BUTTON
 ========================================================= */
 
 .language-btn {
-  min-width: 48px;
+  min-width: 44px;
 
-  height: 42px;
+  height: 44px;
 
-  padding: 0 12px;
+  padding: 0 10px;
 
   border: none;
 
@@ -544,6 +595,8 @@
   justify-content: center;
 
   gap: 6px;
+
+  flex-shrink: 0;
 }
 
 .language-btn:hover {
@@ -557,6 +610,7 @@
 
   font-weight: 700;
 }
+
 
 /* =========================================================
    MENU BUTTON
@@ -576,17 +630,66 @@
   cursor: pointer;
 }
 
+
 /* =========================================================
-   TABLET
+   LARGE DESKTOP
 ========================================================= */
 
-@media (max-width: 1200px) {
+@media (min-width: 1401px) {
+  .container {
+    width: 92%;
+  }
+
   .search-box {
-    width: 320px;
+    max-width: 700px;
+
+    justify-self: center;
   }
 
   .nav-links {
-    gap: 18px;
+    gap: 32px;
+  }
+
+  .nav-links a,
+  .nav-scroll-btn {
+    font-size: 16px;
+  }
+
+  .actions {
+    gap: 12px;
+  }
+}
+
+
+/* =========================================================
+   DESKTOP / LAPTOP
+========================================================= */
+
+@media (max-width: 1400px) and (min-width: 1201px) {
+  .container {
+    width: 94%;
+
+    column-gap: 22px;
+  }
+
+  .navbar-logo-image {
+    width: 130px;
+  }
+
+  .logo-text h2 {
+    font-size: 24px;
+  }
+
+  .logo-text span {
+    font-size: 11px;
+  }
+
+  .search-box {
+    min-width: 300px;
+  }
+
+  .nav-links {
+    gap: 22px;
   }
 
   .nav-links a,
@@ -594,19 +697,140 @@
     font-size: 14px;
   }
 
+  .login {
+    padding: 10px 14px;
+
+    font-size: 13px;
+  }
+
+  .actions {
+    gap: 8px;
+  }
+}
+
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) and (min-width: 851px) {
+  .navbar {
+    height: 135px;
+  }
+
+  .container {
+    width: 96%;
+
+    height: 135px;
+
+    grid-template-columns:
+      auto
+      minmax(250px, 1fr)
+      auto;
+
+    grid-template-rows:
+      75px
+      60px;
+
+    column-gap: 15px;
+  }
+
   .navbar-logo-image {
-    width: 125px;
+    width: 115px;
+
     height: 48px;
   }
 
   .logo-text h2 {
-    font-size: 23px;
+    font-size: 21px;
   }
 
   .logo-text span {
-    font-size: 11px;
+    font-size: 10px;
+
+    letter-spacing: 1px;
+  }
+
+  .search-box {
+    min-width: 250px;
+  }
+
+  .search-box input {
+    height: 45px;
+
+    font-size: 14px;
+  }
+
+  .search-box button {
+    width: 55px;
+
+    height: 45px;
+  }
+
+  .actions {
+    gap: 7px;
+  }
+
+  .icon {
+    width: 42px;
+
+    height: 42px;
+  }
+
+  .language-btn {
+    width: 42px;
+
+    min-width: 42px;
+
+    height: 42px;
+
+    padding: 0;
+  }
+
+  .language-label {
+    display: none;
+  }
+
+  .login {
+    width: 42px;
+
+    height: 42px;
+
+    padding: 0;
+
+    border-radius: 50%;
+
+    font-size: 0;
+  }
+
+  .login svg {
+    font-size: 17px;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+
+    gap: 18px;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+
+    padding-bottom: 3px;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links a,
+  .nav-scroll-btn {
+    font-size: 13px;
   }
 }
+
 
 /* =========================================================
    MOBILE
@@ -622,6 +846,8 @@
   .container {
     width: 100%;
 
+    height: auto;
+
     min-height: auto;
 
     padding: 10px 12px 12px;
@@ -636,6 +862,7 @@
 
     gap: 10px;
   }
+
 
   /* =========================
      TOP ROW
@@ -673,6 +900,7 @@
     display: none;
   }
 
+
   /* =========================
      ACTIONS
   ========================= */
@@ -683,6 +911,8 @@
     margin-left: auto;
 
     gap: 8px;
+
+    display: flex;
   }
 
   .icon {
@@ -721,6 +951,7 @@
     display: none !important;
   }
 
+
   /* =========================
      LANGUAGE
   ========================= */
@@ -738,6 +969,7 @@
 
     font-size: 12px;
   }
+
 
   /* =========================
      SEARCH
@@ -777,6 +1009,7 @@
     background: #166534;
   }
 
+
   /* =========================
      NAV LINKS
   ========================= */
@@ -801,6 +1034,8 @@
     scrollbar-width: none;
 
     -webkit-overflow-scrolling: touch;
+
+    justify-content: flex-start;
   }
 
   .nav-links::-webkit-scrollbar {
@@ -844,6 +1079,7 @@
     border-color: #15803d;
   }
 
+
   /* =========================
      OLD MOBILE MENU
   ========================= */
@@ -853,6 +1089,7 @@
     display: none !important;
   }
 }
+
 
 /* =========================================================
    SMALL PHONES
@@ -926,6 +1163,7 @@
   }
 }
 
+
 /* =========================================================
    VERY SMALL PHONES
 ========================================================= */
@@ -972,6 +1210,7 @@
   }
 }
 
+
 /* =========================================================
    OLD MOBILE MENU
 ========================================================= */
@@ -1003,7 +1242,8 @@
 
   transition: 0.35s;
 
-  box-shadow: -5px 0 20px rgba(21, 128, 61, 0.18);
+  box-shadow:
+    -5px 0 20px rgba(21, 128, 61, 0.18);
 
   overflow-y: auto;
 }
@@ -1021,7 +1261,8 @@
 
   padding: 20px;
 
-  border-bottom: 1px solid rgba(21, 128, 61, 0.12);
+  border-bottom:
+    1px solid rgba(21, 128, 61, 0.12);
 }
 
 .mobile-header h2 {
@@ -1104,7 +1345,8 @@
 
   padding: 18px 25px;
 
-  border-bottom: 1px solid rgba(21, 128, 61, 0.08);
+  border-bottom:
+    1px solid rgba(21, 128, 61, 0.08);
 
   background: none;
 
@@ -1126,6 +1368,7 @@
   color: #fff;
 }
 
+
 /* =========================================================
    DESKTOP MOBILE MENU CONTROL
 ========================================================= */
@@ -1137,12 +1380,19 @@
   }
 }
 
+
 /* =========================================================
    KEEP NAVBAR FROM COVERING CONTENT
 ========================================================= */
 
 #root {
-  padding-top: 85px;
+  padding-top: 130px;
+}
+
+@media (max-width: 1200px) and (min-width: 851px) {
+  #root {
+    padding-top: 135px;
+  }
 }
 
 @media (max-width: 850px) {
@@ -1162,6 +1412,7 @@
     padding-top: 165px;
   }
 }
+
 
 /* =========================================================
    RTL
@@ -1194,6 +1445,7 @@
 [dir="rtl"] .navbar-logo-image {
   object-position: center;
 }
+
 
 /* =========================================================
    LOGO RESPONSIVE FINAL
