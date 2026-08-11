@@ -1,6 +1,9 @@
 import "./App.css";
 
-import { Routes, Route } from "react-router-dom";
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -31,11 +34,28 @@ import AdminSettings from "./pages/AdminSettings";
 function App() {
   return (
     <>
+      {/* =========================
+          NAVBAR
+      ========================== */}
+
       <Navbar />
+
+      {/* =========================
+          SCROLL MANAGER
+      ========================== */}
 
       <ScrollManager />
 
+      {/* =========================
+          ROUTES
+      ========================== */}
+
       <Routes>
+
+        {/* =========================
+            PUBLIC
+        ========================== */}
+
         <Route
           path="/"
           element={<Home />}
@@ -61,6 +81,10 @@ function App() {
           element={<Wishlist />}
         />
 
+        {/* =========================
+            LOGIN / REGISTER
+        ========================== */}
+
         <Route
           path="/login"
           element={<Login />}
@@ -71,23 +95,30 @@ function App() {
           element={<Register />}
         />
 
+        {/* =========================
+            GUEST CHECKOUT
+            NO LOGIN REQUIRED
+        ========================== */}
+
         <Route
           path="/checkout"
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
+          element={<Checkout />}
         />
+
+        {/* =========================
+            ORDER SUCCESS
+            NO LOGIN REQUIRED
+        ========================== */}
 
         <Route
           path="/order-success"
-          element={
-            <ProtectedRoute>
-              <OrderSuccess />
-            </ProtectedRoute>
-          }
+          element={<OrderSuccess />}
         />
+
+        {/* =========================
+            ORDERS
+            ADMIN ONLY
+        ========================== */}
 
         <Route
           path="/orders"
@@ -98,6 +129,10 @@ function App() {
           }
         />
 
+        {/* =========================
+            ADMIN DASHBOARD
+        ========================== */}
+
         <Route
           path="/admin"
           element={
@@ -106,6 +141,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* =========================
+            ADMIN PRODUCTS
+        ========================== */}
 
         <Route
           path="/admin/products"
@@ -116,6 +155,10 @@ function App() {
           }
         />
 
+        {/* =========================
+            ADMIN ORDERS
+        ========================== */}
+
         <Route
           path="/admin/orders"
           element={
@@ -124,6 +167,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* =========================
+            ADMIN REVIEWS
+        ========================== */}
 
         <Route
           path="/admin/reviews"
@@ -134,6 +181,10 @@ function App() {
           }
         />
 
+        {/* =========================
+            ADMIN CUSTOMERS
+        ========================== */}
+
         <Route
           path="/admin/customers"
           element={
@@ -142,6 +193,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* =========================
+            CUSTOMER DETAILS
+        ========================== */}
 
         <Route
           path="/admin/customers/:id"
@@ -152,6 +207,10 @@ function App() {
           }
         />
 
+        {/* =========================
+            ADMIN SETTINGS
+        ========================== */}
+
         <Route
           path="/admin/settings"
           element={
@@ -160,9 +219,18 @@ function App() {
             </ProtectedRoute>
           }
         />
+
       </Routes>
 
+      {/* =========================
+          FOOTER
+      ========================== */}
+
       <Footer />
+
+      {/* =========================
+          WHATSAPP
+      ========================== */}
 
       <WhatsAppButton />
     </>

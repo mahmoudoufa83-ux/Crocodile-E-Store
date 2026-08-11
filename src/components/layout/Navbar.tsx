@@ -36,11 +36,25 @@ function Navbar() {
   const location = useLocation();
 
   const { cart } = useCart();
-  const { wishlist } = useWishlist();
-  const { search, setSearch } = useSearch();
-  const { user, logout } = useAuth();
-  const { settings } = useStore();
-  const { products } = useProducts();
+
+  const { wishlist } =
+    useWishlist();
+
+  const {
+    search,
+    setSearch,
+  } = useSearch();
+
+  const {
+    user,
+    logout,
+  } = useAuth();
+
+  const { settings } =
+    useStore();
+
+  const { products } =
+    useProducts();
 
   const {
     language,
@@ -48,15 +62,25 @@ function Navbar() {
     isArabic,
   } = useLanguage();
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showSearchResults, setShowSearchResults] =
-    useState(false);
+  const [
+    menuOpen,
+    setMenuOpen,
+  ] = useState(false);
+
+  const [
+    showSearchResults,
+    setShowSearchResults,
+  ] = useState(false);
 
   const desktopSearchRef =
-    useRef<HTMLDivElement | null>(null);
+    useRef<HTMLDivElement | null>(
+      null
+    );
 
   const mobileSearchRef =
-    useRef<HTMLDivElement | null>(null);
+    useRef<HTMLDivElement | null>(
+      null
+    );
 
   /*
    * =========================
@@ -65,17 +89,29 @@ function Navbar() {
    */
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as Node;
+    function handleClickOutside(
+      event: MouseEvent
+    ) {
+      const target =
+        event.target as Node;
 
       const insideDesktop =
-        desktopSearchRef.current?.contains(target);
+        desktopSearchRef.current?.contains(
+          target
+        );
 
       const insideMobile =
-        mobileSearchRef.current?.contains(target);
+        mobileSearchRef.current?.contains(
+          target
+        );
 
-      if (!insideDesktop && !insideMobile) {
-        setShowSearchResults(false);
+      if (
+        !insideDesktop &&
+        !insideMobile
+      ) {
+        setShowSearchResults(
+          false
+        );
       }
     }
 
@@ -104,24 +140,38 @@ function Navbar() {
       : products
           .filter((product) => {
             const keyword =
-              search.trim().toLowerCase();
+              search
+                .trim()
+                .toLowerCase();
 
-            const name = (
-              product.name || ""
-            ).toLowerCase();
+            const name =
+              (
+                product.name ||
+                ""
+              ).toLowerCase();
 
-            const brand = (
-              product.brand || ""
-            ).toLowerCase();
+            const brand =
+              (
+                product.brand ||
+                ""
+              ).toLowerCase();
 
-            const category = (
-              product.category || ""
-            ).toLowerCase();
+            const category =
+              (
+                product.category ||
+                ""
+              ).toLowerCase();
 
             return (
-              name.includes(keyword) ||
-              brand.includes(keyword) ||
-              category.includes(keyword)
+              name.includes(
+                keyword
+              ) ||
+              brand.includes(
+                keyword
+              ) ||
+              category.includes(
+                keyword
+              )
             );
           })
           .slice(0, 6);
@@ -136,7 +186,11 @@ function Navbar() {
     await logout();
 
     setMenuOpen(false);
-    setShowSearchResults(false);
+
+    setShowSearchResults(
+      false
+    );
+
     setSearch("");
 
     navigate("/");
@@ -149,7 +203,10 @@ function Navbar() {
    */
 
   function handleSearch() {
-    setShowSearchResults(false);
+    setShowSearchResults(
+      false
+    );
+
     setMenuOpen(false);
 
     navigate("/products");
@@ -159,14 +216,19 @@ function Navbar() {
     e: React.KeyboardEvent
   ) {
     if (e.key === "Enter") {
-      setShowSearchResults(false);
+      setShowSearchResults(
+        false
+      );
+
       setMenuOpen(false);
 
       navigate("/products");
     }
 
     if (e.key === "Escape") {
-      setShowSearchResults(false);
+      setShowSearchResults(
+        false
+      );
     }
   }
 
@@ -190,10 +252,16 @@ function Navbar() {
     productId: string | number
   ) {
     const productPath =
-      `/product/${String(productId)}`;
+      `/product/${String(
+        productId
+      )}`;
 
-    setShowSearchResults(false);
+    setShowSearchResults(
+      false
+    );
+
     setMenuOpen(false);
+
     setSearch("");
 
     navigate(productPath);
@@ -218,13 +286,16 @@ function Navbar() {
   function handleLanguageChange() {
     toggleLanguage();
 
-    setShowSearchResults(false);
+    setShowSearchResults(
+      false
+    );
+
     setMenuOpen(false);
   }
 
   /*
    * =========================
-   * SCROLL TO HOME SECTION
+   * SCROLL TO SECTION
    * =========================
    */
 
@@ -234,22 +305,30 @@ function Navbar() {
     closeMenu();
 
     /*
-     * لو المستخدم مش في Home
+     * If user is not on Home,
+     * go Home first.
      */
-    if (location.pathname !== "/") {
+
+    if (
+      location.pathname !== "/"
+    ) {
       sessionStorage.setItem(
         "scrollToSection",
         sectionId
       );
 
       navigate("/");
+
       return;
     }
 
     /*
      * Home
      */
-    if (sectionId === "home") {
+
+    if (
+      sectionId === "home"
+    ) {
       window.scrollTo({
         top: 0,
         left: 0,
@@ -260,10 +339,13 @@ function Navbar() {
     }
 
     /*
-     * باقي أقسام الصفحة الرئيسية
+     * Home sections
      */
+
     const section =
-      document.getElementById(sectionId);
+      document.getElementById(
+        sectionId
+      );
 
     if (section) {
       section.scrollIntoView({
@@ -280,33 +362,68 @@ function Navbar() {
    */
 
   const text = {
-    home: isArabic ? "الرئيسية" : "Home",
-    products: isArabic ? "المنتجات" : "Products",
+    home: isArabic
+      ? "الرئيسية"
+      : "Home",
+
+    products: isArabic
+      ? "المنتجات"
+      : "Products",
+
     orders: isArabic
       ? "طلباتي"
       : "My Orders",
+
     categories: isArabic
       ? "الأقسام"
       : "Categories",
-    brands: isArabic ? "البراندات" : "Brands",
-    offers: isArabic ? "العروض" : "Offers",
-    contact: isArabic ? "تواصل معنا" : "Contact",
-    admin: isArabic ? "الإدارة" : "Admin",
-    login: isArabic ? "تسجيل الدخول" : "Login",
-    logout: isArabic ? "تسجيل الخروج" : "Logout",
+
+    brands: isArabic
+      ? "البراندات"
+      : "Brands",
+
+    offers: isArabic
+      ? "العروض"
+      : "Offers",
+
+    contact: isArabic
+      ? "تواصل معنا"
+      : "Contact",
+
+    admin: isArabic
+      ? "الإدارة"
+      : "Admin",
+
+    login: isArabic
+      ? "تسجيل الدخول"
+      : "Login",
+
+    logout: isArabic
+      ? "تسجيل الخروج"
+      : "Logout",
+
     search: isArabic
       ? "ابحث عن المنتجات..."
       : "Search Products...",
+
     noProducts: isArabic
       ? "لا توجد منتجات 🔍"
       : "No Products Found 🔍",
+
     unnamed: isArabic
       ? "منتج بدون اسم"
       : "Unnamed Product",
+
     unknown: isArabic
       ? "غير معروف"
       : "Unknown",
   };
+
+  /*
+   * =========================
+   * RENDER
+   * =========================
+   */
 
   return (
     <>
@@ -321,10 +438,15 @@ function Navbar() {
             to="/"
             className="logo"
             onClick={(e) => {
-              if (location.pathname === "/") {
+              if (
+                location.pathname ===
+                "/"
+              ) {
                 e.preventDefault();
 
-                scrollToSection("home");
+                scrollToSection(
+                  "home"
+                );
               } else {
                 closeMenu();
 
@@ -334,20 +456,24 @@ function Navbar() {
               }
             }}
             style={{
-              textDecoration: "none",
+              textDecoration:
+                "none",
               color: "inherit",
             }}
           >
             {settings.logo &&
-            settings.logo.trim() !== "" ? (
+            settings.logo.trim() !==
+              "" ? (
               <img
                 src={settings.logo}
                 alt="Logo"
                 style={{
                   width: "45px",
                   height: "45px",
-                  objectFit: "cover",
-                  borderRadius: "50%",
+                  objectFit:
+                    "cover",
+                  borderRadius:
+                    "50%",
                 }}
               />
             ) : (
@@ -355,6 +481,7 @@ function Navbar() {
             )}
 
             <div className="logo-text">
+
               <h2>
                 {settings.storeName}
               </h2>
@@ -362,6 +489,7 @@ function Navbar() {
               <span>
                 Print Solutions
               </span>
+
             </div>
           </Link>
 
@@ -371,17 +499,24 @@ function Navbar() {
 
           <div
             className="search-box"
-            ref={desktopSearchRef}
+            ref={
+              desktopSearchRef
+            }
           >
             <input
               type="text"
-              placeholder={text.search}
+              placeholder={
+                text.search
+              }
               value={search}
               onFocus={() => {
                 if (
-                  search.trim() !== ""
+                  search.trim() !==
+                  ""
                 ) {
-                  setShowSearchResults(true);
+                  setShowSearchResults(
+                    true
+                  );
                 }
               }}
               onChange={(e) =>
@@ -389,23 +524,29 @@ function Navbar() {
                   e.target.value
                 )
               }
-              onKeyDown={handleKeyDown}
+              onKeyDown={
+                handleKeyDown
+              }
             />
 
             <button
               type="button"
-              onClick={handleSearch}
+              onClick={
+                handleSearch
+              }
             >
               <FaSearch />
             </button>
 
-            {/* LIVE SEARCH RESULTS */}
+            {/* LIVE SEARCH */}
 
             {showSearchResults &&
-              search.trim() !== "" && (
+              search.trim() !==
+                "" && (
                 <div className="search-results">
 
-                  {searchResults.length > 0 ? (
+                  {searchResults.length >
+                  0 ? (
                     searchResults.map(
                       (product) => (
                         <button
@@ -445,7 +586,8 @@ function Navbar() {
 
                             <strong>
                               {(
-                                product.price ?? 0
+                                product.price ??
+                                0
                               ).toLocaleString()}{" "}
                               EGP
                             </strong>
@@ -456,7 +598,9 @@ function Navbar() {
                     )
                   ) : (
                     <div className="search-no-results">
-                      {text.noProducts}
+                      {
+                        text.noProducts
+                      }
                     </div>
                   )}
 
@@ -465,7 +609,7 @@ function Navbar() {
           </div>
 
           {/* =========================
-              NAVIGATION
+              DESKTOP NAVIGATION
           ========================== */}
 
           <nav className="nav-links">
@@ -473,7 +617,9 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection("home")
+                scrollToSection(
+                  "home"
+                )
               }
             >
               {text.home}
@@ -481,22 +627,38 @@ function Navbar() {
 
             <Link
               to="/products"
-              onClick={closeMenu}
+              onClick={
+                closeMenu
+              }
             >
               {text.products}
             </Link>
 
-            <Link
-              to="/orders"
-              onClick={closeMenu}
-            >
-              {text.orders}
-            </Link>
+            {/* 
+             * My Orders is Admin only
+             *
+             * Normal users and Guests
+             * don't need this page.
+             */}
+
+            {user?.role ===
+              "admin" && (
+              <Link
+                to="/orders"
+                onClick={
+                  closeMenu
+                }
+              >
+                {text.orders}
+              </Link>
+            )}
 
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection("categories")
+                scrollToSection(
+                  "categories"
+                )
               }
             >
               {text.categories}
@@ -505,7 +667,9 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection("brands")
+                scrollToSection(
+                  "brands"
+                )
               }
             >
               {text.brands}
@@ -514,7 +678,9 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection("offers")
+                scrollToSection(
+                  "offers"
+                )
               }
             >
               {text.offers}
@@ -523,16 +689,23 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection("contact")
+                scrollToSection(
+                  "contact"
+                )
               }
             >
               {text.contact}
             </button>
 
-            {user?.role === "admin" && (
+            {/* ADMIN */}
+
+            {user?.role ===
+              "admin" && (
               <Link
                 to="/admin"
-                onClick={closeMenu}
+                onClick={
+                  closeMenu
+                }
               >
                 <FaUserShield
                   style={{
@@ -557,14 +730,18 @@ function Navbar() {
             <button
               type="button"
               className="icon language-btn"
-              onClick={handleLanguageChange}
+              onClick={
+                handleLanguageChange
+              }
               title={
-                language === "en"
+                language ===
+                "en"
                   ? "العربية"
                   : "English"
               }
               aria-label={
-                language === "en"
+                language ===
+                "en"
                   ? "Switch to Arabic"
                   : "Switch to English"
               }
@@ -572,7 +749,8 @@ function Navbar() {
               <FaGlobe />
 
               <span className="language-label">
-                {language === "en"
+                {language ===
+                "en"
                   ? "AR"
                   : "EN"}
               </span>
@@ -583,12 +761,16 @@ function Navbar() {
             <Link
               to="/wishlist"
               className="icon"
-              onClick={closeMenu}
+              onClick={
+                closeMenu
+              }
             >
               <FaHeart />
 
               <span>
-                {wishlist.length}
+                {
+                  wishlist.length
+                }
               </span>
             </Link>
 
@@ -597,7 +779,9 @@ function Navbar() {
             <Link
               to="/cart"
               className="icon"
-              onClick={closeMenu}
+              onClick={
+                closeMenu
+              }
             >
               <FaShoppingCart />
 
@@ -611,7 +795,9 @@ function Navbar() {
             {user ? (
               <button
                 className="login"
-                onClick={handleLogout}
+                onClick={
+                  handleLogout
+                }
               >
                 <FaUser />
 
@@ -621,16 +807,21 @@ function Navbar() {
 
                 <span>
                   {" | "}
-                  {text.logout}
+                  {
+                    text.logout
+                  }
                 </span>
               </button>
             ) : (
               <Link
                 to="/login"
                 className="login"
-                onClick={closeMenu}
+                onClick={
+                  closeMenu
+                }
               >
                 <FaUser />
+
                 {text.login}
               </Link>
             )}
@@ -659,7 +850,9 @@ function Navbar() {
       {menuOpen && (
         <div
           className="mobile-overlay"
-          onClick={closeMenu}
+          onClick={
+            closeMenu
+          }
         />
       )}
 
@@ -669,7 +862,9 @@ function Navbar() {
 
       <aside
         className={`mobile-menu ${
-          menuOpen ? "show" : ""
+          menuOpen
+            ? "show"
+            : ""
         }`}
       >
         <div className="mobile-header">
@@ -679,7 +874,9 @@ function Navbar() {
           </h2>
 
           <button
-            onClick={closeMenu}
+            onClick={
+              closeMenu
+            }
             aria-label="Close menu"
           >
             <FaTimes />
@@ -687,21 +884,30 @@ function Navbar() {
 
         </div>
 
-        {/* MOBILE SEARCH */}
+        {/* =========================
+            MOBILE SEARCH
+        ========================== */}
 
         <div
           className="mobile-search"
-          ref={mobileSearchRef}
+          ref={
+            mobileSearchRef
+          }
         >
           <input
             type="text"
-            placeholder={text.search}
+            placeholder={
+              text.search
+            }
             value={search}
             onFocus={() => {
               if (
-                search.trim() !== ""
+                search.trim() !==
+                ""
               ) {
-                setShowSearchResults(true);
+                setShowSearchResults(
+                  true
+                );
               }
             }}
             onChange={(e) =>
@@ -709,12 +915,16 @@ function Navbar() {
                 e.target.value
               )
             }
-            onKeyDown={handleKeyDown}
+            onKeyDown={
+              handleKeyDown
+            }
           />
 
           <button
             type="button"
-            onClick={handleSearch}
+            onClick={
+              handleSearch
+            }
           >
             <FaSearch />
           </button>
@@ -722,10 +932,12 @@ function Navbar() {
           {/* MOBILE LIVE RESULTS */}
 
           {showSearchResults &&
-            search.trim() !== "" && (
+            search.trim() !==
+              "" && (
               <div className="search-results mobile-search-results">
 
-                {searchResults.length > 0 ? (
+                {searchResults.length >
+                0 ? (
                   searchResults.map(
                     (product) => (
                       <button
@@ -765,7 +977,8 @@ function Navbar() {
 
                           <strong>
                             {(
-                              product.price ?? 0
+                              product.price ??
+                              0
                             ).toLocaleString()}{" "}
                             EGP
                           </strong>
@@ -776,7 +989,9 @@ function Navbar() {
                   )
                 ) : (
                   <div className="search-no-results">
-                    {text.noProducts}
+                    {
+                      text.noProducts
+                    }
                   </div>
                 )}
 
@@ -784,14 +999,18 @@ function Navbar() {
             )}
         </div>
 
-        {/* MOBILE NAVIGATION */}
+        {/* =========================
+            MOBILE NAVIGATION
+        ========================== */}
 
         <nav>
 
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection("home")
+              scrollToSection(
+                "home"
+              )
             }
           >
             {text.home}
@@ -799,17 +1018,26 @@ function Navbar() {
 
           <Link
             to="/products"
-            onClick={closeMenu}
+            onClick={
+              closeMenu
+            }
           >
             {text.products}
           </Link>
 
-          <Link
-            to="/orders"
-            onClick={closeMenu}
-          >
-            {text.orders}
-          </Link>
+          {/* ADMIN ORDERS ONLY */}
+
+          {user?.role ===
+            "admin" && (
+            <Link
+              to="/orders"
+              onClick={
+                closeMenu
+              }
+            >
+              {text.orders}
+            </Link>
+          )}
 
           <button
             className="mobile-login"
@@ -825,7 +1053,9 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection("brands")
+              scrollToSection(
+                "brands"
+              )
             }
           >
             {text.brands}
@@ -834,7 +1064,9 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection("offers")
+              scrollToSection(
+                "offers"
+              )
             }
           >
             {text.offers}
@@ -843,16 +1075,23 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection("contact")
+              scrollToSection(
+                "contact"
+              )
             }
           >
             {text.contact}
           </button>
 
-          {user?.role === "admin" && (
+          {/* ADMIN */}
+
+          {user?.role ===
+            "admin" && (
             <Link
               to="/admin"
-              onClick={closeMenu}
+              onClick={
+                closeMenu
+              }
             >
               <FaUserShield
                 style={{
@@ -864,23 +1103,32 @@ function Navbar() {
             </Link>
           )}
 
+          {/* LOGIN / LOGOUT */}
+
           {user ? (
             <button
               className="mobile-login"
-              onClick={handleLogout}
+              onClick={
+                handleLogout
+              }
             >
               <FaUser />
 
               {user.name}
+
               {" | "}
+
               {text.logout}
             </button>
           ) : (
             <Link
               to="/login"
-              onClick={closeMenu}
+              onClick={
+                closeMenu
+              }
             >
               <FaUser />
+
               {text.login}
             </Link>
           )}
@@ -889,7 +1137,9 @@ function Navbar() {
 
           <button
             className="mobile-login"
-            onClick={handleLanguageChange}
+            onClick={
+              handleLanguageChange
+            }
             type="button"
           >
             <FaGlobe
@@ -898,7 +1148,8 @@ function Navbar() {
               }}
             />
 
-            {language === "en"
+            {language ===
+            "en"
               ? "العربية"
               : "English"}
           </button>

@@ -20,59 +20,131 @@ function Checkout() {
 
   const { user } = useAuth();
 
-  const [customerName, setCustomerName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("Cash On Delivery");
+  const [customerName, setCustomerName] =
+    useState("");
+
+  const [email, setEmail] =
+    useState("");
+
+  const [phone, setPhone] =
+    useState("");
+
+  const [city, setCity] =
+    useState("");
+
+  const [address, setAddress] =
+    useState("");
+
+  const [paymentMethod, setPaymentMethod] =
+    useState("Cash On Delivery");
+
+  const [placingOrder, setPlacingOrder] =
+    useState(false);
 
   async function placeOrder() {
-    if (cart.length === 0) return;
+    if (placingOrder) return;
 
-    if (
-      !customerName ||
-      !email ||
-      !phone ||
-      !city ||
-      !address
-    ) {
-      alert("Please fill all billing details.");
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
       return;
     }
 
-    await addOrder({
-      customerName,
-      email,
-      phone,
-      city,
-      address,
-      paymentMethod,
-      items: cart,
-      total: totalPrice,
-      userId: user?.uid ?? "",
-    });
+    if (
+      !customerName.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      !city.trim() ||
+      !address.trim()
+    ) {
+      alert(
+        "Please fill all billing details."
+      );
 
-    clearCart();
+      return;
+    }
 
-    navigate("/order-success");
+    try {
+      setPlacingOrder(true);
+
+      await addOrder({
+        customerName:
+          customerName.trim(),
+
+        email:
+          email.trim(),
+
+        phone:
+          phone.trim(),
+
+        city:
+          city.trim(),
+
+        address:
+          address.trim(),
+
+        paymentMethod,
+
+        items: cart,
+
+        total: totalPrice,
+
+        /*
+         * لو العميل Guest:
+         * user?.uid هتكون undefined
+         * وبالتالي يتم إرسال string فاضي.
+         *
+         * لو العميل مسجل دخول:
+         * يتم حفظ UID الخاص به.
+         */
+        userId:
+          user?.uid ?? "",
+      });
+
+      /*
+       * نمسح السلة فقط بعد نجاح
+       * عملية إنشاء الطلب.
+       */
+      clearCart();
+
+      navigate("/order-success");
+    } catch (error) {
+      console.error(
+        "Failed to place order:",
+        error
+      );
+
+      alert(
+        "Failed to place your order. Please try again."
+      );
+    } finally {
+      setPlacingOrder(false);
+    }
   }
 
   return (
     <section className="checkout-page">
       <div className="checkout-container">
 
+        {/* =========================
+            BILLING DETAILS
+        ========================== */}
+
         <div className="checkout-form">
 
-          <h2>Billing Details</h2>
+          <h2>
+            Billing Details
+          </h2>
 
           <input
             type="text"
             placeholder="Full Name"
             value={customerName}
             onChange={(e) =>
-              setCustomerName(e.target.value)
+              setCustomerName(
+                e.target.value
+              )
             }
+            disabled={placingOrder}
           />
 
           <input
@@ -80,8 +152,11 @@ function Checkout() {
             placeholder="Email"
             value={email}
             onChange={(e) =>
-              setEmail(e.target.value)
+              setEmail(
+                e.target.value
+              )
             }
+            disabled={placingOrder}
           />
 
           <input
@@ -89,8 +164,11 @@ function Checkout() {
             placeholder="Phone Number"
             value={phone}
             onChange={(e) =>
-              setPhone(e.target.value)
+              setPhone(
+                e.target.value
+              )
             }
+            disabled={placingOrder}
           />
 
           <input
@@ -98,8 +176,11 @@ function Checkout() {
             placeholder="City"
             value={city}
             onChange={(e) =>
-              setCity(e.target.value)
+              setCity(
+                e.target.value
+              )
             }
+            disabled={placingOrder}
           />
 
           <input
@@ -107,55 +188,78 @@ function Checkout() {
             placeholder="Address"
             value={address}
             onChange={(e) =>
-              setAddress(e.target.value)
+              setAddress(
+                e.target.value
+              )
             }
+            disabled={placingOrder}
           />
 
           <select
             value={paymentMethod}
             onChange={(e) =>
-              setPaymentMethod(e.target.value)
+              setPaymentMethod(
+                e.target.value
+              )
             }
+            disabled={placingOrder}
           >
-            <option>Cash On Delivery</option>
-            <option>Credit Card</option>
+            <option>
+              Cash On Delivery
+            </option>
+
+            <option>
+              Credit Card
+            </option>
           </select>
 
           <button
             className="place-order"
             onClick={placeOrder}
+            disabled={placingOrder}
           >
-            Place Order
+            {placingOrder
+              ? "Placing Order..."
+              : "Place Order"}
           </button>
 
         </div>
 
+        {/* =========================
+            ORDER SUMMARY
+        ========================== */}
+
         <div className="checkout-summary">
 
-          <h2>Order Summary</h2>
+          <h2>
+            Order Summary
+          </h2>
 
           {cart.map((item) => (
-
             <div
               className="summary-item"
-              key={item.id}
+              key={String(item.id)}
             >
 
-              <span>{item.name}</span>
+              <span>
+                {item.name}
+              </span>
 
               <span>
-                {item.quantity} × {item.price} EGP
+                {item.quantity} ×{" "}
+                {item.price} EGP
               </span>
 
             </div>
-
           ))}
 
           <hr />
 
           <div className="summary-total">
 
-            <h3>Total</h3>
+            <h3>
+              Total
+            </h3>
 
             <h3>
               {totalPrice.toLocaleString()} EGP
