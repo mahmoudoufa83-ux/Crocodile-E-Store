@@ -1,13 +1,21 @@
-/* ===========================
+/* =========================================================
    CROCODILE PRINT SOLUTIONS
    Premium Green Navbar
-=========================== */
+   ========================================================= */
+
+/* =========================
+   RESET
+========================= */
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+/* =========================
+   NAVBAR
+========================= */
 
 .navbar {
   width: 100%;
@@ -24,6 +32,10 @@
   box-shadow: 0 5px 20px rgba(21, 128, 61, 0.12);
 }
 
+/* =========================
+   CONTAINER
+========================= */
+
 .container {
   width: 92%;
   max-width: 1400px;
@@ -39,15 +51,16 @@
   gap: 20px;
 }
 
-/* ===========================
+/* =========================================================
    LOGO
-=========================== */
+   Horizontal Crocodile Logo
+========================================================= */
 
 .logo {
   display: flex;
   align-items: center;
 
-  gap: 15px;
+  gap: 10px;
 
   cursor: pointer;
 
@@ -56,35 +69,66 @@
   z-index: 10001;
 
   flex-shrink: 0;
+
+  text-decoration: none;
 }
 
-.logo-icon {
-  width: 55px;
-  height: 55px;
+/* =========================
+   HORIZONTAL LOGO IMAGE
+========================= */
 
-  border-radius: 50%;
+.navbar-logo-image {
+  width: 145px;
+  height: 52px;
 
-  background: #15803d;
+  object-fit: contain;
+  object-position: center;
+
+  display: block;
+
+  flex-shrink: 0;
+
+  transition: 0.3s ease;
+}
+
+/* Hover effect */
+
+.logo:hover .navbar-logo-image {
+  transform: scale(1.04);
+}
+
+/* =========================
+   FALLBACK LOGO
+========================= */
+
+.navbar-logo-fallback {
+  width: 145px;
+  height: 52px;
 
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
-  font-size: 28px;
+  font-size: 38px;
 
-  transition: 0.3s;
+  flex-shrink: 0;
 }
 
-.logo:hover .logo-icon {
-  transform: rotate(-10deg) scale(1.05);
-}
+/* =========================
+   LOGO TEXT
+========================= */
 
 .logo-text {
   display: flex;
+
   flex-direction: column;
+
+  justify-content: center;
 }
 
 .logo-text h2 {
+  margin: 0;
+
   color: #14532d;
 
   font-size: 27px;
@@ -104,9 +148,9 @@
   margin-top: 5px;
 }
 
-/* ===========================
+/* =========================================================
    SEARCH
-=========================== */
+========================================================= */
 
 .search-box {
   width: 430px;
@@ -115,6 +159,8 @@
   align-items: center;
 
   flex-shrink: 1;
+
+  position: relative;
 }
 
 .search-box input {
@@ -163,18 +209,129 @@
   transition: 0.3s;
 
   font-size: 17px;
+
+  flex-shrink: 0;
 }
 
 .search-box button:hover {
   background: #166534;
 }
 
-/* ===========================
+/* =========================================================
+   SEARCH RESULTS
+========================================================= */
+
+.search-results {
+  position: absolute;
+
+  top: calc(100% + 8px);
+
+  left: 0;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 10px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  overflow: hidden;
+
+  z-index: 10050;
+
+  border: 1px solid #dceee2;
+}
+
+.search-result-item {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 12px;
+
+  border: none;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition: 0.2s;
+}
+
+.search-result-item:hover {
+  background: #f0faf3;
+}
+
+.search-result-item img {
+  width: 55px;
+
+  height: 55px;
+
+  object-fit: cover;
+
+  border-radius: 7px;
+
+  flex-shrink: 0;
+}
+
+.search-result-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  overflow: hidden;
+}
+
+.search-result-info h4 {
+  color: #14532d;
+
+  font-size: 14px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.search-result-info span {
+  color: #7b8f82;
+
+  font-size: 12px;
+}
+
+.search-result-info strong {
+  color: #15803d;
+
+  font-size: 13px;
+}
+
+.search-no-results {
+  padding: 20px;
+
+  text-align: center;
+
+  color: #14532d;
+
+  font-size: 14px;
+}
+
+/* =========================================================
    DESKTOP NAVIGATION
-=========================== */
+========================================================= */
 
 .nav-links {
   display: flex;
+
   align-items: center;
 
   gap: 30px;
@@ -236,9 +393,9 @@
   width: 100%;
 }
 
-/* ===========================
+/* =========================================================
    ACTIONS
-=========================== */
+========================================================= */
 
 .actions {
   display: flex;
@@ -249,6 +406,10 @@
 
   flex-shrink: 0;
 }
+
+/* =========================
+   ICONS
+========================= */
 
 .icon {
   width: 45px;
@@ -311,6 +472,10 @@
   font-size: 11px;
 }
 
+/* =========================================================
+   LOGIN
+========================================================= */
+
 .login {
   border: none;
 
@@ -345,13 +510,75 @@
   transform: translateY(-1px);
 }
 
-.menu {
-  display: none;
+/* =========================================================
+   LANGUAGE BUTTON
+========================================================= */
+
+.language-btn {
+  min-width: 48px;
+
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #15803d;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  transition: 0.3s;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
 }
 
-/* ===========================
+.language-btn:hover {
+  background: #166534;
+
+  transform: translateY(-2px);
+}
+
+.language-label {
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   MENU BUTTON
+========================================================= */
+
+.menu {
+  display: none;
+
+  border: none;
+
+  background: none;
+
+  color: #14532d;
+
+  font-size: 25px;
+
+  cursor: pointer;
+}
+
+/* =========================================================
    TABLET
-=========================== */
+========================================================= */
 
 @media (max-width: 1200px) {
   .search-box {
@@ -366,11 +593,24 @@
   .nav-scroll-btn {
     font-size: 14px;
   }
+
+  .navbar-logo-image {
+    width: 125px;
+    height: 48px;
+  }
+
+  .logo-text h2 {
+    font-size: 23px;
+  }
+
+  .logo-text span {
+    font-size: 11px;
+  }
 }
 
-/* ===========================
+/* =========================================================
    MOBILE
-=========================== */
+========================================================= */
 
 @media (max-width: 850px) {
   .navbar {
@@ -397,32 +637,45 @@
     gap: 10px;
   }
 
-  /* ===========================
+  /* =========================
      TOP ROW
-  =========================== */
+  ========================= */
 
   .logo {
     order: 1;
 
-    gap: 8px;
+    gap: 6px;
+
+    max-width: 150px;
+
+    overflow: hidden;
   }
 
-  .logo img {
-    width: 48px !important;
-    height: 48px !important;
+  .navbar-logo-image {
+    width: 120px !important;
 
-    object-fit: cover;
+    height: 45px !important;
 
-    border-radius: 50%;
+    object-fit: contain;
+
+    object-position: left center;
+  }
+
+  .navbar-logo-fallback {
+    width: 120px;
+
+    height: 45px;
+
+    font-size: 30px;
   }
 
   .logo-text {
     display: none;
   }
 
-  /* ===========================
+  /* =========================
      ACTIONS
-  =========================== */
+  ========================= */
 
   .actions {
     order: 2;
@@ -434,6 +687,7 @@
 
   .icon {
     width: 44px;
+
     height: 44px;
 
     font-size: 18px;
@@ -445,6 +699,7 @@
 
   .login {
     width: 44px;
+
     height: 44px;
 
     padding: 0;
@@ -466,9 +721,27 @@
     display: none !important;
   }
 
-  /* ===========================
+  /* =========================
+     LANGUAGE
+  ========================= */
+
+  .language-btn {
+    width: 44px;
+
+    height: 44px;
+
+    min-width: 44px;
+
+    padding: 0;
+
+    border-radius: 50%;
+
+    font-size: 12px;
+  }
+
+  /* =========================
      SEARCH
-  =========================== */
+  ========================= */
 
   .search-box {
     order: 3;
@@ -504,9 +777,9 @@
     background: #166534;
   }
 
-  /* ===========================
+  /* =========================
      NAV LINKS
-  =========================== */
+  ========================= */
 
   .nav-links {
     order: 4;
@@ -571,24 +844,35 @@
     border-color: #15803d;
   }
 
+  /* =========================
+     OLD MOBILE MENU
+  ========================= */
+
   .mobile-menu,
   .mobile-overlay {
     display: none !important;
   }
 }
 
-/* ===========================
+/* =========================================================
    SMALL PHONES
-=========================== */
+========================================================= */
 
 @media (max-width: 600px) {
   .container {
     padding: 8px 10px 10px;
   }
 
-  .logo img {
-    width: 46px !important;
-    height: 46px !important;
+  .navbar-logo-image {
+    width: 105px !important;
+
+    height: 43px !important;
+  }
+
+  .navbar-logo-fallback {
+    width: 105px;
+
+    height: 43px;
   }
 
   .actions {
@@ -598,11 +882,21 @@
   .icon,
   .login {
     width: 42px;
+
     height: 42px;
+  }
+
+  .language-btn {
+    width: 42px;
+
+    height: 42px;
+
+    min-width: 42px;
   }
 
   .icon span {
     width: 17px;
+
     height: 17px;
 
     font-size: 10px;
@@ -632,20 +926,38 @@
   }
 }
 
-/* ===========================
+/* =========================================================
    VERY SMALL PHONES
-=========================== */
+========================================================= */
 
 @media (max-width: 380px) {
-  .logo img {
-    width: 42px !important;
-    height: 42px !important;
+  .navbar-logo-image {
+    width: 90px !important;
+
+    height: 40px !important;
+  }
+
+  .navbar-logo-fallback {
+    width: 90px;
+
+    height: 40px;
+
+    font-size: 26px;
   }
 
   .icon,
   .login {
     width: 40px;
+
     height: 40px;
+  }
+
+  .language-btn {
+    width: 40px;
+
+    height: 40px;
+
+    min-width: 40px;
   }
 
   .actions {
@@ -660,9 +972,9 @@
   }
 }
 
-/* ===========================
+/* =========================================================
    OLD MOBILE MENU
-=========================== */
+========================================================= */
 
 .mobile-overlay {
   position: fixed;
@@ -734,6 +1046,8 @@
   display: flex;
 
   padding: 20px;
+
+  position: relative;
 }
 
 .mobile-search input {
@@ -762,6 +1076,18 @@
   border-radius: 0 8px 8px 0;
 
   cursor: pointer;
+}
+
+.mobile-search-results {
+  position: absolute;
+
+  top: 75px;
+
+  left: 20px;
+
+  right: 20px;
+
+  width: auto;
 }
 
 .mobile-menu nav {
@@ -800,6 +1126,10 @@
   color: #fff;
 }
 
+/* =========================================================
+   DESKTOP MOBILE MENU CONTROL
+========================================================= */
+
 @media (min-width: 851px) {
   .mobile-menu,
   .mobile-overlay {
@@ -807,10 +1137,9 @@
   }
 }
 
-/* ===========================
-   KEEP NAVBAR FROM
-   COVERING CONTENT
-=========================== */
+/* =========================================================
+   KEEP NAVBAR FROM COVERING CONTENT
+========================================================= */
 
 #root {
   padding-top: 85px;
@@ -832,27 +1161,11 @@
   #root {
     padding-top: 165px;
   }
-}.language-btn {
-  min-width: 48px;
-  height: 42px;
-  padding: 0 12px;
-  border: none;
-  border-radius: 8px;
-  background: #15803d;
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-  transition: 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.language-btn:hover {
-  background: #166534;
-  transform: translateY(-2px);
-}
+/* =========================================================
+   RTL
+========================================================= */
 
 [dir="rtl"] .navbar {
   direction: rtl;
@@ -878,29 +1191,28 @@
   direction: rtl;
 }
 
+[dir="rtl"] .navbar-logo-image {
+  object-position: center;
+}
+
+/* =========================================================
+   LOGO RESPONSIVE FINAL
+========================================================= */
+
 @media (max-width: 850px) {
-  .language-btn {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    padding: 0;
-    border-radius: 50%;
-    font-size: 12px;
+  .logo {
+    min-width: 105px;
   }
 }
 
 @media (max-width: 600px) {
-  .language-btn {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
+  .logo {
+    min-width: 95px;
   }
 }
 
 @media (max-width: 380px) {
-  .language-btn {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+  .logo {
+    min-width: 85px;
   }
 }

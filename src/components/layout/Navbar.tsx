@@ -37,8 +37,7 @@ function Navbar() {
 
   const { cart } = useCart();
 
-  const { wishlist } =
-    useWishlist();
+  const { wishlist } = useWishlist();
 
   const {
     search,
@@ -50,11 +49,9 @@ function Navbar() {
     logout,
   } = useAuth();
 
-  const { settings } =
-    useStore();
+  const { settings } = useStore();
 
-  const { products } =
-    useProducts();
+  const { products } = useProducts();
 
   const {
     language,
@@ -73,14 +70,10 @@ function Navbar() {
   ] = useState(false);
 
   const desktopSearchRef =
-    useRef<HTMLDivElement | null>(
-      null
-    );
+    useRef<HTMLDivElement | null>(null);
 
   const mobileSearchRef =
-    useRef<HTMLDivElement | null>(
-      null
-    );
+    useRef<HTMLDivElement | null>(null);
 
   /*
    * =========================
@@ -109,9 +102,7 @@ function Navbar() {
         !insideDesktop &&
         !insideMobile
       ) {
-        setShowSearchResults(
-          false
-        );
+        setShowSearchResults(false);
       }
     }
 
@@ -163,15 +154,9 @@ function Navbar() {
               ).toLowerCase();
 
             return (
-              name.includes(
-                keyword
-              ) ||
-              brand.includes(
-                keyword
-              ) ||
-              category.includes(
-                keyword
-              )
+              name.includes(keyword) ||
+              brand.includes(keyword) ||
+              category.includes(keyword)
             );
           })
           .slice(0, 6);
@@ -187,9 +172,7 @@ function Navbar() {
 
     setMenuOpen(false);
 
-    setShowSearchResults(
-      false
-    );
+    setShowSearchResults(false);
 
     setSearch("");
 
@@ -203,9 +186,7 @@ function Navbar() {
    */
 
   function handleSearch() {
-    setShowSearchResults(
-      false
-    );
+    setShowSearchResults(false);
 
     setMenuOpen(false);
 
@@ -216,9 +197,7 @@ function Navbar() {
     e: React.KeyboardEvent
   ) {
     if (e.key === "Enter") {
-      setShowSearchResults(
-        false
-      );
+      setShowSearchResults(false);
 
       setMenuOpen(false);
 
@@ -226,9 +205,7 @@ function Navbar() {
     }
 
     if (e.key === "Escape") {
-      setShowSearchResults(
-        false
-      );
+      setShowSearchResults(false);
     }
   }
 
@@ -252,13 +229,9 @@ function Navbar() {
     productId: string | number
   ) {
     const productPath =
-      `/product/${String(
-        productId
-      )}`;
+      `/product/${String(productId)}`;
 
-    setShowSearchResults(
-      false
-    );
+    setShowSearchResults(false);
 
     setMenuOpen(false);
 
@@ -286,9 +259,7 @@ function Navbar() {
   function handleLanguageChange() {
     toggleLanguage();
 
-    setShowSearchResults(
-      false
-    );
+    setShowSearchResults(false);
 
     setMenuOpen(false);
   }
@@ -309,9 +280,7 @@ function Navbar() {
      * go Home first.
      */
 
-    if (
-      location.pathname !== "/"
-    ) {
+    if (location.pathname !== "/") {
       sessionStorage.setItem(
         "scrollToSection",
         sectionId
@@ -326,9 +295,7 @@ function Navbar() {
      * Home
      */
 
-    if (
-      sectionId === "home"
-    ) {
+    if (sectionId === "home") {
       window.scrollTo({
         top: 0,
         left: 0,
@@ -369,6 +336,10 @@ function Navbar() {
     products: isArabic
       ? "المنتجات"
       : "Products",
+
+    returns: isArabic
+      ? "سياسة الاسترجاع"
+      : "Returns",
 
     orders: isArabic
       ? "طلباتي"
@@ -439,14 +410,11 @@ function Navbar() {
             className="logo"
             onClick={(e) => {
               if (
-                location.pathname ===
-                "/"
+                location.pathname === "/"
               ) {
                 e.preventDefault();
 
-                scrollToSection(
-                  "home"
-                );
+                scrollToSection("home");
               } else {
                 closeMenu();
 
@@ -456,32 +424,24 @@ function Navbar() {
               }
             }}
             style={{
-              textDecoration:
-                "none",
+              textDecoration: "none",
               color: "inherit",
             }}
           >
             {settings.logo &&
-            settings.logo.trim() !==
-              "" ? (
+            settings.logo.trim() !== "" ? (
               <img
                 src={settings.logo}
-                alt="Logo"
-                style={{
-                  width: "45px",
-                  height: "45px",
-                  objectFit:
-                    "cover",
-                  borderRadius:
-                    "50%",
-                }}
+                alt="Crocodile Print Solutions"
+                className="navbar-logo-image"
               />
             ) : (
-              "🐊"
+              <div className="navbar-logo-fallback">
+                🐊
+              </div>
             )}
 
             <div className="logo-text">
-
               <h2>
                 {settings.storeName}
               </h2>
@@ -489,7 +449,6 @@ function Navbar() {
               <span>
                 Print Solutions
               </span>
-
             </div>
           </Link>
 
@@ -499,24 +458,17 @@ function Navbar() {
 
           <div
             className="search-box"
-            ref={
-              desktopSearchRef
-            }
+            ref={desktopSearchRef}
           >
             <input
               type="text"
-              placeholder={
-                text.search
-              }
+              placeholder={text.search}
               value={search}
               onFocus={() => {
                 if (
-                  search.trim() !==
-                  ""
+                  search.trim() !== ""
                 ) {
-                  setShowSearchResults(
-                    true
-                  );
+                  setShowSearchResults(true);
                 }
               }}
               onChange={(e) =>
@@ -524,16 +476,12 @@ function Navbar() {
                   e.target.value
                 )
               }
-              onKeyDown={
-                handleKeyDown
-              }
+              onKeyDown={handleKeyDown}
             />
 
             <button
               type="button"
-              onClick={
-                handleSearch
-              }
+              onClick={handleSearch}
             >
               <FaSearch />
             </button>
@@ -541,12 +489,10 @@ function Navbar() {
             {/* LIVE SEARCH */}
 
             {showSearchResults &&
-              search.trim() !==
-                "" && (
+              search.trim() !== "" && (
                 <div className="search-results">
 
-                  {searchResults.length >
-                  0 ? (
+                  {searchResults.length > 0 ? (
                     searchResults.map(
                       (product) => (
                         <button
@@ -598,9 +544,7 @@ function Navbar() {
                     )
                   ) : (
                     <div className="search-no-results">
-                      {
-                        text.noProducts
-                      }
+                      {text.noProducts}
                     </div>
                   )}
 
@@ -617,9 +561,7 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection(
-                  "home"
-                )
+                scrollToSection("home")
               }
             >
               {text.home}
@@ -627,27 +569,26 @@ function Navbar() {
 
             <Link
               to="/products"
-              onClick={
-                closeMenu
-              }
+              onClick={closeMenu}
             >
               {text.products}
             </Link>
 
-            {/* 
-             * My Orders is Admin only
-             *
-             * Normal users and Guests
-             * don't need this page.
-             */}
+            {/* RETURNS */}
 
-            {user?.role ===
-              "admin" && (
+            <Link
+              to="/returns"
+              onClick={closeMenu}
+            >
+              {text.returns}
+            </Link>
+
+            {/* ADMIN ORDERS ONLY */}
+
+            {user?.role === "admin" && (
               <Link
                 to="/orders"
-                onClick={
-                  closeMenu
-                }
+                onClick={closeMenu}
               >
                 {text.orders}
               </Link>
@@ -667,9 +608,7 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection(
-                  "brands"
-                )
+                scrollToSection("brands")
               }
             >
               {text.brands}
@@ -678,9 +617,7 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection(
-                  "offers"
-                )
+                scrollToSection("offers")
               }
             >
               {text.offers}
@@ -689,9 +626,7 @@ function Navbar() {
             <button
               className="nav-scroll-btn"
               onClick={() =>
-                scrollToSection(
-                  "contact"
-                )
+                scrollToSection("contact")
               }
             >
               {text.contact}
@@ -699,13 +634,10 @@ function Navbar() {
 
             {/* ADMIN */}
 
-            {user?.role ===
-              "admin" && (
+            {user?.role === "admin" && (
               <Link
                 to="/admin"
-                onClick={
-                  closeMenu
-                }
+                onClick={closeMenu}
               >
                 <FaUserShield
                   style={{
@@ -734,14 +666,12 @@ function Navbar() {
                 handleLanguageChange
               }
               title={
-                language ===
-                "en"
+                language === "en"
                   ? "العربية"
                   : "English"
               }
               aria-label={
-                language ===
-                "en"
+                language === "en"
                   ? "Switch to Arabic"
                   : "Switch to English"
               }
@@ -749,8 +679,7 @@ function Navbar() {
               <FaGlobe />
 
               <span className="language-label">
-                {language ===
-                "en"
+                {language === "en"
                   ? "AR"
                   : "EN"}
               </span>
@@ -761,16 +690,12 @@ function Navbar() {
             <Link
               to="/wishlist"
               className="icon"
-              onClick={
-                closeMenu
-              }
+              onClick={closeMenu}
             >
               <FaHeart />
 
               <span>
-                {
-                  wishlist.length
-                }
+                {wishlist.length}
               </span>
             </Link>
 
@@ -779,9 +704,7 @@ function Navbar() {
             <Link
               to="/cart"
               className="icon"
-              onClick={
-                closeMenu
-              }
+              onClick={closeMenu}
             >
               <FaShoppingCart />
 
@@ -795,9 +718,7 @@ function Navbar() {
             {user ? (
               <button
                 className="login"
-                onClick={
-                  handleLogout
-                }
+                onClick={handleLogout}
               >
                 <FaUser />
 
@@ -807,18 +728,14 @@ function Navbar() {
 
                 <span>
                   {" | "}
-                  {
-                    text.logout
-                  }
+                  {text.logout}
                 </span>
               </button>
             ) : (
               <Link
                 to="/login"
                 className="login"
-                onClick={
-                  closeMenu
-                }
+                onClick={closeMenu}
               >
                 <FaUser />
 
@@ -850,9 +767,7 @@ function Navbar() {
       {menuOpen && (
         <div
           className="mobile-overlay"
-          onClick={
-            closeMenu
-          }
+          onClick={closeMenu}
         />
       )}
 
@@ -862,9 +777,7 @@ function Navbar() {
 
       <aside
         className={`mobile-menu ${
-          menuOpen
-            ? "show"
-            : ""
+          menuOpen ? "show" : ""
         }`}
       >
         <div className="mobile-header">
@@ -874,9 +787,7 @@ function Navbar() {
           </h2>
 
           <button
-            onClick={
-              closeMenu
-            }
+            onClick={closeMenu}
             aria-label="Close menu"
           >
             <FaTimes />
@@ -890,24 +801,17 @@ function Navbar() {
 
         <div
           className="mobile-search"
-          ref={
-            mobileSearchRef
-          }
+          ref={mobileSearchRef}
         >
           <input
             type="text"
-            placeholder={
-              text.search
-            }
+            placeholder={text.search}
             value={search}
             onFocus={() => {
               if (
-                search.trim() !==
-                ""
+                search.trim() !== ""
               ) {
-                setShowSearchResults(
-                  true
-                );
+                setShowSearchResults(true);
               }
             }}
             onChange={(e) =>
@@ -915,16 +819,12 @@ function Navbar() {
                 e.target.value
               )
             }
-            onKeyDown={
-              handleKeyDown
-            }
+            onKeyDown={handleKeyDown}
           />
 
           <button
             type="button"
-            onClick={
-              handleSearch
-            }
+            onClick={handleSearch}
           >
             <FaSearch />
           </button>
@@ -932,12 +832,10 @@ function Navbar() {
           {/* MOBILE LIVE RESULTS */}
 
           {showSearchResults &&
-            search.trim() !==
-              "" && (
+            search.trim() !== "" && (
               <div className="search-results mobile-search-results">
 
-                {searchResults.length >
-                0 ? (
+                {searchResults.length > 0 ? (
                   searchResults.map(
                     (product) => (
                       <button
@@ -989,9 +887,7 @@ function Navbar() {
                   )
                 ) : (
                   <div className="search-no-results">
-                    {
-                      text.noProducts
-                    }
+                    {text.noProducts}
                   </div>
                 )}
 
@@ -1008,9 +904,7 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection(
-                "home"
-              )
+              scrollToSection("home")
             }
           >
             {text.home}
@@ -1018,22 +912,26 @@ function Navbar() {
 
           <Link
             to="/products"
-            onClick={
-              closeMenu
-            }
+            onClick={closeMenu}
           >
             {text.products}
           </Link>
 
+          {/* RETURNS */}
+
+          <Link
+            to="/returns"
+            onClick={closeMenu}
+          >
+            {text.returns}
+          </Link>
+
           {/* ADMIN ORDERS ONLY */}
 
-          {user?.role ===
-            "admin" && (
+          {user?.role === "admin" && (
             <Link
               to="/orders"
-              onClick={
-                closeMenu
-              }
+              onClick={closeMenu}
             >
               {text.orders}
             </Link>
@@ -1053,9 +951,7 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection(
-                "brands"
-              )
+              scrollToSection("brands")
             }
           >
             {text.brands}
@@ -1064,9 +960,7 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection(
-                "offers"
-              )
+              scrollToSection("offers")
             }
           >
             {text.offers}
@@ -1075,9 +969,7 @@ function Navbar() {
           <button
             className="mobile-login"
             onClick={() =>
-              scrollToSection(
-                "contact"
-              )
+              scrollToSection("contact")
             }
           >
             {text.contact}
@@ -1085,13 +977,10 @@ function Navbar() {
 
           {/* ADMIN */}
 
-          {user?.role ===
-            "admin" && (
+          {user?.role === "admin" && (
             <Link
               to="/admin"
-              onClick={
-                closeMenu
-              }
+              onClick={closeMenu}
             >
               <FaUserShield
                 style={{
@@ -1108,9 +997,7 @@ function Navbar() {
           {user ? (
             <button
               className="mobile-login"
-              onClick={
-                handleLogout
-              }
+              onClick={handleLogout}
             >
               <FaUser />
 
@@ -1123,9 +1010,7 @@ function Navbar() {
           ) : (
             <Link
               to="/login"
-              onClick={
-                closeMenu
-              }
+              onClick={closeMenu}
             >
               <FaUser />
 
@@ -1148,8 +1033,7 @@ function Navbar() {
               }}
             />
 
-            {language ===
-            "en"
+            {language === "en"
               ? "العربية"
               : "English"}
           </button>
