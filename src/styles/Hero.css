@@ -198,11 +198,11 @@ PRIMARY BUTTON
 =========================== */
 
 .primary-btn {
-    background: #15803d;
+    background: #79c98f;
 
-    color: #ffffff;
+    color: #14532d;
 
-    border: none;
+    border: 1px solid #79c98f;
 
     padding: 15px 34px;
 
@@ -218,12 +218,16 @@ PRIMARY BUTTON
 }
 
 .primary-btn:hover {
-    background: #166534;
+    background: #5fb879;
+
+    border-color: #5fb879;
+
+    color: #ffffff;
 
     transform: translateY(-4px);
 
     box-shadow:
-        0 15px 35px rgba(21, 128, 61, 0.25);
+        0 15px 35px rgba(21, 128, 61, 0.20);
 }
 
 /* ===========================
@@ -231,11 +235,11 @@ SECONDARY BUTTON
 =========================== */
 
 .secondary-btn {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(234, 247, 238, 0.78);
 
-    border: 2px solid #15803d;
+    border: 2px solid #79c98f;
 
-    color: #166534;
+    color: #2f7d4a;
 
     padding: 15px 34px;
 
@@ -253,9 +257,11 @@ SECONDARY BUTTON
 }
 
 .secondary-btn:hover {
-    background: #15803d;
+    background: #79c98f;
 
-    color: #ffffff;
+    border-color: #79c98f;
+
+    color: #14532d;
 }
 
 /* ===========================

@@ -991,13 +991,13 @@ MOBILE
   }
 
   .navbar-logo-image {
-    width: 120px !important;
+    width: 150px !important;
 
-    height: 45px !important;
+    height: 52px !important;
 
     object-fit: contain;
 
-    object-position: left center;
+    object-position: center;
   }
 
   .navbar-logo-fallback {
@@ -1320,9 +1320,9 @@ SMALL PHONES
   }
 
   .navbar-logo-image {
-    width: 105px !important;
+    width: 150px !important;
 
-    height: 43px !important;
+    height: 52px !important;
   }
 
   .navbar-logo-fallback {
@@ -1428,9 +1428,9 @@ VERY SMALL PHONES
 
 @media (max-width: 380px) {
   .navbar-logo-image {
-    width: 90px !important;
+    width: 145px !important;
 
-    height: 40px !important;
+    height: 50px !important;
   }
 
   .navbar-logo-fallback {
@@ -1760,18 +1760,21 @@ LOGO RESPONSIVE FINAL
 
 @media (max-width: 850px) {
   .logo {
-    min-width: 105px;
+    min-width: 150px;
+    max-width: 150px;
   }
 }
 
 @media (max-width: 600px) {
   .logo {
-    min-width: 95px;
+    min-width: 150px;
+    max-width: 150px;
   }
 }
 
 @media (max-width: 380px) {
   .logo {
-    min-width: 85px;
+    min-width: 145px;
+    max-width: 145px;
   }
 }
