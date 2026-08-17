@@ -32,6 +32,7 @@ function ProductDetails() {
   } = useProducts();
 
   const { addToCart } = useCart();
+
   const { addToWishlist } =
     useWishlist();
 
@@ -52,6 +53,257 @@ function ProductDetails() {
     (item) =>
       String(item.id) === String(id)
   );
+
+  /*
+   * =========================
+   * PRODUCT SEO
+   * =========================
+   *
+   * تحديث عنوان الصفحة وبيانات
+   * SEO تلقائياً حسب المنتج.
+   */
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    const productName =
+      product.name ||
+      "Product";
+
+    const brand =
+      product.brand ||
+      "Crocodile Print Solutions";
+
+    const productDescription =
+      product.description?.trim() ||
+      `${productName} from ${brand}. Available at Crocodile Print Solutions with competitive prices in Egypt.`;
+
+    const productUrl =
+      `https://crocodilehp.com/product/${product.id}`;
+
+    const productImage =
+      product.image ||
+      "https://crocodilehp.com/favicon.png";
+
+    /*
+     * TITLE
+     */
+    document.title =
+      `${productName} | ${brand} | Crocodile Print Solutions`;
+
+    /*
+     * DESCRIPTION
+     */
+    let descriptionMeta =
+      document.querySelector(
+        'meta[name="description"]'
+      ) as HTMLMetaElement | null;
+
+    if (!descriptionMeta) {
+      descriptionMeta =
+        document.createElement("meta");
+
+      descriptionMeta.name =
+        "description";
+
+      document.head.appendChild(
+        descriptionMeta
+      );
+    }
+
+    descriptionMeta.content =
+      productDescription;
+
+    /*
+     * ROBOTS
+     */
+    let robotsMeta =
+      document.querySelector(
+        'meta[name="robots"]'
+      ) as HTMLMetaElement | null;
+
+    if (!robotsMeta) {
+      robotsMeta =
+        document.createElement("meta");
+
+      robotsMeta.name =
+        "robots";
+
+      document.head.appendChild(
+        robotsMeta
+      );
+    }
+
+    robotsMeta.content =
+      "index, follow";
+
+    /*
+     * CANONICAL
+     */
+    let canonical =
+      document.querySelector(
+        'link[rel="canonical"]'
+      ) as HTMLLinkElement | null;
+
+    if (!canonical) {
+      canonical =
+        document.createElement("link");
+
+      canonical.rel =
+        "canonical";
+
+      document.head.appendChild(
+        canonical
+      );
+    }
+
+    canonical.href =
+      productUrl;
+
+    /*
+     * =========================
+     * OPEN GRAPH
+     * =========================
+     */
+
+    function setMetaProperty(
+      property: string,
+      content: string
+    ) {
+      let meta =
+        document.querySelector(
+          `meta[property="${property}"]`
+        ) as HTMLMetaElement | null;
+
+      if (!meta) {
+        meta =
+          document.createElement(
+            "meta"
+          );
+
+        meta.setAttribute(
+          "property",
+          property
+        );
+
+        document.head.appendChild(
+          meta
+        );
+      }
+
+      meta.content =
+        content;
+    }
+
+    setMetaProperty(
+      "og:title",
+      productName
+    );
+
+    setMetaProperty(
+      "og:description",
+      productDescription
+    );
+
+    setMetaProperty(
+      "og:url",
+      productUrl
+    );
+
+    setMetaProperty(
+      "og:type",
+      "product"
+    );
+
+    setMetaProperty(
+      "og:site_name",
+      "Crocodile Print Solutions"
+    );
+
+    setMetaProperty(
+      "og:image",
+      productImage
+    );
+
+    /*
+     * =========================
+     * TWITTER
+     * =========================
+     */
+
+    function setMetaName(
+      name: string,
+      content: string
+    ) {
+      let meta =
+        document.querySelector(
+          `meta[name="${name}"]`
+        ) as HTMLMetaElement | null;
+
+      if (!meta) {
+        meta =
+          document.createElement(
+            "meta"
+          );
+
+        meta.name =
+          name;
+
+        document.head.appendChild(
+          meta
+        );
+      }
+
+      meta.content =
+        content;
+    }
+
+    setMetaName(
+      "twitter:card",
+      "summary_large_image"
+    );
+
+    setMetaName(
+      "twitter:title",
+      productName
+    );
+
+    setMetaName(
+      "twitter:description",
+      productDescription
+    );
+
+    setMetaName(
+      "twitter:image",
+      productImage
+    );
+
+    /*
+     * =========================
+     * CLEANUP
+     * =========================
+     *
+     * نرجع عنوان الموقع الأساسي
+     * عند مغادرة صفحة المنتج.
+     */
+
+    return () => {
+      document.title =
+        "Crocodile Print Solutions";
+
+      const currentCanonical =
+        document.querySelector(
+          'link[rel="canonical"]'
+        ) as HTMLLinkElement | null;
+
+      if (currentCanonical) {
+        currentCanonical.href =
+          "https://crocodilehp.com/";
+      }
+    };
+  }, [product]);
 
   /*
    * حفظ المنتج في Recently Viewed
@@ -188,12 +440,11 @@ function ProductDetails() {
             </div>
 
             <p className="description">
-              High quality original
-              product from{" "}
-              {product.brand ||
-                "our store"}
-              . Perfect for offices
-              and home use.
+              {product.description?.trim() ||
+                `High quality original product from ${
+                  product.brand ||
+                  "our store"
+                }. Perfect for offices and home use.`}
             </p>
 
             {/* =========================
