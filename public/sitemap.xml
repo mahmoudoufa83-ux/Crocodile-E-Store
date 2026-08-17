@@ -5,4 +5,16 @@
     <loc>https://crocodilehp.com/</loc>
   </url>
 
+  <url>
+    <loc>https://crocodilehp.com/products</loc>
+  </url>
+
+  <url>
+    <loc>https://crocodilehp.com/returns</loc>
+  </url>
+
+  <url>
+    <loc>https://crocodilehp.com/terms</loc>
+  </url>
+
 </urlset>
