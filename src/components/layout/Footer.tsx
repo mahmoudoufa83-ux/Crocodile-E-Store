@@ -7,6 +7,7 @@ import {
   FaPhoneAlt,
   FaEnvelope,
   FaMapMarkerAlt,
+  FaDirections,
 } from "react-icons/fa";
 
 import { useStore } from "../../context/StoreContext";
@@ -14,11 +15,11 @@ import { useStore } from "../../context/StoreContext";
 function Footer() {
   const { settings } = useStore();
 
+  const googleMapsUrl =
+    "https://goo.gl/maps/p5ocqjCqVuPh6tpb7";
+
   return (
-    <footer
-      className="footer"
-      id="contact"
-    >
+    <footer className="footer" id="contact">
       <div className="footer-container">
 
         {/* =========================
@@ -41,9 +42,7 @@ function Footer() {
             />
           ) : null}
 
-          <h2>
-            {settings.storeName}
-          </h2>
+          <h2>{settings.storeName}</h2>
 
           <p>
             Original printers, cartridges,
@@ -78,10 +77,7 @@ function Footer() {
               </a>
             )}
 
-            <a
-              href="#"
-              aria-label="LinkedIn"
-            >
+            <a href="#" aria-label="LinkedIn">
               <FaLinkedinIn />
             </a>
 
@@ -94,40 +90,28 @@ function Footer() {
 
         <div className="footer-col">
 
-          <h3>
-            Quick Links
-          </h3>
+          <h3>Quick Links</h3>
 
           <ul>
 
             <li>
-              <a href="/">
-                Home
-              </a>
+              <a href="/">Home</a>
             </li>
 
             <li>
-              <a href="/products">
-                Products
-              </a>
+              <a href="/products">Products</a>
             </li>
 
             <li>
-              <a href="/">
-                Categories
-              </a>
+              <a href="/">Categories</a>
             </li>
 
             <li>
-              <a href="/">
-                About
-              </a>
+              <a href="/">About</a>
             </li>
 
             <li>
-              <a href="/#contact">
-                Contact
-              </a>
+              <a href="/#contact">Contact</a>
             </li>
 
           </ul>
@@ -139,9 +123,7 @@ function Footer() {
 
         <div className="footer-col">
 
-          <h3>
-            Customer Service
-          </h3>
+          <h3>Customer Service</h3>
 
           <ul>
 
@@ -158,15 +140,11 @@ function Footer() {
             </li>
 
             <li>
-              <a href="#">
-                Privacy Policy
-              </a>
+              <a href="#">Privacy Policy</a>
             </li>
 
             <li>
-              <a href="#">
-                Shipping
-              </a>
+              <a href="#">Shipping</a>
             </li>
 
           </ul>
@@ -178,14 +156,11 @@ function Footer() {
 
         <div className="footer-col">
 
-          <h3>
-            Contact
-          </h3>
+          <h3>Contact</h3>
 
           <p>
             <FaPhoneAlt />{" "}
-            {settings.phone ||
-              "+20 100 000 0000"}
+            {settings.phone || "+20 100 000 0000"}
           </p>
 
           <p>
@@ -193,11 +168,27 @@ function Footer() {
             {settings.adminEmail}
           </p>
 
-          <p>
-            <FaMapMarkerAlt />{" "}
-            {settings.address ||
-              "Cairo, Egypt"}
-          </p>
+          <div className="footer-location">
+
+            <p className="location-text">
+              <FaMapMarkerAlt />
+              <span>
+                {settings.address || "Cairo, Egypt"}
+              </span>
+            </p>
+
+            <a
+              className="directions-btn"
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Get Directions to our location"
+            >
+              <FaDirections />
+              <span>Get Directions</span>
+            </a>
+
+          </div>
 
           {settings.whatsapp && (
             <p>

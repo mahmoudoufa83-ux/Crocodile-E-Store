@@ -1,3 +1,7 @@
+/* =========================
+   FOOTER
+========================= */
+
 .footer {
   background: #dce9df;
   color: #1b4332;
@@ -9,10 +13,7 @@
   width: 85%;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(220px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 45px;
   padding-bottom: 50px;
 }
@@ -100,6 +101,58 @@
 }
 
 /* =========================
+   LOCATION
+========================= */
+
+.footer-location {
+  margin-top: 8px;
+}
+
+.location-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.location-text svg {
+  flex-shrink: 0;
+  margin-top: 6px;
+  color: #15803d;
+}
+
+/* =========================
+   GET DIRECTIONS
+========================= */
+
+.directions-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 5px;
+  padding: 9px 15px;
+  border-radius: 8px;
+  background: #79c98f;
+  color: #14532d !important;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px solid #79c98f;
+  transition: 0.3s;
+}
+
+.directions-btn svg {
+  font-size: 14px;
+}
+
+.directions-btn:hover {
+  background: #5fb879;
+  border-color: #5fb879;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(21, 128, 61, 0.16);
+}
+
+/* =========================
    FOOTER BOTTOM
 ========================= */
 
@@ -139,6 +192,11 @@
 
   .socials {
     margin-top: 20px;
+  }
+
+  .directions-btn {
+    width: fit-content;
+    padding: 10px 16px;
   }
 
   .footer-bottom {
