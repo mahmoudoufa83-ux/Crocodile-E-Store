@@ -557,9 +557,9 @@ function AdminSettings() {
             color: "#666",
           }}
         >
-          Write the return and
-          refund conditions displayed
-          to customers.
+          Write the complete return,
+          exchange and refund policy
+          displayed to customers.
         </p>
 
         <textarea
@@ -570,8 +570,8 @@ function AdminSettings() {
           onChange={
             handlePolicyChange
           }
-          rows={8}
-          placeholder="Write your return policy here..."
+          rows={16}
+          placeholder="Write your return and exchange policy here..."
           style={{
             width: "100%",
             padding: "15px",
@@ -583,6 +583,7 @@ function AdminSettings() {
             fontFamily:
               "inherit",
             fontSize: "15px",
+            lineHeight: 1.7,
             boxSizing:
               "border-box",
           }}
@@ -663,6 +664,72 @@ function AdminSettings() {
           {saving
             ? "Saving..."
             : "Save Shipping Policy"}
+        </button>
+      </div>
+
+      {/* =========================
+          TERMS & CONDITIONS
+      ========================== */}
+
+      <div
+        style={{
+          background: "#fff",
+          padding: "30px",
+          borderRadius: "15px",
+          marginBottom: "30px",
+        }}
+      >
+        <h2>
+          Terms & Conditions
+        </h2>
+
+        <p
+          style={{
+            color: "#666",
+          }}
+        >
+          Write the complete terms
+          and conditions displayed to
+          customers.
+        </p>
+
+        <textarea
+          name="termsAndConditions"
+          value={
+            storeForm.termsAndConditions
+          }
+          onChange={
+            handlePolicyChange
+          }
+          rows={16}
+          placeholder="Write your terms and conditions here..."
+          style={{
+            width: "100%",
+            padding: "15px",
+            marginTop: "15px",
+            borderRadius: "10px",
+            border:
+              "1px solid #ddd",
+            resize: "vertical",
+            fontFamily:
+              "inherit",
+            fontSize: "15px",
+            lineHeight: 1.7,
+            boxSizing:
+              "border-box",
+          }}
+        />
+
+        <br />
+        <br />
+
+        <button
+          onClick={saveStore}
+          disabled={saving}
+        >
+          {saving
+            ? "Saving..."
+            : "Save Terms & Conditions"}
         </button>
       </div>
 
